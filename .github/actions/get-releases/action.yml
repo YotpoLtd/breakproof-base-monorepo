@@ -1,0 +1,105 @@
+name: Get & summarize list of packages to be released
+description: Outputs to github summary and produces "list" and "list-as-md"
+
+inputs:
+  package-filter:
+    description:
+      The pnpm filter/selector of packages you want to check for releases
+    required: true
+  add-summary:
+    description:
+      Wether or not to add GitHub workflow summary with the upcoming releases
+    default: 'true'
+
+outputs:
+  list:
+    description:
+      List of packages to be released in the format "<NAME>@<VERSION>" per line
+    value: ${{ steps.releases.outputs.list }}
+  list-as-names-only:
+    description: List of packages to be released in the format "<NAME>" per line
+    value: ${{ steps.releases.outputs.list-as-names-only }}
+  list-as-md:
+    description:
+      List of packages to be released as markdown bullet list,
+      "`<NAME>@<VERSION>`" per point
+    value: ${{ steps.releases.outputs.list-as-md }}
+  is-main-breakproof-repo:
+    description:
+      Flag which value will be "1" whenever the current repository is the same
+      as the one defined in .source-breakproof-repo.cjs
+    value: ${{ steps.releases.outputs.is-main-breakproof-repo }}
+
+runs:
+  using: composite
+  steps:
+    - name:
+        Install changed packages, their dependencies and any other that directly
+        or indirectly use them
+      shell: bash
+      run: |
+        pnpm \
+          --filter="@repo/release-it-base-isolated..." \
+          --filter="...${{ inputs.package-filter }}..." \
+          install --frozen-lockfile --prefer-offline
+        # can't use --no-optional here since pnpm needs all `workspace:` packages installed to know what to replace their version with
+        # @see https://github.com/pnpm/pnpm/issues/5094
+
+    - name: Create a list of upcoming releases
+      shell: bash
+      id: releases
+      run: |
+        # Create a flag which value will be "1" whenever the current repository is the same as the one defined in .source-breakproof-repo.cjs
+        # Expose this flag as environment variable, so that packages can check for it during the release process
+        export SOURCE_BREAKPROOF_REPO="$(pnpm --workspace-root --silent repo:get-breakproof-source-repo)"
+        if [ "$SOURCE_BREAKPROOF_REPO" = '${{ github.repository }}' ]; then
+          export IS_MAIN_BREAKPROOF_REPO='1'
+        fi
+
+        PNPM_RELEASE_CONCURRENCY_ARGS="--parallel --workspace-concurrency='$(nproc)'"
+        PNPM_RELEASE_COMMAND_ARGS="exec pnpm --workspace-root run --silent --no-bail shared:release:get-new-tag"
+
+        if echo "${{ inputs.package-filter }}" | grep -q "\["; then
+          # lets the strip out `[` or `]` from `inputs.package-filter` when defining $GIT_DIFF_BASE
+          export GIT_DIFF_BASE=$(echo "${{ inputs.package-filter }}" | tr -d '[]')
+          
+          source ./infra/devx-and-repo/repo-shell-scripts/pnpm_shortcut_fns.sh
+          LIST=$(
+            pnpm_affected_build_filter \
+              $PNPM_RELEASE_CONCURRENCY_ARGS $PNPM_RELEASE_COMMAND_ARGS
+          )
+        else
+          LIST=$(
+            pnpm --filter="...${{ inputs.package-filter }}" \
+              $PNPM_RELEASE_CONCURRENCY_ARGS $PNPM_RELEASE_COMMAND_ARGS
+          )
+        fi
+
+        # convert list to empty string if there are no affected projects
+        LIST=$(echo "$LIST" | grep -q "No projects matched" && echo -n '' || echo "$LIST")
+        LIST_NO_NEW_LINES=$(echo -n "$LIST" | tr '\n' ';')
+
+        # create a markdown version of the list
+        LIST_AS_MD=$(echo "$LIST" | sed 's/^/- `/; s/$/`/')
+
+        # create a version of the list with ONLY NAMES of packages
+        LIST_AS_NAMES_ONLY=$(echo "$LIST" | sed -E 's/(.+)@.*/\1/;')
+
+        echo "is-main-breakproof-repo=$IS_MAIN_BREAKPROOF_REPO" >> $GITHUB_OUTPUT
+        echo "list=$LIST_NO_NEW_LINES" >> $GITHUB_OUTPUT
+        echo -e "list-as-names-only<<EOF\n${LIST_AS_NAMES_ONLY}\nEOF" >> $GITHUB_OUTPUT
+        echo -e "list-as-md<<EOF\n${LIST_AS_MD}\nEOF" >> $GITHUB_OUTPUT
+
+    - name: Add workflow summary of upcoming releases
+      if: ${{ steps.releases.outputs.list && inputs.add-summary == 'true' }}
+      shell: bash
+      run: |
+        echo '### 🚀️ UPCOMING PACKAGE RELEASES 🚀️️' >> $GITHUB_STEP_SUMMARY
+        echo '${{ steps.releases.outputs.list-as-md }}' >> $GITHUB_STEP_SUMMARY
+
+    - name: Add workflow summary for no releases
+      if: ${{ ! steps.releases.outputs.list && inputs.add-summary == 'true' }}
+      shell: bash
+      run: |
+        echo '### 🏳️️ NO PACKAGE RELEASES 🏳️' >> $GITHUB_STEP_SUMMARY
+        echo 'If you actually intend to trigger a release, you need to rewrite your [commit messages to fit the expected format for autorelease](${{ github.server_url }}/${{ github.repository }}/blob/master/docs/autorelease-commits.md).' >> $GITHUB_STEP_SUMMARY

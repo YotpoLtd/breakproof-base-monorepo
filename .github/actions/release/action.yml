@@ -1,0 +1,77 @@
+name: Release packages
+description:
+  Release by specifying a pnpm filter/selector of packages you want to release
+
+inputs:
+  AUTORELEASE_GITHUB_TOKEN:
+    description: 'The github token used for release'
+    required: true
+  autorelease-bot-name:
+    description: The name of the bot that will commit during automatic releases
+    required: true
+  autorelease-bot-email:
+    description: The email of the bot that will commit during automatic releases
+    required: true
+  package-filter:
+    description: The pnpm filter/selector of packages you want to release
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: ⚠️ Warning ⚠️
+      shell: bash
+      run: |
+        echo '## ⚠️ Warning ⚠️' >> "$GITHUB_STEP_SUMMARY"
+        echo 'This workflow may push new commits to the branch' >> "$GITHUB_STEP_SUMMARY"
+        echo 'There shouldn'"'"'t be any PRs merged or other actions running in this repo that can commit to this branch.' >> "$GITHUB_STEP_SUMMARY"
+        echo >> "$GITHUB_STEP_SUMMARY"
+        echo 'You were warned 🫡!' >> "$GITHUB_STEP_SUMMARY"
+
+    - name: Get list of packages packages with new releases
+      uses: ./.github/actions/get-releases
+      id: releases
+      with:
+        package-filter: ${{ inputs.package-filter }}
+        add-summary: false
+
+    - name: Set git credentials to use for committing & pushing changes
+      shell: bash
+      run: |
+        git config --local user.email "${{ inputs.autorelease-bot-email }}"
+        git config --local user.name "${{ inputs.autorelease-bot-name }}"
+
+    - name: ✨Automatically release ✨
+      if: ${{ steps.releases.outputs.list-as-names-only }}
+      env:
+        GITHUB_TOKEN: ${{ inputs.AUTORELEASE_GITHUB_TOKEN }}
+      shell: bash
+      run: |
+        # transform the list of package names to multiple `--filter=<PACKAGE NAME>` arguments for pnpm
+        PNPM_RELEASE_FILTER_ARGS=$(
+          echo "${{ steps.releases.outputs.list-as-names-only }}" | \
+            sed 's/^/--filter=/' | \
+            tr '\n' ' '
+        )
+
+        # Expose this flag as environment variable, so that packages can check for it during the release process
+        export IS_MAIN_BREAKPROOF_REPO='${{steps.releases.outputs.is-main-breakproof-repo}}'
+
+        # try to release affected packages
+        # start from deepest dependencies to -> top level ones, bumping each version, releasing & pushing to git
+        pnpm $PNPM_RELEASE_FILTER_ARGS --workspace-concurrency=1 run release --ci --VV
+
+    - name: Check if new commits were added
+      shell: bash
+      id: check-result
+      run: |
+        CURRENT_COMMIT=$(git rev-parse HEAD)
+        TRIGGERED_COMMIT=${{ github.sha }}
+        echo "$CURRENT_COMMIT $TRIGGERED_COMMIT"
+        if [ "$CURRENT_COMMIT" == "$TRIGGERED_COMMIT" ]; then
+           echo "No new commits"
+           echo "new-commits=false" >> $GITHUB_OUTPUT
+        else
+          echo "New commits appeared - release was made"
+          echo "new-commits=true" >> $GITHUB_OUTPUT
+        fi

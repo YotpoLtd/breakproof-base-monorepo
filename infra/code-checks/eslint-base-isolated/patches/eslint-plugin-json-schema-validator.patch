@@ -1,0 +1,34 @@
+diff --git a/lib/utils/validator-factory.js b/lib/utils/validator-factory.js
+index 4b384d00dc99710d875ca18e3b5d316b86fc2074..6f3f301989882da0d10df5131b6cfbda58f1bef5 100644
+--- a/lib/utils/validator-factory.js
++++ b/lib/utils/validator-factory.js
+@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
+ Object.defineProperty(exports, "__esModule", { value: true });
+ exports.compile = compile;
+ const ajv_1 = __importDefault(require("./ajv"));
++const ajvErrors = require("ajv-errors");
+ const json_schema_migrate_1 = require("json-schema-migrate");
+ const schema_1 = require("./schema");
+ const lazyRegExpEngine = (str, flags) => {
+@@ -31,6 +32,7 @@ const ajv = new ajv_1.default({
+         regExp: lazyRegExpEngine,
+     },
+ });
++ajvErrors(ajv);
+ ajv.addMetaSchema(require("ajv/lib/refs/json-schema-draft-06.json"));
+ function unescapeFragment(str) {
+     return unescapeJsonPointer(decodeURIComponent(str));
+diff --git a/package.json b/package.json
+index b14f93a3a1069fe59198ef85ddb872f124d89659..0c81aecbd8d18c47d190fb8a89bafc4484333b29 100644
+--- a/package.json
++++ b/package.json
+@@ -47,7 +47,8 @@
+     "version:ci": "env-cmd -e version-ci yarn update && changeset version"
+   },
+   "peerDependencies": {
+-    "eslint": ">=6.0.0"
++    "eslint": ">=6.0.0",
++    "ajv-errors": "*"
+   },
+   "dependencies": {
+     "@eslint-community/eslint-utils": "^4.3.0",

@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+# Used in the validation script to figure out what are the changed files
+# and what package-specific checks to run
+GIT_DIFF_BASE='--cached'
+LINT_SCRIPT_NAME='lint:precommit'
+TEST_SCRIPT_NAME='test:precommit'
+
+#;
+# Execute checks
+#"
+# shellcheck disable=2155
+imports() {
+  local __DIRNAME=$(dirname -- "${BASH_SOURCE[0]}")
+  source "$__DIRNAME/../infra/devx-and-repo/repo-shell-scripts/run_all_code_checks_without_build.sh"
+}
+imports

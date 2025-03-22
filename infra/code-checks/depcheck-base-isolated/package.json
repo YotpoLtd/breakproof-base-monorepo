@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json.schemastore.org/package.json",
+  "name": "@repo/depcheck-base-isolated",
+  "private": true,
+  "version": "0.0.1",
+  "pnpm": {
+    "executionEnv": {
+      "nodeVersion": "22.6.0"
+    }
+  },
+  "packageManager": "pnpm@9.15.3",
+  "exports": {
+    "./package.json": "./package.json",
+    "./base": {
+      "default": "./lib/depcheckrc-base.mjs"
+    }
+  },
+  "scripts": {
+    "preinstall": "[ -n \"$(pwd | grep '/node_modules/')\" ] || echo $npm_config_user_agent | grep -q 'pnpm/' || (echo 'PLEASE USE PNPM, not NPM' && exit 1)",
+    "lint:everything": "pnpm --workspace-root run '/^shared:lint:.*/'",
+    "lint:everything:fix-autofixable": "pnpm --workspace-root run --sequential '/^shared:fix:/'",
+    "lint:precommit": "pnpm --workspace-root run shared:staged:lint:common",
+    "lint:precommit:fix-autofixable": "pnpm --workspace-root run --sequential '/^shared:staged:fix:/'",
+    "transpile": "tsc --project ./tsconfig.build.json",
+    "dev": "pnpm --filter='{.}^...' build && pnpm run dev:watch",
+    "dev:with-deps": "pnpm --filter='{.}^...' build && pnpm --filter='{.}...' run --parallel '/^dev:(watch|serve)$/'",
+    "build": "pnpm run transpile",
+    "dev:watch": "pnpm run transpile --watch",
+    "depcheck": "cd $PACKAGE_DIR && depcheck",
+    "depcheck:ts-check": "TS_CONFIG_DIR=$INIT_CWD/node_modules/.cache && mkdir -p $TS_CONFIG_DIR && cp ./template-files/tsconfig.depcheck.json $TS_CONFIG_DIR && cd $INIT_CWD && tsc --project $TS_CONFIG_DIR/tsconfig.depcheck.json --noEmit"
+  },
+  "dependencies": {
+    "depcheck": "^1.4.7"
+  },
+  "devDependencies": {
+    "@repo/tsconfig-bases": "workspace:^",
+    "tslib": "^2.7.0",
+    "typescript": "^5.3.3"
+  },
+  "peerDependencies": {
+    "tslib": "^2.7.0"
+  },
+  "devtoolsDependencies": {
+    "@repo/eslint-base-isolated": "workspace:^",
+    "@repo/lint-staged-base-isolated": "workspace:^",
+    "eslint": "^8.57.1",
+    "prettier": "^3.4.2"
+  }
+}

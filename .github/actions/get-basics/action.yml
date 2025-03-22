@@ -1,0 +1,101 @@
+name: Get & summarize basic data for workflow
+description:
+  Outputs to github summary and produces "git-diff-base", "is-bot-push",
+  "current-branch", "target-branch" and "concurrency-group"
+inputs:
+  autorelease-bot-email:
+    description: The email of the bot that will commit during automatic releases
+    required: true
+
+outputs:
+  is-bot-push:
+    description: Whether the last push was done by the configured bot account
+    value: ${{ steps.get-basics.outputs.is-bot-push }}
+  git-diff-base:
+    description: The git commit where we want to compare to
+    value: ${{ steps.get-basics.outputs.git-diff-base }}
+  git-diff-base-depth:
+    description:
+      The --depth for `git fetch` when a job only needs to compare a PR commit
+      to git-diff-base
+    value: ${{ steps.get-basics.outputs.git-diff-base-depth }}
+  current-branch:
+    description:
+      For PRs that's the branch you want to merge FROM, for the rest it's the
+      `github.ref_name`
+    value: ${{ steps.get-basics.outputs.current-branch }}
+  target-branch:
+    description:
+      For PRs that's the base you want to merge INTO, for push it's the same as
+      `current-branch`
+    value: ${{ steps.get-basics.outputs.target-branch }}
+  concurrency-group:
+    description:
+      Re-creation of the key used for concurrency.group of current workflow run
+    value: ${{ steps.get-basics.outputs.concurrency-group }}
+  is-code-import:
+    description:
+      'Whether the changes in this workflow run include a commit with the
+      message "chore: import code from another repo"'
+    value: ${{ steps.get-basics.outputs.is-code-import }}
+
+runs:
+  using: composite
+  steps:
+    - name: Basic data
+      id: get-basics
+      shell: bash
+      run: |
+        CONCURRENCY_GROUP='${{ 
+          github.event_name == 'pull_request'
+            && format('{0}-{1}', github.workflow, github.head_ref)
+            || (
+              ((github.event_name == 'push' && github.ref_name == github.event.repository.default_branch) || github.event_name == 'merge_group')
+                && 'release-or-wait-until-release-is-done'
+                || github.ref_name
+          )
+        }}'
+        LAST_COMMIT_BY=$(git show -s --format=%ae)
+        LAST_COMMIT_HASH=$(git show -s --format=%H)
+
+        IS_BOT_PUSH=$([ "$LAST_COMMIT_BY" = "${{ inputs.autorelease-bot-email }}" ] && echo "1" || echo "")
+        CPU_CORES="$(nproc)"
+
+        echo '### 📊 Workflow basics 📊️' >> $GITHUB_STEP_SUMMARY
+        echo "Number of CPU cores for default runner: ${CPU_CORES}" >> $GITHUB_STEP_SUMMARY
+        echo 'Last commit by: **${{ env.LAST_COMMIT_BY }}**' >> $GITHUB_STEP_SUMMARY
+
+        THIS_BRANCH="${{ github.head_ref || github.ref_name }}"
+
+        echo "Current branch: **$THIS_BRANCH**" >> $GITHUB_STEP_SUMMARY
+
+        # for main branch -> compare to the commit before the push, for the rest -> compare to base or main branch
+        BASE_BRANCH="${{ github.base_ref || github.event.repository.default_branch }}"
+        BASE_BRANCH_FULL="origin/$BASE_BRANCH"
+
+        echo "Target base branch: **$BASE_BRANCH**" >> $GITHUB_STEP_SUMMARY
+        echo "Workflow triggered due to: **${{ github.event_name }}**" >> $GITHUB_STEP_SUMMARY
+        echo "Is it triggered by '${{ inputs.autorelease-bot-email }}': **$([ "$IS_BOT_PUSH" = "1" ] && echo "YES" || echo "NO")**" >> $GITHUB_STEP_SUMMARY
+        echo "Concurrency group name: **$CONCURRENCY_GROUP**" >> $GITHUB_STEP_SUMMARY
+
+        GIT_DIFF_BASE=${{ github.ref_name == github.event.repository.default_branch && github.event.before || '$(git merge-base $BASE_BRANCH_FULL HEAD)' }}
+        GIT_DIFF_BASE_DEPTH="$(git rev-list --count $GIT_DIFF_BASE^..HEAD)"
+        IS_CODE_IMPORT=$(git log --format=%B "$GIT_DIFF_BASE".. | grep -q 'chore: import code from another repo' && echo 1 || echo -n '')
+        echo "Is it importing code from another repo: **$([ "$IS_CODE_IMPORT" = "1" ] && echo "YES" || echo "NO")**" >> $GITHUB_STEP_SUMMARY
+
+        echo "Looking for affected packages between: **[${{ github.ref_name == github.event.repository.default_branch && '${GIT_DIFF_BASE}' || '${BASE_BRANCH_FULL}' }}](${{ github.server_url }}/${{ github.repository }}/tree/${GIT_DIFF_BASE})..[${THIS_BRANCH}](${{ github.server_url }}/${{ github.repository }}/tree/${LAST_COMMIT_HASH})**" >> $GITHUB_STEP_SUMMARY
+        echo "<sub>_([comparison](${{ github.server_url }}/${{ github.repository }}/compare/${GIT_DIFF_BASE}...${LAST_COMMIT_HASH}))_</sub>" >> $GITHUB_STEP_SUMMARY
+        # Remove comments & ' quotes around toJSON when debugging this action, kept here for quick access
+        #echo '```json' >> $GITHUB_STEP_SUMMARY
+        #cat << EOF
+        #${{ 'toJSON(github)' }}
+        #EOF >> $GITHUB_STEP_SUMMARY
+        #echo '```' >> $GITHUB_STEP_SUMMARY
+
+        echo "is-code-import=${IS_CODE_IMPORT}" >> $GITHUB_OUTPUT
+        echo "is-bot-push=${IS_BOT_PUSH}" >> $GITHUB_OUTPUT
+        echo "git-diff-base=${GIT_DIFF_BASE}" >> $GITHUB_OUTPUT
+        echo "git-diff-base-depth=${GIT_DIFF_BASE_DEPTH}" >> $GITHUB_OUTPUT
+        echo "current-branch=${THIS_BRANCH}" >> $GITHUB_OUTPUT
+        echo "target-branch=${BASE_BRANCH}" >> $GITHUB_OUTPUT
+        echo "concurrency-group=${CONCURRENCY_GROUP}" >> $GITHUB_OUTPUT

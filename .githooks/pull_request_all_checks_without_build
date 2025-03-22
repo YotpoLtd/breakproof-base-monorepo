@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+#;
+#
+#
+# You can run this script locally which will execute most of the checks performed on CI
+# for your pull request.
+#
+# Before running you need to set the GITHUB_BASE_REF environment variable to
+# the base branch of your PR or another commit/branch of your choice.
+#
+# This will be used as point of comparison ro detect changes and what they affect
+#
+#
+#"
+if [ -z "$GITHUB_BASE_REF" ]; then
+  echo "Please set the GITHUB_BASE_REF environment variable to commit hash or branch name before running this script"
+  exit 1
+fi
+
+# Used in the validation script to figure out what are the changed files
+# and what package-specific checks to run
+GIT_DIFF_BASE=$(git merge-base "$GITHUB_BASE_REF" HEAD)
+export GIT_DIFF_BASE
+
+LINT_SCRIPT_NAME='lint:github-pr'
+TEST_SCRIPT_NAME='test:github-pr'
+#;
+# Execute checks
+#"
+# shellcheck disable=2155
+imports() {
+  local __DIRNAME=$(dirname -- "${BASH_SOURCE[0]}")
+  source "$__DIRNAME/../infra/devx-and-repo/repo-shell-scripts/run_all_code_checks_without_build.sh"
+}
+imports

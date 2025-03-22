@@ -1,0 +1,9 @@
+{
+  "extends": "@repo/tsconfig-bases/tsconfig.lib.node.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "tsBuildInfoFile": "./node_modules/.cache/tsc/tsconfig.tsbuildinfo"
+  },
+  "include": ["src/**/*"]
+}

@@ -1,0 +1,8 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "blueglassblock.better-json5",
+    "jasonnutter.vscode-codeowners"
+  ]
+}

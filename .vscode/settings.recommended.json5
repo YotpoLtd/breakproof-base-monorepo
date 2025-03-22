@@ -1,0 +1,23 @@
+/**
+ * Copy the settings below to `.vscode/settings.json`
+ * Modify "eslint.runtime" and "typescript.tsserver.nodePath" values to match your system
+ * Don't forget to remove comments when copying
+ */
+{
+  // VSCode has built-in version of TypeScript, we want to make sure we use our own
+  "typescript.tsdk": "./infra/code-checks/lint-staged-base-isolated/node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  // We use prettier
+  "json5.format.enable": false,
+  // If there are missing types, show it, instead of auto-installing "behind-the-scenes",
+  // so that developers can download & save them
+  "typescript.disableAutomaticTypeAcquisition": true,
+  "typescript.check.npmIsInstalled": false,
+  // Integrate prettier and keep only 1 way to define config
+  "prettier.useEditorConfig": false,
+  "prettier.requireConfig": true,
+  "prettier.prettierPath": "./node_modules/prettier",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "typescript.tsserver.nodePath": "<repo root>/infra/node",
+  "eslint.runtime": "<repo root>/infra/node"
+}

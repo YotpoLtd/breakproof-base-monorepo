@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json.schemastore.org/package.json",
+  "name": "@repo/jest-base-isolated",
+  "version": "0.0.1",
+  "pnpm": {
+    "executionEnv": {
+      "nodeVersion": "22.6.0"
+    }
+  },
+  "packageManager": "pnpm@9.15.3",
+  "main": "./dist/index.js",
+  "exports": {
+    "./tsconfig.node.spec.base.json": "./tsconfig.node.spec.base.json",
+    "./*": {
+      "types": [
+        "./src/*.ts",
+        "./src/*/index.ts"
+      ],
+      "default": [
+        "./dist/*.js",
+        "./dist/*/index.js"
+      ]
+    }
+  },
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "scripts": {
+    "preinstall": "[ -n \"$(pwd | grep '/node_modules/')\" ] || echo $npm_config_user_agent | grep -q 'pnpm/' || (echo 'PLEASE USE PNPM, not NPM' && exit 1)",
+    "lint:everything": "pnpm --workspace-root run '/^shared:lint:.*/'",
+    "lint:everything:fix-autofixable": "pnpm --workspace-root run --sequential '/^shared:fix:/'",
+    "lint:precommit": "pnpm --workspace-root run '/^shared:(staged:lint:.*|lint:dependencies:.*)/'",
+    "lint:precommit:fix-autofixable": "pnpm --workspace-root run --sequential '/^shared:staged:fix:/'",
+    "lint:github-pr": "pnpm --workspace-root run '/^shared:(github-pr:lint:.*|lint:dependencies:.*)/'",
+    "transpile": "tsc --project ./tsconfig.build.json",
+    "dev": "pnpm --filter='{.}^...' build && pnpm run dev:watch",
+    "dev:with-deps": "pnpm --filter='{.}^...' build && pnpm --filter='{.}...' run --parallel '/^dev:(watch|serve)$/'",
+    "build": "pnpm --filter='{.}^...' build && pnpm run transpile",
+    "dev:watch": "pnpm run transpile --watch",
+    "jest": "export EXTRA_JEST_NODE_MODULES=\"$PWD/node_modules\" && echo node:$(node --version) && export CONFIG_FILE=$PWD/jest.config.mjs && cd $INIT_CWD && jest --config $CONFIG_FILE",
+    "__SEE_SHARED__": "echo \"You can run any script starting with 'shared:' defined in <repo-root>/package.json by executing `pnpm -w <name of script>` from your package directory\""
+  },
+  "dependencies": {
+    "@jest/globals": "^29.7.0",
+    "@repo/babel-base-isolated": "workspace:^",
+    "@repo/environment": "workspace:^",
+    "expect-more-jest": "^5.5.0",
+    "identity-obj-proxy": "^3.0.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "sucrase": "^3.35.0",
+    "ts-node": "^10.9.2",
+    "whatwg-fetch": "^3.6.20"
+  },
+  "devDependencies": {
+    "@repo/tsconfig-bases": "workspace:^",
+    "@types/find-root": "^1.1.4",
+    "find-root": "^1.1.0",
+    "jest": "^29.7.0",
+    "jest-resolve": "^29.7.0",
+    "tslib": "^2.7.0",
+    "typescript": "^5.3.3"
+  },
+  "peerDependencies": {
+    "jest": "^29.7.0"
+  },
+  "devtoolsDependencies": {
+    "@repo/depcheck-base-isolated": "workspace:^",
+    "@repo/eslint-base-isolated": "workspace:^",
+    "@repo/lint-staged-base-isolated": "workspace:^",
+    "prettier": "^3.4.2"
+  }
+}

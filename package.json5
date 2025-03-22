@@ -1,0 +1,288 @@
+/**
+ * This file is in JSON5 format to allow us to add inline documentation for scripts
+ * or reasoning for settings done here (like this comment).
+ *
+ * We should not use JSON5 for normal packages in the repo since many third-party tools
+ * expect `package.json` and they will break if there is only a JSON5 version of it.
+ */
+{
+  $schema: 'https://json.schemastore.org/package.json',
+  private: true,
+  name: '@repo/root',
+  engines: {
+    pnpm: '9.15.3',
+    node: '22.6.0',
+  },
+  packageManager: 'pnpm@9.15.3',
+  /**
+   * Scripts staring with `shared:` or `fix:shared` can only be executed in 3 ways:
+   *
+   * 1. from the terminal/script inside your package directory
+   * 2. from the `scripts` in your package.json
+   * 3. using `pnpm --filter="<selector>" exec pnpm --workspace-root run shared:<script name>
+   *
+   * Other script can be executed from anywhere within the repo.
+   *
+   * Most of the shared scripts are originally defined in the
+   * `<repo root dir>/infra/*` packages such as `devtools`, `lint` and
+   * `generators` and they get executed through them. We do this extra packaging
+   * internally to encapsulate any optional packages used for analysis/linting like
+   * `webpack-bundle-analyzer` outside your package. Those are not needed
+   * runtime, build-time or while testing, so we don't want to mix them with the
+   * other dependencies, lock them to the same `node.js` version or download them unnecessarily.
+   */
+  scripts: {
+    'lint:everything': 'pnpm run shared:lint:common',
+    'lint:everything:fix-autofixable': 'pnpm run --sequential shared:fix:lint:common',
+    'lint:precommit': 'pnpm run shared:staged:lint:common',
+    'lint:precommit:fix-autofixable': 'pnpm run --sequential shared:staged:fix:common',
+
+    // PREVENT ACCIDENTAL USAGE OF `NPM`
+    'preinstall': "[ -n \"$(pwd | grep '/node_modules/')\" ] || echo $npm_config_user_agent | grep -q 'pnpm/' || (echo 'PLEASE USE PNPM, not NPM' && exit 1)",
+    // Run fixes for better integration with code editors
+    'postinstall': '([ -z "$CODE_EDITOR_INSTALL" ] && [ -z "$GITHUB_ENV" ] && pnpm --workspace-root run code-editor:install-tools-at-top-level && pnpm --workspace-root run code-editor:jetbrains:fix-eslint-at-top-level && pnpm --workspace-root run code-editor:symlink-default-node) || true',
+
+    /**
+     * SHORTCUTS FOR ANALYZING CODE
+     */
+    // it outputs which dependencies are outdated and what's the available latest version. It doesn't automatically update them, only reports options for updating
+    'shared:analyze:dependencies-versions': 'PACKAGE_DIR=$INIT_CWD pnpm --filter=devtools run analyze:dependencies-versions',
+    // outputs its entire `tsconfig.json` file including settings from all extended tsconfigs
+    'shared:analyze:tsconfig': 'PACKAGE_DIR=$INIT_CWD pnpm --filter=devtools run ts:show-config',
+    // it visualizes all dependencies in the final bundle. Only works if `webpack` is executed as bundler under the `build` script of your package.
+    'shared:analyze:webpack:build': 'PACKAGE_DIR=$INIT_CWD pnpm --filter=devtools run webpack:visualize-bundle',
+    // creates `stats.json` with metadata about the build. Only works if `webpack` is executed as bundler under the `build` script of your package.
+    'shared:analyze:webpack:stats': 'PACKAGE_DIR=$INIT_CWD pnpm --filter=devtools run webpack:stats',
+    'shared:analyze:webpack:stats:delete-external': 'PACKAGE_DIR=$INIT_CWD pnpm --filter=devtools run webpack:stats:delete-external',
+
+    /**
+     * SHORTCUTS FOR FINDING CODE PROBLEMS
+     */
+    'shared:ts:check': 'PACKAGE_DIR=$INIT_CWD pnpm --filter=@repo/lint run ts:check',
+    'shared:lint:common': 'PACKAGE_DIR=$INIT_CWD pnpm --filter=@repo/lint-staged-base-isolated run lint-staged-but-for-all-package-files',
+    // checks if there are missing or unused dependencies. It can't fix the errors, only reports them
+    'shared:lint:dependencies:circular': 'PACKAGE_DIR=$INIT_CWD pnpm --filter=@repo/dpdm-base-isolated run dpdm',
+    // checks if there are circular dependencies/imports. It can't fix the errors, only reports them
+    'shared:lint:dependencies:misused': 'PACKAGE_DIR=$INIT_CWD pnpm --filter=@repo/depcheck-base-isolated run depcheck',
+    // checks if there are package file that do not have defined owner in <repo root>/.github/CODEOWNERS file
+    'shared:lint:codeowners': 'PACKAGE_DIR=$INIT_CWD pnpm --filter=@repo/.github run codeowners:validate-package-ownership',
+    // the following will be executed on precommit & CI even if your package is not calling them
+    'shared:lint:package.json': 'PACKAGE_DIR=$INIT_CWD pnpm --filter=@repo/eslint-base-isolated run package.json:validate',
+    // two shortcuts for specific cases: precommit hook & github CI
+    'shared:staged:lint:common': "PACKAGE_DIR=$INIT_CWD pnpm --filter=@repo/lint-staged-base-isolated run staged:lint --diff='--cached'",
+    'shared:github-pr:lint:common': 'PACKAGE_DIR=$INIT_CWD pnpm --filter=@repo/lint-staged-base-isolated run staged:lint --diff="${GIT_DIFF_BASE:-$(git merge-base origin/$GITHUB_BASE_REF HEAD)}"',
+
+    /**
+     * SHORTCUTS FOR COMMANDS THAT WILL TRY TO FIX FOUND PROBLEMS AUTOMATICALLY (IF POSSIBLE)
+     */
+    'shared:fix:lint:common': 'PACKAGE_DIR=$INIT_CWD pnpm --filter=@repo/lint-staged-base-isolated run fix:lint-staged-but-for-all-package-files',
+    'shared:fix:lint:package.json': 'PACKAGE_DIR=$INIT_CWD pnpm --filter=@repo/eslint-base-isolated run fix:package.json:validate',
+    // different naming from the other fixing commands so that it's not executed when you do pnpm --workspace-root run '/^shared:fix:.+/'
+    'shared:repo:fix:lint:package.json:dependencies': 'pnpm --filter=@repo/syncpack-base-isolated run fix:syncpack',
+    // different naming from the other fixing commands so that it's not executed when you do pnpm --workspace-root run '/^shared:fix:.+/'
+    'shared:staged:fix:common': "PACKAGE_DIR=$INIT_CWD pnpm --filter=@repo/lint-staged-base-isolated run staged:fix:lint --diff='--cached'",
+
+    /**
+     * SHORTCUTS FOR COMMANDS THAT DON'T APPLY TO SPECIFIC PACKAGE BUT TO ALL OF THEM
+     */
+    // checks if dependencies which are not explicitly allowed to have different version are the same across all `packages.json`
+    'repo:lint:package.json:dependencies': 'pnpm --filter=@repo/syncpack-base-isolated run syncpack:lint',
+    // list all packages in the repo
+    'repo:list-all-packages': "pnpm --filter='*' list --depth -1 --parseable",
+    // finds and removes all `node_modules` directories across the entire repo
+    'repo:clear:node_modules': "find . -name 'node_modules' -type d -prune -print -exec rm -rf '{}' \\;",
+    'repo:install-whitelisted-nodejs-versions': "pnpm env add $(node -p \"require('./.nodejs-versions-whitelist.cjs').join(' ')\") --global",
+    'repo:simulate-github-pr:checks': './.githooks/pull_request_all_checks_without_build',
+    // import another repository (or a subdir of it) into this repo (as a new package) while preserving git history
+    'repo:import-from-other-repo': './infra/devx-and-repo/repo-shell-scripts/import-from-other-repo.sh',
+    // output whatever is exported from <repo root>/.source-breakproof-repo.cjs
+    'repo:get-breakproof-source-repo': 'node -p "require(\'./.source-breakproof-repo.cjs\')"',
+
+    /**
+     * SHORTCUTS FOR RELEASING PACKAGES
+     */
+    // perform the default release logic using `release-it`
+    'shared:release': 'PACKAGE_DIR=$INIT_CWD pnpm --filter=@repo/release-it-base-isolated run release:perform',
+    'shared:release:if-needed': '(pnpm --silent --filter=$PNPM_PACKAGE_NAME exec pnpm --silent --workspace-root run shared:release:conventional-commit:get-new-version && pnpm --filter=$PNPM_PACKAGE_NAME run release) || echo "<NO NEW VERSION>"',
+    'shared:release:conventional-commit:get-new-version': 'PACKAGE_DIR=$INIT_CWD pnpm --filter=@repo/release-it-base-isolated run release:conventional-commit:get-new-version',
+    'shared:release:get-new-tag': 'cd $INIT_CWD && PNPM_PACKAGE_NAME=$(node -p "require(\'./package.json\').name") && NEW_VERSION=$(pnpm --workspace-root run shared:release:conventional-commit:get-new-version) && echo "$PNPM_PACKAGE_NAME@$NEW_VERSION"',
+
+    /**
+     * SHORTCUTS FOR GENERATING CODE
+     */
+    'generate': 'pnpm --filter=@repo/generators exec hygen',
+
+    /**
+     * MISC USEFUL SHORTCUTS
+     */
+    // will run the `build` script for all of nested dependencies and once those are built, it will do the same for the package itself
+    'shared:build:recursive': "cd $INIT_CWD && pnpm --filter='{.}...' run build",
+
+    /**
+     * SHORTCUTS FOR CODE-EDITOR INTEGRATIONS
+     */
+    // Install dependencies defined in codeEditorIntegrationDependencies of this file WITHOUT saving them to the lock file
+    'code-editor:install-tools-at-top-level': 'CODE_EDITOR_INSTALL=1 npm_config_save=false npm_config_lockfile=false pnpm --workspace-root install --prefer-offline',
+    'code-editor:jetbrains:fix-eslint-at-top-level': 'ln -sf ./this-file-should-not-exist-please-delete-me ./package.json',
+    'code-editor:symlink-default-node': 'ln -sf "$(pnpm which node)" ./infra/node',
+  },
+
+  /**
+   * !! DO NOT ADD NEW DEPENDENCIES TO THE REPOSITORY ROOT !!
+   *
+   * The only 1 here is added because `pnpm run --parallel` doesn't have fine-grain
+   * control of when to stop running
+   */
+  devDependencies: {
+    concurrently: '9.1.0',
+  },
+
+  /**
+   * Only installed locally, not on CI.
+   * This is achieved with a little bit of customization in .pnpmfile.cjs
+   */
+  codeEditorIntegrationDependencies: {
+    eslint: '^8.57.1',
+    prettier: '3.4.2',
+  },
+
+  /**
+   * Fixes and overrides of dependencies across packages in the repo
+   */
+  pnpm: {
+    /**
+     * Override the older versions of those so we get some bug fixes
+     */
+    overrides: {
+      'cosmiconfig': '^9',
+      'prosemirror-model': '1.23.0',
+    },
+    packageExtensions: {
+      /**
+       * We patch eslint-plugin-json-schema-validator to enable custom errors
+       * which means we need the ajv packages as peer deps
+       */
+      'eslint-plugin-json-schema-validator': {
+        peerDependencies: {
+          'ajv': '*',
+          'ajv-errors': '*',
+        },
+      },
+      /**
+       * Fix problems in third party package definitions
+       */
+      '@reactflow/core': {
+        peerDependencies: {
+          '@types/react': '>=17',
+        },
+      },
+      'react-i18next': {
+        peerDependencies: {
+          '@types/react': '^18.2.52',
+        },
+      },
+      'emoji-picker-react': {
+        peerDependencies: {
+          react: '16.2.0',
+        },
+      },
+      'react-toastify': {
+        peerDependencies: {
+          'react-dom': '^16.13.1',
+        },
+      },
+      // We want webpack-cli always available to webpack when installed as peer dependency
+      'webpack': {
+        peerDependencies: {
+          'webpack-cli': '*',
+        },
+      },
+      // hygen have not defined any ts loaders as peers, so we need to fix that
+      'hygen': {
+        peerDependencies: {
+          tsx: '*',
+        },
+      },
+      '@angular-devkit/build-angular': {
+        peerDependencies: {
+          'ng-packagr': '*',
+        },
+      },
+      '@angular-builders/custom-webpack': {
+        dependencies: {
+          rxjs: '*',
+        },
+      },
+      '@angular-architects/module-federation': {
+        peerDependencies: {
+          tslib: '*',
+          webpack: '*',
+        },
+        dependencies: {
+          json5: '*',
+        },
+      },
+      'jest-runner': {
+        peerDependencies: {
+          tslib: '*',
+        },
+      },
+      'jest-environment-jsdom': {
+        peerDependencies: {
+          tslib: '*',
+        },
+      },
+      'jest-preset-angular': {
+        dependencies: {
+          'zone.js': '*',
+        },
+      },
+      'jest-circus': {
+        peerDependencies: {
+          tslib: '*',
+        },
+      },
+      'jest-config': {
+        dependencies: {
+          'ts-node': '*',
+        },
+      },
+      'tslib': {
+        dependencies: {
+          'ts-node': '*',
+        },
+      },
+      '@auth0/auth0-angular': {
+        dependencies: {
+          rxjs: '*',
+        },
+      },
+      '@angular-builders/common': {
+        peerDependencies: {
+          'mini-css-extract-plugin': '*',
+        },
+      },
+    },
+    patchedDependencies: {
+      /**
+       * We patch hygen due to:
+       * 1. a bug in color highlighting: https://github.com/jondot/hygen/issues/265
+       * 2. using `tsx` instead of `ts-node` since `ts-node` is stale and does not support extending multiple tsconfigs
+       */
+      'hygen@6.2.11': 'infra/devx-and-repo/generators/patches/hygen@6.2.11.patch',
+      /**
+       * With this patch, we enable custom error messages via ajv-error
+       */
+      'eslint-plugin-json-schema-validator': 'infra/code-checks/eslint-base-isolated/patches/eslint-plugin-json-schema-validator.patch',
+      /**
+       * With this patch, we make sure `lint-staged` recognizes its own `lint-staged` node_modules/.bin
+       * files
+       */
+      'lint-staged': 'infra/code-checks/lint-staged-base-isolated/patches/lint-staged.patch',
+      /**
+       * With this patch, we make sure `depcheck` recognizes the `package` option even when run as CLI
+       */
+      'depcheck': 'infra/code-checks/depcheck-base-isolated/patches/depcheck.patch',
+    },
+  },
+}

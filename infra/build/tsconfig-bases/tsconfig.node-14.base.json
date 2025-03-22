@@ -1,0 +1,11 @@
+{
+  "extends": [
+    "@tsconfig/node14/tsconfig",
+    "./tsconfig.base",
+    "./partials/tsconfig.node-types"
+  ],
+  "compilerOptions": {
+    "lib": ["es2022"],
+    "declaration": true
+  }
+}

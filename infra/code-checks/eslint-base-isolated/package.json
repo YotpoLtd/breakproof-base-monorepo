@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json.schemastore.org/package.json",
+  "name": "@repo/eslint-base-isolated",
+  "version": "0.0.1",
+  "pnpm": {
+    "executionEnv": {
+      "nodeVersion": "22.6.0"
+    }
+  },
+  "packageManager": "pnpm@9.15.3",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "default": "./lib/index.js"
+    },
+    "./*": {
+      "default": "./lib/*.js"
+    }
+  },
+  "scripts": {
+    "lint:everything": "pnpm --workspace-root run '/^shared:lint:.*/'",
+    "lint:everything:fix-autofixable": "pnpm --workspace-root run --sequential '/^shared:fix:/'",
+    "lint:precommit": "pnpm --workspace-root run '/^shared:(staged:lint:.*|lint:dependencies:.*)/'",
+    "lint:precommit:fix-autofixable": "pnpm --workspace-root run --sequential '/^shared:staged:fix:/'",
+    "lint:github-pr": "pnpm --workspace-root run '/^shared:(github-pr:lint:.*|lint:dependencies:.*)/'",
+    "eslint": "cd $INIT_CWD && eslint",
+    "package.json:validate": "CONFIG_FILE_PATH=$PWD/lib/eslint-package-json.js && cd $PACKAGE_DIR && ESLINT_USE_FLAT_CONFIG=true eslint --config \"$CONFIG_FILE_PATH\" --no-config-lookup './package.json'",
+    "fix:package.json:validate": "pnpm run package.json:validate --fix",
+    "transpile": "tsc --project ./tsconfig.build.json",
+    "dev": "pnpm --filter='{.}^...' build && pnpm run dev:watch",
+    "dev:with-deps": "pnpm --filter='{.}^...' build && pnpm --filter='{.}...' run --parallel '/^dev:(watch|serve)$/'",
+    "build": "pnpm run transpile",
+    "dev:watch": "pnpm run transpile --watch"
+  },
+  "dependencies": {
+    "@yotpo-common/shared-linter-config": "workspace:^",
+    "ajv": "^8.17.1",
+    "ajv-errors": "^3.0.0",
+    "eslint": "^8.57.1",
+    "eslint-plugin-diff": "^2.0.3",
+    "eslint-plugin-json-schema-validator": "^5.3.1",
+    "eslint-plugin-jsonc": "^2.16.0",
+    "prettier": "^3.4.2"
+  },
+  "devDependencies": {
+    "@repo/tsconfig-bases": "workspace:^",
+    "tslib": "^2.7.0",
+    "typescript": "^5.5.4"
+  },
+  "peerDependencies": {
+    "tslib": "^2.7.0",
+    "typescript": "^5.5.4"
+  },
+  "devtoolsDependencies": {
+    "@repo/circular-dependency-workaround": "workspace:^"
+  }
+}

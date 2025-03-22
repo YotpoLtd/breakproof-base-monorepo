@@ -1,0 +1,171 @@
+name: Setup pnpm
+description: Sets up pnpm & node versions for repo
+
+inputs:
+  store-and-tasks-cache-package-filter:
+    description:
+      Valid --filter=____ (e.g. "packageA..." or "[...<git commit sha>]") for
+      pnpm that will be used to list all of those packages use them as suffix
+      for the store & tasks caches
+    required: true
+  save-store-cache:
+    description: Enable/Disable caching the pnpm store
+    default: 'false'
+    required: false
+  task-cache-name:
+    description:
+      In the cases your github step runs tasks that can benefit from cache (like
+      nx), and you need it, provide a unique name to identify the type of tasks
+      you want to cache. e.g. "build"
+    required: false
+  cache-prefix:
+    description: Prefix for caches to distinguish between different workflows
+    required: false
+    default: 'default'
+outputs:
+  pnpm-store-cache-hit:
+    description:
+      Is there a matching cache for the pnpm store for the given lock file &
+      package filter input
+    value: ${{ steps.store-cache-lookup.outputs.cache-hit }}
+
+runs:
+  using: composite
+  steps:
+    - name: Set target versions & paths
+      id: setup-vars
+      shell: bash
+      # 1. Setup base PNPM vars & paths as variables
+      # 2. Move NX cache path outside node_modules so it can cached without caching the entire node_modules
+      run: |
+        export PNPM_HOME="$HOME/pnpm"
+        export PNPM_STORE_DIR="$HOME/pnpm_store"
+        export TASKS_CACHE_DIR="$HOME/.tasks-cache"
+        export NX_CACHE_DIRECTORY="$TASKS_CACHE_DIR/.nx"
+
+        # the target pnpm version can be extracted using tools like `jq` but we want to avoid an extra apt-get install
+        export PNPM_VERSION="$(cat package.json5 | sed -n '/packageManager:/s/.*pnpm@\([0-9.]*\).*/\1/p')"
+        export TARGET_NODE_VERSION_LIST="$(node -p 'require("./.nodejs-versions-whitelist.cjs").join("_")')"
+
+        export MAIN_CACHE_PREFIX="${{ inputs.cache-prefix }}-${{ runner.os }}-pnpm-${PNPM_VERSION}-node-lists-${TARGET_NODE_VERSION_LIST}-"
+
+        mkdir -p "$TASKS_CACHE_DIR"
+        mkdir -p "$NX_CACHE_DIRECTORY"
+
+        echo "PNPM_VERSION=$PNPM_VERSION" >> "$GITHUB_ENV"
+        echo "TARGET_NODE_VERSION_LIST=$TARGET_NODE_VERSION_LIST" >> "$GITHUB_ENV"
+        echo "MAIN_CACHE_PREFIX=$MAIN_CACHE_PREFIX" >> "$GITHUB_ENV"
+
+        echo "PNPM_HOME=$PNPM_HOME" >> "$GITHUB_ENV"
+        echo "npm_config_store_dir=$PNPM_STORE_DIR" >> "$GITHUB_ENV"
+        echo "npm_config_store_dir=$PNPM_STORE_DIR" >> $GITHUB_OUTPUT
+        echo "TASKS_CACHE_DIR=$TASKS_CACHE_DIR" >> "$GITHUB_ENV"
+        echo "NX_CACHE_DIRECTORY=$NX_CACHE_DIRECTORY" >> "$GITHUB_ENV"
+        echo "$PNPM_HOME" >> $GITHUB_PATH
+
+    - name: Base vars listing
+      shell: bash
+      run: |
+        echo "PNPM_VERSION=${{ env.PNPM_VERSION }}"
+        echo "TARGET_NODE_VERSION_LIST=${{ env.TARGET_NODE_VERSION_LIST }}"
+
+        echo "PNPM_HOME=${{ env.PNPM_HOME }}"
+        echo "npm_config_store_dir=${{ env.npm_config_store_dir }}"
+
+        echo "TASKS_CACHE_DIR=${{ env.TASKS_CACHE_DIR }}"
+        echo "NX_CACHE_DIRECTORY=${{ env.NX_CACHE_DIRECTORY }}"
+        echo "MAIN_CACHE_PREFIX=${{ env.MAIN_CACHE_PREFIX }}"
+
+    - name: Setup pnpm & node cache
+      uses: actions/cache/restore@v4
+      id: restore-pnpm-cache
+      with:
+        path: ${{ env.PNPM_HOME }}
+        key: ${{ env.MAIN_CACHE_PREFIX }}main
+
+    - name: Install curl if missing
+      shell: bash
+      run: |
+        which curl || (apt-get update && apt-get install -y curl)
+
+    - name: Install pnpm & node
+      if: steps.restore-pnpm-cache.outputs.cache-hit != 'true'
+      shell: bash
+      run: |
+        CURRENT_DIR=$PWD
+        cd ~
+        curl -fsSL https://get.pnpm.io/install.sh | SHELL="$(which bash)" bash -
+        cd $CURRENT_DIR
+        pnpm run repo:install-whitelisted-nodejs-versions
+
+    - name: Immediately save cache after pnpm & node install
+      if: steps.restore-pnpm-cache.outputs.cache-hit != 'true'
+      uses: actions/cache/save@v4
+      with:
+        path: ${{ env.PNPM_HOME }}
+        key: ${{ steps.restore-pnpm-cache.outputs.cache-primary-key }}
+
+    - name: Set pnpm store cache keys
+      id: pnpm-store-cache
+      shell: bash
+      run: |
+        PNPM_STORE_CACHE_PREFIX='${{ env.MAIN_CACHE_PREFIX }}pnpm-store-'
+        echo "prefix=${PNPM_STORE_CACHE_PREFIX}" >> $GITHUB_OUTPUT
+        PNPM_STORE_PACKAGE_FILTER_HASH="$(pnpm --filter='${{ inputs.store-and-tasks-cache-package-filter }}' ls --depth=-1 | md5sum | awk '{print $1}')"
+        echo "packages-key=${PNPM_STORE_PACKAGE_FILTER_HASH}" >> $GITHUB_OUTPUT
+        PNPM_STORE_CACHE_SUFFIX="${PNPM_STORE_PACKAGE_FILTER_HASH}-${{ hashFiles('**/pnpm-lock.yaml') }}"
+        echo "suffix=${PNPM_STORE_CACHE_SUFFIX}" >> $GITHUB_OUTPUT
+        echo "key=${PNPM_STORE_CACHE_PREFIX}${PNPM_STORE_CACHE_SUFFIX}" >> $GITHUB_OUTPUT
+
+    - name: Look up if pnpm store cache exists
+      id: store-cache-lookup
+      uses: actions/cache/restore@v4
+      with:
+        lookup-only: true
+        path: ${{ env.npm_config_store_dir }}
+        key: ${{ steps.pnpm-store-cache.outputs.key }}
+
+    - name: Pnpm store cache keys output listing
+      shell: bash
+      run: |
+        echo "steps.pnpm-store-cache.outputs.prefix=${{ steps.pnpm-store-cache.outputs.prefix }}"
+        echo "steps.pnpm-store-cache.outputs.packages-key=${{ steps.pnpm-store-cache.outputs.packages-key }}"
+        echo "steps.pnpm-store-cache.outputs.suffix=${{ steps.pnpm-store-cache.outputs.suffix }}"
+        echo "steps.pnpm-store-cache.outputs.key=${{ steps.pnpm-store-cache.outputs.key }}"
+
+    - name: Restore pnpm store cache & setup autosave after job completes
+      if:
+        ${{ steps.store-cache-lookup.outputs.cache-hit != 'true' &&
+        inputs.save-store-cache == 'true' }}
+      uses: actions/cache@v4
+      with:
+        path: ${{ env.npm_config_store_dir }}
+        key: ${{ steps.pnpm-store-cache.outputs.key }}
+        restore-keys: |
+          ${{ steps.pnpm-store-cache.outputs.prefix }}${{ steps.pnpm-store-cache.outputs.packages-key }}
+          ${{ steps.pnpm-store-cache.outputs.prefix }}
+
+    - name: Only restore pnpm store cache
+      if:
+        ${{ steps.store-cache-lookup.outputs.cache-hit == 'true' ||
+        inputs.save-store-cache == 'false' }}
+      uses: actions/cache/restore@v4
+      with:
+        path: ${{ env.npm_config_store_dir }}
+        key: ${{ steps.pnpm-store-cache.outputs.key }}
+        restore-keys: |
+          ${{ steps.pnpm-store-cache.outputs.prefix }}${{ steps.pnpm-store-cache.outputs.packages-key }}
+          ${{ steps.pnpm-store-cache.outputs.prefix }}
+
+    - name: Restore tasks (e.g. nx) cache & setup autosave after job completes
+      if: ${{ inputs.task-cache-name }}
+      uses: actions/cache@v4
+      env:
+        CACHE_PREFIX:
+          ${{ env.MAIN_CACHE_PREFIX }}cache-tasks-${{ inputs.task-cache-name }}-
+      with:
+        path: ${{ env.TASKS_CACHE_DIR }}
+        key: ${{ env.CACHE_PREFIX }}${{ steps.pnpm-store-cache.outputs.suffix }}
+        restore-keys: |
+          ${{ env.CACHE_PREFIX }}${{ steps.pnpm-store-cache.outputs.packages-key }}
+          ${{ env.CACHE_PREFIX }}

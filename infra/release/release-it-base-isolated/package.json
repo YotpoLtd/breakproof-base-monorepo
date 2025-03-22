@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json.schemastore.org/package.json",
+  "name": "@repo/release-it-base-isolated",
+  "version": "0.0.1",
+  "pnpm": {
+    "executionEnv": {
+      "nodeVersion": "22.6.0"
+    }
+  },
+  "packageManager": "pnpm@9.15.3",
+  "exports": {
+    "./base": {
+      "types": "./lib/release-it.base.d.ts",
+      "ts-skipLib-workaround": "./lib/release-it.base.js",
+      "default": "./release-it.base.ts"
+    },
+    "./angular": {
+      "types": "./lib/release-it.angular.d.ts",
+      "ts-skipLib-workaround": "./lib/release-it.base.angular.js",
+      "default": "./release-it.base.angular.ts"
+    },
+    "./config-helpers": {
+      "types": "./lib/release.config-helpers.d.ts",
+      "ts-skipLib-workaround": "./lib/release.config-helpers.js",
+      "default": "./release.config-helpers.ts"
+    }
+  },
+  "scripts": {
+    "lint:everything": "pnpm --workspace-root run '/^shared:lint:.*/'",
+    "lint:everything:fix-autofixable": "pnpm --workspace-root run --sequential '/^shared:fix:/'",
+    "lint:precommit": "pnpm --workspace-root run '/^shared:(staged:lint:.*|lint:dependencies:.*)/'",
+    "lint:precommit:fix-autofixable": "pnpm --workspace-root run --sequential '/^shared:staged:fix:/'",
+    "lint:github-pr": "pnpm --workspace-root run '/^shared:(github-pr:lint:.*|lint:dependencies:.*)/'",
+    "transpile": "tsc --project ./tsconfig.build.json",
+    "dev": "pnpm --filter='{.}^...' build && pnpm run dev:watch",
+    "dev:with-deps": "pnpm --filter='{.}^...' build && pnpm --filter='{.}...' run --parallel '/^dev:(watch|serve)$/'",
+    "build": "pnpm run transpile",
+    "dev:watch": "pnpm run transpile --watch",
+    "release:perform": "cd $PACKAGE_DIR && release-it",
+    "release:conventional-commit:get-new-version": "cd $PACKAGE_DIR && VERSION_OUTPUT=$(pnpm run '/^release(:mfe:tag)?$/' --release-version --no-npm --no-github --no-git.push --no-preRelease) && ! (echo $VERSION_OUTPUT | grep -q 'No new version to release') && pnpm run '/^release(:mfe:tag)?$/' --release-version --no-github --no-git.push | grep -v 'Unable to verify if user' | grep -v 'Assuming new package'"
+  },
+  "dependencies": {
+    "@release-it/conventional-changelog": "^8",
+    "@repo/conventional-changelog-preset": "workspace:^",
+    "@repo/tsconfig-bases": "workspace:^",
+    "find-root": "^1.1.0",
+    "git-semver-tags": "^8.0.0",
+    "release-it": "^17.6.0"
+  },
+  "devDependencies": {
+    "@types/find-root": "^1.1.4",
+    "typescript": "^5.3.3"
+  },
+  "peerDependencies": {
+    "tsx": "*",
+    "typescript": "*"
+  },
+  "devtoolsDependencies": {
+    "@repo/depcheck-base-isolated": "workspace:^",
+    "@repo/eslint-base-isolated": "workspace:^",
+    "@repo/lint-staged-base-isolated": "workspace:^",
+    "prettier": "^3.4.2"
+  }
+}

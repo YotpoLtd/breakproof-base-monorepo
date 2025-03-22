@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json.schemastore.org/package.json",
+  "name": "@repo/.github",
+  "version": "1.0.0",
+  "pnpm": {
+    "executionEnv": {
+      "nodeVersion": "22.6.0"
+    }
+  },
+  "packageManager": "pnpm@9.15.3",
+  "exports": {
+    "./codeowners-info": {
+      "default": "./codeowners-info.mjs",
+      "types": "./codeowners-info.d.mts"
+    }
+  },
+  "scripts": {
+    "preinstall": "[ -n \"$(pwd | grep '/node_modules/')\" ] || echo $npm_config_user_agent | grep 'pnpm/' || (echo 'PLEASE USE PNPM, not NPM' && exit 1)",
+    "postinstall": "mkdir -p ./node_modules/.bin && [ -e './node_modules/.bin/actionlint' ] || bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash) 1.7.3 ./node_modules/.bin",
+    "lint:everything": "pnpm --workspace-root run shared:lint:common",
+    "lint:everything:fix-autofixable": "pnpm --workspace-root run --sequential shared:fix:lint:common",
+    "lint:precommit": "pnpm --workspace-root run shared:staged:lint:common",
+    "lint:precommit:fix-autofixable": "pnpm --workspace-root run --sequential shared:staged:fix:common",
+    "codeowners:validate-package-ownership": "SCRIPT_PATH=$PWD/codeowners-validator.mjs && cd $PACKAGE_DIR && node $SCRIPT_PATH"
+  },
+  "dependencies": {
+    "micromatch": "^4.0.8"
+  },
+  "devtoolsDependencies": {
+    "@repo/eslint-base-isolated": "workspace:^",
+    "@repo/lint-staged-base-isolated": "workspace:^",
+    "@yotpo-common/tsconfig-bases": "workspace:^",
+    "prettier": "^3.4.2",
+    "shellcheck": "^3.0.0"
+  }
+}

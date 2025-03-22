@@ -1,0 +1,47 @@
+{
+  "name": "@repo/conventional-changelog-preset",
+  "version": "0.1.0",
+  "engines": {
+    "node": ">=14"
+  },
+  "pnpm": {
+    "executionEnv": {
+      "nodeVersion": "14.21.3"
+    }
+  },
+  "packageManager": "pnpm@9.15.3",
+  "keywords": [
+    "conventional-changelog",
+    "angular",
+    "preset"
+  ],
+  "main": "src/index.js",
+  "files": [
+    "src",
+    "!src/test"
+  ],
+  "scripts": {
+    "preinstall": "[ -n \"$(pwd | grep '/node_modules/')\" ] || echo $npm_config_user_agent | grep 'pnpm/' || (echo 'PLEASE USE PNPM, not NPM' && exit 1)",
+    "lint:everything": "pnpm --workspace-root run '/^shared:lint:.*/'",
+    "lint:everything:fix-autofixable": "pnpm --workspace-root run --sequential '/^shared:fix:/'",
+    "lint:precommit": "pnpm --workspace-root run '/^shared:(staged:lint:.*|lint:dependencies:.*)/'",
+    "lint:precommit:fix-autofixable": "pnpm --workspace-root run --sequential '/^shared:staged:fix:/'",
+    "lint:github-pr": "pnpm --workspace-root run '/^shared:(github-pr:lint|lint:dependencies:.*)/'",
+    "test": "pnpm --filter=@repo/jest-base-isolated run jest"
+  },
+  "dependencies": {
+    "conventional-changelog-angular": "~5.0.13",
+    "module-alias": "^2.2.3"
+  },
+  "devtoolsDependencies": {
+    "@repo/depcheck-base-isolated": "workspace:^",
+    "@repo/eslint-base-isolated": "workspace:^",
+    "@repo/jest-base-isolated": "workspace:^",
+    "@repo/lint-staged-base-isolated": "workspace:^",
+    "@repo/tsconfig-bases": "workspace:^",
+    "conventional-commits-parser": "3.2.4",
+    "eslint-plugin-jest": "27.9.0",
+    "find-root": "^1.1.0",
+    "prettier": "^3.4.2"
+  }
+}

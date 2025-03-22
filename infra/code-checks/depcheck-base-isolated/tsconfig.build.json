@@ -1,0 +1,9 @@
+{
+  "extends": "@repo/tsconfig-bases/tsconfig.node-14.base.json",
+  "compilerOptions": {
+    "outDir": "lib",
+    "incremental": true,
+    "tsBuildInfoFile": "./node_modules/.cache/tsc/tsconfig.tsbuildinfo"
+  },
+  "include": ["./src/**/*"]
+}

@@ -1,0 +1,7 @@
+{
+  "extends": "./tsconfig.browser-lib.base.json",
+  "compilerOptions": {
+    // we never build via tsc for the browser, we are using a bundler
+    "noEmit": true
+  }
+}

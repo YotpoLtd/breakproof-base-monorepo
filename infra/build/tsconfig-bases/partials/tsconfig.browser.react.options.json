@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    // No need to import React in every tsx file.
+    // `react-jsx` tells the TypeScript compiler
+    // which JSX factory function to use in
+    // order to properly type-check the JSX code.
+    // Because we transpile the TypeScript code
+    // with babel it is required for '@babel/preset-react'
+    // to have the option { runtime: 'automatic' }
+    "jsx": "react-jsx"
+  }
+}

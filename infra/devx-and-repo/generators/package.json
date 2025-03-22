@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json.schemastore.org/package.json",
+  "name": "@repo/generators",
+  "private": true,
+  "version": "0.0.1",
+  "pnpm": {
+    "executionEnv": {
+      "nodeVersion": "22.6.0"
+    }
+  },
+  "packageManager": "pnpm@9.15.3",
+  "imports": {
+    "#extra-template-vars": "./extra-template-vars.ts",
+    "#shared-prompts": "./shared-prompts.ts",
+    "#helpers": "./helpers.ts"
+  },
+  "scripts": {
+    "preinstall": "[ -n \"$(pwd | grep '/node_modules/')\" ] || echo $npm_config_user_agent | grep -q 'pnpm/' || (echo 'PLEASE USE PNPM, not NPM' && exit 1)",
+    "lint:everything": "pnpm --workspace-root run '/^shared:lint:.*/'",
+    "lint:everything:fix-autofixable": "pnpm --workspace-root run --sequential '/^shared:fix:/'",
+    "lint:precommit": "pnpm --workspace-root run '/^shared:(staged:lint:.*|lint:dependencies:.*)/'",
+    "lint:precommit:fix-autofixable": "pnpm --workspace-root run --sequential '/^shared:staged:fix:/'",
+    "lint:github-pr": "pnpm --workspace-root run shared:github-pr:lint:common",
+    "test:github-pr:sequential": "./tests/new-library.sh"
+  },
+  "dependencies": {
+    "@repo/.github": "workspace:^",
+    "@repo/environment": "workspace:^",
+    "chalk": "^5.4.1",
+    "enquirer": "^2.4.1",
+    "execa": "5.1.1",
+    "fast-xml-parser": "5.0.9",
+    "hygen": "^6.2.11",
+    "json5": "2.2.3",
+    "terminal-link": "3.0.0",
+    "tsx": "^4.19.1",
+    "yargs-unparser": "^2.0.0"
+  },
+  "devDependencies": {
+    "@repo/cypress-base-isolated": "workspace:^",
+    "@repo/depcheck-base-isolated": "workspace:^",
+    "@repo/eslint-base-isolated": "workspace:^",
+    "@repo/jest-base-isolated": "workspace:^",
+    "@repo/lint-staged-base-isolated": "workspace:^",
+    "@repo/rollup-base-isolated": "workspace:^",
+    "@repo/tsconfig-bases": "workspace:^",
+    "@repo/webpack-base-isolated": "workspace:^"
+  },
+  "devtoolsDependencies": {
+    "@repo/depcheck-base-isolated": "workspace:^",
+    "@repo/eslint-base-isolated": "workspace:^",
+    "@repo/lint-staged-base-isolated": "workspace:^",
+    "@repo/tsconfig-bases": "workspace:^",
+    "@types/yargs-unparser": "^2.0.3",
+    "prettier": "^3.4.2",
+    "typescript": "^5.4.5"
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json.schemastore.org/package.json",
+  "name": "@repo/cypress-base-isolated",
+  "version": "0.0.1",
+  "pnpm": {
+    "executionEnv": {
+      "nodeVersion": "22.6.0"
+    }
+  },
+  "packageManager": "pnpm@9.15.3",
+  "main": "./dist/index.js",
+  "exports": {
+    "./*": {
+      "types": [
+        "./src/*.ts",
+        "./src/*/index.ts"
+      ],
+      "default": [
+        "./dist/*.js",
+        "./dist/*/index.js"
+      ]
+    }
+  },
+  "scripts": {
+    "preinstall": "[ -n \"$(pwd | grep '/node_modules/')\" ] || echo $npm_config_user_agent | grep -q 'pnpm/' || (echo 'PLEASE USE PNPM, not NPM' && exit 1)",
+    "lint:everything": "pnpm --workspace-root run '/^shared:lint:.*/'",
+    "lint:everything:fix-autofixable": "pnpm --workspace-root run --sequential '/^shared:fix:/'",
+    "lint:precommit": "pnpm --workspace-root run '/^shared:(staged:lint:.*|lint:dependencies:.*)/'",
+    "lint:precommit:fix-autofixable": "pnpm --workspace-root run --sequential '/^shared:staged:fix:/'",
+    "lint:github-pr": "pnpm --workspace-root run '/^shared:(github-pr:lint:.*|lint:dependencies:.*)/'",
+    "test": "pnpm run test:units:run",
+    "test:units:run": "pnpm --filter=@repo/jest-base-isolated run jest",
+    "test:units:watch": "pnpm run test --watch",
+    "test:unites:coverage": "pnpm run test --coverage",
+    "transpile": "tsc --project ./tsconfig.build.json",
+    "dev": "pnpm --filter='{.}^...' build && pnpm run dev:watch",
+    "dev:with-deps": "pnpm --filter='{.}^...' build && pnpm --filter='{.}...' run --parallel '/^dev:(watch|serve)$/'",
+    "build": "pnpm run transpile",
+    "dev:watch": "pnpm run transpile --watch",
+    "__SEE_SHARED__": "echo \"You can run any script starting with 'shared:' defined in <repo-root>/package.json by executing `pnpm -w <name of script>` from your package directory\""
+  },
+  "dependencies": {
+    "@testing-library/cypress": "10.0.2",
+    "cypress": "^13.16.0"
+  },
+  "devDependencies": {
+    "@repo/tsconfig-bases": "workspace:^",
+    "typescript": "^5.3.3"
+  },
+  "devtoolsDependencies": {
+    "@repo/depcheck-base-isolated": "workspace:^",
+    "@repo/eslint-base-isolated": "workspace:^",
+    "@repo/jest-base-isolated": "workspace:^",
+    "@repo/lint-staged-base-isolated": "workspace:^",
+    "prettier": "^3.4.2",
+    "ts-node": "^10.9.2"
+  }
+}

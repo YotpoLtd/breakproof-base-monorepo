@@ -1,0 +1,27 @@
+# OS-specific
+.DS_Store
+
+# Editor-specific
+.idea/**
+!.idea/externalDependencies.xml
+!.idea/workspace.recommended-keyToString.json5
+!.idea/workspace.recommended-VcsManagerConfiguration.xml
+!.idea/prettier.recommended.xml
+!.idea/eslint.recommended.xml
+!.idea/jsLibraryMappings.recommended.xml
+.vscode/**
+!.vscode/extensions.json
+!.vscode/settings.recommended.json5
+
+# Technology-specific
+node_modules
+*.tsbuildinfo
+
+# Repo-specific
+.env
+.env.secrets
+/infra/node
+/tmp
+# Repository root package.json is ignored
+# We have package.json5 instead and autogenerate FAKE package.json for code editors's sake
+/package.json

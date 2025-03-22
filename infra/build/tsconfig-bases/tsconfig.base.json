@@ -1,0 +1,31 @@
+{
+  "extends": "@tsconfig/strictest/tsconfig",
+  "compilerOptions": {
+    "pretty": true,
+    // Intentionally disable types & typeRoots because they are not extendable
+    // and we don't want projects to use them. Instead, we want to promote including a `global.d.ts` file.
+    // or several files that import global modules.
+    "types": [],
+    "typeRoots": [],
+    // Loosen up a bit the strict mode:
+    "resolveJsonModule": true,
+    "noPropertyAccessFromIndexSignature": false,
+    // Override @tsconfig/strictest
+    "checkJs": false,
+    // ts-skipLib-workaround is because even if you have `skipLibCheck`
+    // enabled, the tsc will only respect it if the lib has `.d.ts` and
+    // `.js` files. So even if we don't use those, we need to create them
+    // and tell TSC to look for them via this condition
+    // @see usage in @repo/release-it-base-isolated
+    "customConditions": ["ts-skipLib-workaround"],
+    // we use eslint for that
+    "noUnusedParameters": false,
+    // we use eslint for that
+    "noUnusedLocals": false
+  },
+  "ts-node": {
+    // we assume we use ts-node only as runtime, not as type checker
+    "transpileOnly": true,
+    "transpiler": "sucrase/ts-node-plugin"
+  }
+}

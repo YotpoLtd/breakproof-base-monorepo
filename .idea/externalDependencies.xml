@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+    <component name="ExternalDependencies">
+        <plugin id="NodeJS" />
+        <plugin id="intellij.prettierJS" />
+        <plugin id="mobi.hsz.idea.gitignore" />
+        <plugin id="org.jetbrains.plugins.github" />
+        <plugin id="com.jetbrains.lang.ejs" />
+        <plugin id="fantom.codeowners" />
+    </component>
+</project>

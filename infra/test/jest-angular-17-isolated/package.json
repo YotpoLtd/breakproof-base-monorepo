@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json.schemastore.org/package.json",
+  "name": "@repo/jest-angular-17-isolated",
+  "version": "0.0.1",
+  "pnpm": {
+    "executionEnv": {
+      "nodeVersion": "22.6.0"
+    }
+  },
+  "packageManager": "pnpm@9.15.3",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "scripts": {
+    "preinstall": "[ -n \"$(pwd | grep '/node_modules/')\" ] || echo $npm_config_user_agent | grep -q 'pnpm/' || (echo 'PLEASE USE PNPM, not NPM' && exit 1)",
+    "lint:everything": "pnpm --workspace-root run '/^shared:lint:.*/'",
+    "lint:everything:fix-autofixable": "pnpm --workspace-root run --sequential '/^shared:fix:/'",
+    "lint:precommit": "pnpm --workspace-root run '/^shared:(staged:lint:.*|lint:dependencies:.*)/'",
+    "lint:precommit:fix-autofixable": "pnpm --workspace-root run --sequential '/^shared:staged:fix:/'",
+    "lint:github-pr": "pnpm --workspace-root run '/^shared:(github-pr:lint:.*|lint:dependencies:.*)/'",
+    "test": "pnpm run test:units:run",
+    "jest": "export EXTRA_JEST_NODE_MODULES=\"$PWD/node_modules\" && echo node:$(node --version) && export CONFIG_FILE=$PWD/jest.config.mjs && cd $INIT_CWD && jest --config $CONFIG_FILE",
+    "test:units:run": "jest",
+    "test:units:dev": "jest --watch",
+    "__SEE_SHARED__": "echo \"You can run any script starting with 'shared:' defined in <repo-root>/package.json by executing `pnpm -w <name of script>` from your package directory\""
+  },
+  "dependencies": {
+    "@angular/core": "^17.3.12",
+    "@angular/platform-browser": "^17.3.12",
+    "@angular/platform-browser-dynamic": "^17.3.12",
+    "@jest/globals": "^29.7.0",
+    "@repo/jest-base-isolated": "workspace:^",
+    "jest": "^29.7.0",
+    "jest-preset-angular": "^14.5.0",
+    "ts-node": "^9.1.1",
+    "tslib": "^2.8.1",
+    "zone.js": "~0.14.10"
+  },
+  "devDependencies": {
+    "typescript": "~5.4.5"
+  },
+  "devtoolsDependencies": {
+    "@repo/depcheck-base-isolated": "workspace:^",
+    "@repo/eslint-base-isolated": "workspace:^",
+    "@repo/lint-staged-base-isolated": "workspace:^",
+    "@repo/tsconfig-bases": "workspace:^",
+    "prettier": "3.2.4",
+    "sucrase": "^3.35.0"
+  }
+}

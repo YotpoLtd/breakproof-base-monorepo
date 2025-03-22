@@ -1,0 +1,16 @@
+{
+  /**
+   * We can use `tsconfig.node-transpiled.base.json` as base here because
+   * the package is intended to be consumed via `release-it.config.ts` config file
+   * which itself gets transpiled via `tsx`
+   */
+  "extends": "@repo/tsconfig-bases/tsconfig.node-transpiled.base.json",
+  "compilerOptions": {
+    "outDir": "lib",
+    "declaration": true,
+    "incremental": true,
+    "tsBuildInfoFile": "./node_modules/.cache/tsc/tsconfig.tsbuildinfo"
+  },
+  "include": ["./*"],
+  "exclude": ["./depcheck.config.ts"]
+}

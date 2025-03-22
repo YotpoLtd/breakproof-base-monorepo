@@ -1,0 +1,34 @@
+{
+  "extends": "@tsconfig/strictest/tsconfig",
+  "compileOnSave": false,
+  "compilerOptions": {
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true,
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "module": "esnext",
+    "skipDefaultLibCheck": true,
+    // ------
+    // overriding the extended strict tsconfig due to current packages
+    // ------
+    "noPropertyAccessFromIndexSignature": false,
+    "strictNullChecks": false,
+    "exactOptionalPropertyTypes": false,
+    "noImplicitAny": false,
+    // FIX ASAP:
+    "noUnusedLocals": false,
+    "noUnusedParameters": false
+  },
+  "angularCompilerOptions": {
+    "enableIvy": false,
+    "enableI18nLegacyMessageIdFormat": false,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "strictTemplates": true,
+    "skipTemplateCodegen": true,
+    "strictMetadataEmit": true,
+    "enableResourceInlining": true
+  }
+}

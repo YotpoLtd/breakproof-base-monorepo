@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json.schemastore.org/package.json",
+  "name": "@repo/shell-scripts",
+  "version": "1.0.0",
+  "pnpm": {
+    "executionEnv": {
+      "nodeVersion": "22.6.0"
+    }
+  },
+  "packageManager": "pnpm@9.15.3",
+  "scripts": {
+    "lint:precommit": "pnpm run lint",
+    "lint:everything": "pnpm run lint",
+    "lint": "shellcheck --source-path ../../../.githooks ./*.sh ../../../.githooks/* && prettier --check \"**/*.{sh,json,md}\"",
+    "lint:fix": "prettier --write \"**/*.{sh,md,json}\""
+  },
+  "dependencies": {
+    "cli-highlight": "^2.1.11"
+  },
+  "devtoolsDependencies": {
+    "prettier": "^3.4.2",
+    "prettier-plugin-sh": "^0.14.0",
+    "shellcheck": "^3.0.0"
+  }
+}

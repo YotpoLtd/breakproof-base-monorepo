@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json.schemastore.org/package.json",
+  "name": "devtools",
+  "version": "0.0.1",
+  "pnpm": {
+    "executionEnv": {
+      "nodeVersion": "22.6.0"
+    }
+  },
+  "packageManager": "pnpm@9.15.3",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "scripts": {
+    "preinstall": "[ -n \"$(pwd | grep '/node_modules/')\" ] || echo $npm_config_user_agent | grep -q 'pnpm/' || (echo 'PLEASE USE PNPM, not NPM' && exit 1)",
+    "postinstall": "pnpm --filter='@repo/eslint-base-isolated...' build && pnpm --filter='{.}...' --filter='!@repo/eslint-base-isolated...' build",
+    "lint:everything": "pnpm --workspace-root run '/^shared:lint:*/'",
+    "lint:everything:fix-autofixable": "pnpm --workspace-root run --sequential '/^shared:fix:/'",
+    "lint:precommit": "pnpm --workspace-root run '/^shared:(staged:lint:.*|lint:dependencies:misused)/'",
+    "lint:precommit:fix-autofixable": "pnpm --workspace-root run --sequential '/^shared:staged:fix:/'",
+    "lint:github-pr": "pnpm --workspace-root run '/^shared:(github-pr:lint:.*|lint:dependencies:misused)/'",
+    "analyze:dependencies-versions": "cd $PACKAGE_DIR && pnpm outdated",
+    "ts:show-config": "cd $PACKAGE_DIR && pnpm exec tsc --project ./tsconfig.json --showConfig",
+    "____TODO_____:analyze:eslint:config": "cd $PACKAGE_DIR && ...",
+    "webpack:visualize-bundle": "cd $PACKAGE_DIR && ANALYZE_BUNDLE=1 pnpm run build --profile --json=dist/compilation-stats.json && pnpm exec webpack-bundle-analyzer dist/compilation-stats.json",
+    "webpack:stats": "cd $PACKAGE_DIR && ANALYZE_BUNDLE=1 pnpm run build --profile --json=dist/compilation-stats.json",
+    "webpack:stats:delete-external": "SCRIPT_PATH=\"$PWD/scripts/remove-external-from-stats.cjs\" && cd $PACKAGE_DIR && pnpm node $SCRIPT_PATH"
+  },
+  "dependencies": {
+    "@repo/.github": "workspace:^",
+    "@repo/depcheck-base-isolated": "workspace:^",
+    "@repo/dpdm-base-isolated": "workspace:^",
+    "@repo/environment": "workspace:^",
+    "@repo/eslint-base-isolated": "workspace:^",
+    "@repo/eslint-problem-snapshotter": "workspace:^",
+    "@repo/generators": "workspace:^",
+    "@repo/lint-staged-base-isolated": "workspace:^",
+    "@repo/release-it-base-isolated": "workspace:^",
+    "@repo/shell-scripts": "workspace:^",
+    "@repo/syncpack-base-isolated": "workspace:^",
+    "webpack-bundle-analyzer": "^4.10.1"
+  },
+  "devtoolsDependencies": {
+    "@repo/tsconfig-bases": "workspace:^",
+    "prettier": "^3.4.2",
+    "typescript": "^5.3.3"
+  }
+}

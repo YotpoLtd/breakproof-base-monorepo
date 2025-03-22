@@ -1,0 +1,61 @@
+name:
+  Manually trigger release for specific packages, derive version from git
+  commits
+on:
+  workflow_dispatch:
+    inputs:
+      package-filter:
+        description: The pnpm filter/selector of packages you want to release
+        required: true
+        type: string
+
+concurrency:
+  # same group as `_repo-on-change.yaml` workflow
+  group: release-or-wait-until-release-is-done
+  # wait previous releases to finish
+  cancel-in-progress: false
+
+#
+# We transfer some secrets to env vars so we don't have to repeat them in reusable
+# actions which unlike reusable workflows, can't inherit secrets
+#
+env:
+  SECRET_NPM_REGISTRY_AUTH_TOKEN: ${{ secrets.NPM_REGISTRY_AUTH_TOKEN }}
+  SECRET_NPM_REGISTRY_USER: ${{ secrets.NPM_REGISTRY_USER }}
+  SECRET_NPM_REGISTRY_PASSWORD: ${{ secrets.NPM_REGISTRY_PASSWORD }}
+
+jobs:
+  abort:
+    if: ${{ github.ref_name != github.event.repository.default_branch }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⚠️ YOU CAN'T TRIGGER RELEASE OUTSIDE THE MAIN BRANCH ⚠️
+        shell: bash
+        run: |
+          echo '## ⚠️ YOU CAN'"'"'T TRIGGER RELEASE OUTSIDE THE MAIN BRANCH ⚠️' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Release is only possible from the main branch' >> "$GITHUB_STEP_SUMMARY"
+          exit 1
+
+  autorelease:
+    if: ${{ github.ref_name == github.event.repository.default_branch }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.AUTORELEASE_BOT_TOKEN }}
+
+      - uses: ./.github/actions/setup-pnpm
+        with:
+          store-and-tasks-cache-package-filter: '${{ inputs.package-filter }}'
+          task-cache-name: autorelease
+
+      - uses: ./.github/actions/npm-login
+
+      - uses: ./.github/actions/release
+        with:
+          AUTORELEASE_GITHUB_TOKEN: ${{ secrets.AUTORELEASE_GITHUB_TOKEN }}
+          autorelease-bot-name: ${{ vars.AUTORELEASE_BOT_NAME }}
+          autorelease-bot-email: ${{ vars.AUTORELEASE_BOT_EMAIL }}
+          package-filter: '${{ inputs.package-filter }}'

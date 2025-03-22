@@ -1,0 +1,8 @@
+{
+  "extends": "@repo/tsconfig-bases/tsconfig.node-transpiled.base.json",
+  "include": [
+    "./*.ts",
+    "_templates/**/prompt.ts",
+    "_templates/**/code-editor/*.ts"
+  ]
+}

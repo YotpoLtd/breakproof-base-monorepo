@@ -1,0 +1,4 @@
+{
+  "extends": "@repo/tsconfig-bases/tsconfig.node.base.json",
+  "include": ["../../.depcheckrc.ts"]
+}

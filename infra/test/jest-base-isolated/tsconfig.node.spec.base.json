@@ -1,0 +1,16 @@
+{
+  "extends": "@repo/tsconfig-bases/tsconfig.node-transpiled.base.json",
+  "compilerOptions": {
+    "lib": ["ESNext", "dom"],
+    "paths": {
+      /**
+       *
+       * `@jest/globals` is module with special handling by jest
+       * we can't simply re-export it from another file
+       * but we don't want it installed everywhere so we force the resolution to this tester
+       *
+       */
+      "@jest/globals": ["./node_modules/@jest/globals"]
+    }
+  }
+}

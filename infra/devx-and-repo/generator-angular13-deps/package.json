@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json.schemastore.org/package.json",
+  "name": "generator-angular13-deps",
+  "version": "0.0.1",
+  "pnpm": {
+    "executionEnv": {
+      "nodeVersion": "22.6.0"
+    }
+  },
+  "packageManager": "pnpm@9.15.3",
+  "main": "./dist/index.js",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "scripts": {
+    "ng": "cd $INIT_CWD && ng",
+    "preinstall": "[ -n \"$(pwd | grep '/node_modules/')\" ] || echo $npm_config_user_agent | grep -q 'pnpm/' || (echo 'PLEASE USE PNPM, not NPM' && exit 1)",
+    "lint:everything": "pnpm --workspace-root run shared:lint:common",
+    "lint:everything:fix-autofixable": "pnpm --workspace-root run --sequential '/^shared:fix:/'",
+    "lint:precommit": "pnpm --workspace-root run shared:staged:lint:common",
+    "lint:precommit:fix-autofixable": "pnpm --workspace-root run --sequential '/^shared:staged:fix:/'",
+    "lint:github-pr": "pnpm --workspace-root run shared:github-pr:lint:common"
+  },
+  "dependencies": {
+    "@angular/cli": "13.3.11",
+    "@pnpm/exportable-manifest": "4"
+  },
+  "devDependencies": {
+    "@repo/tsconfig-bases": "workspace:^"
+  },
+  "devtoolsDependencies": {
+    "@repo/eslint-base-isolated": "workspace:^",
+    "@repo/lint-staged-base-isolated": "workspace:^",
+    "prettier": "^3.4.2",
+    "typescript": "^5.3.3"
+  }
+}

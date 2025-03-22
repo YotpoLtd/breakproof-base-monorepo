@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json.schemastore.org/package.json",
+  "name": "@repo/rollup-base-isolated",
+  "version": "0.0.1",
+  "type": "module",
+  "pnpm": {
+    "executionEnv": {
+      "nodeVersion": "22.6.0"
+    }
+  },
+  "packageManager": "pnpm@9.15.3",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./dist/index.js"
+    },
+    "./plugins": {
+      "types": "./src/plugins/index.ts",
+      "default": "./dist/plugins/index.js"
+    }
+  },
+  "scripts": {
+    "lint:everything": "pnpm --workspace-root run '/^shared:lint:.*/'",
+    "lint:everything:fix-autofixable": "pnpm --workspace-root run --sequential '/^shared:fix:/'",
+    "lint:precommit": "pnpm --workspace-root run '/^shared:(staged:lint:.*|lint:dependencies:.*)/'",
+    "lint:precommit:fix-autofixable": "pnpm --workspace-root run --sequential '/^shared:staged:fix:/'",
+    "lint:github-pr": "pnpm --workspace-root run '/^shared:(github-pr:lint|lint:dependencies:.*)/'",
+    "transpile": "tsc --project ./tsconfig.build.json",
+    "dev": "pnpm --filter='{.}^...' build && pnpm run dev:watch",
+    "dev:with-deps": "pnpm --filter='{.}^...' build && pnpm --filter='{.}...' run --parallel '/^dev:(watch|serve)$/'",
+    "build": "pnpm run transpile",
+    "dev:watch": "pnpm run transpile --watch",
+    "rollup": "export CONFIG_PLUGIN=$PWD/node_modules/@rollup/plugin-swc/dist/es/index.js && cd $INIT_CWD && rollup --configPlugin $CONFIG_PLUGIN",
+    "preinstall": "[ -n \"$(pwd | grep '/node_modules/')\" ] || echo $npm_config_user_agent | grep -q 'pnpm/' || (echo 'PLEASE USE PNPM, not NPM' && exit 1)",
+    "__SEE_SHARED__": "echo \"You can run any script starting with 'shared:' defined in <repo-root>/package.json by executing `pnpm -w <name of script>` from your package directory\""
+  },
+  "dependencies": {
+    "@babel/core": "7.23.7",
+    "@repo/babel-base-isolated": "workspace:^",
+    "@repo/environment": "workspace:^",
+    "@rollup/plugin-babel": "^6.0.4",
+    "@rollup/plugin-commonjs": "^28.0.1",
+    "@rollup/plugin-node-resolve": "^15.3.0",
+    "@rollup/plugin-typescript": "^12.1.1",
+    "glob": "^11.0.0",
+    "rollup": "^4.29.1",
+    "tslib": "^2.8.1"
+  },
+  "devDependencies": {
+    "@repo/tsconfig-bases": "workspace:^",
+    "@rollup/plugin-swc": "^0.4.0",
+    "@swc/core": "^1.9.2",
+    "typescript": "^5.3.3"
+  },
+  "devtoolsDependencies": {
+    "@repo/depcheck-base-isolated": "workspace:^",
+    "@repo/eslint-base-isolated": "workspace:^",
+    "@repo/lint-staged-base-isolated": "workspace:^",
+    "prettier": "^3.4.2"
+  }
+}

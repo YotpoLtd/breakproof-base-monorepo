@@ -1,0 +1,21 @@
+/**
+ * Modify "nodejs_interpreter_path", `ts.external.directory.path` and `nodejs_package_manager_path` values to match your system
+ * Copy the settings below to the "keyToString" section inside `<repo root>/.idea/workspace.xml`
+ * After you copy double check the "keyToString" section is valid json (e.g. not missing or having extra commas)
+ */
+{
+  // eslint
+  "javascript.nodejs.core.library.configured.version": "22.6.0",
+  "javascript.nodejs.core.library.typings.version": "22.6.2",
+  "node.js.detected.package.eslint": "true",
+  "node.js.detected.package.standard": "true",
+  "node.js.selected.package.eslint": "(autodetect)",
+  "node.js.selected.package.standard": "",
+  "nodejs_interpreter_path": "<repo root>/infra/node",
+  // pnpm is our package manager
+  "nodejs_package_manager_path": "<result of `which pnpm`>",
+  // @TODO do we need a typescript-isolated repo package and reference its path here:
+  // (we might not need it since CODE EDITOR is just another environment for linting,
+  //  so the idea of matching the TS version to the default in the lint package fits)
+  "ts.external.directory.path": "<repo root>/infra/code-checks/lint-staged-base-isolated/node_modules/typescript/lib"
+}

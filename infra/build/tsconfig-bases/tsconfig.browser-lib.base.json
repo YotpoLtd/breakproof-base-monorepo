@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.lib.base.json",
+  "compilerOptions": {
+    // 1. let's add browser APIs
+    // 2. we expect browser-facing projects to be transpiled & polyfill-ed
+    //    (e.g. babel + corejs), so we can expose ESNext APIs
+    "lib": ["dom", "ESNext"]
+  }
+}

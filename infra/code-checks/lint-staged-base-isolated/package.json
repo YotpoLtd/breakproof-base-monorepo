@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json.schemastore.org/package.json",
+  "name": "@repo/lint-staged-base-isolated",
+  "private": true,
+  "version": "0.0.1",
+  "pnpm": {
+    "executionEnv": {
+      "nodeVersion": "22.6.0"
+    }
+  },
+  "packageManager": "pnpm@9.15.3",
+  "exports": {
+    "./package.json": "./package.json",
+    "./base": {
+      "default": "./lib/lintstagedrc-base.mjs"
+    },
+    "./*": {
+      "default": "./lib/*.js"
+    }
+  },
+  "scripts": {
+    "preinstall": "[ -n \"$(pwd | grep '/node_modules/')\" ] || echo $npm_config_user_agent | grep -q 'pnpm/' || (echo 'PLEASE USE PNPM, not NPM' && exit 1)",
+    "lint:everything": "pnpm --workspace-root run '/^shared:lint:.*/'",
+    "lint:everything:fix-autofixable": "pnpm --workspace-root run --sequential '/^shared:fix:/'",
+    "lint:precommit": "pnpm --workspace-root run shared:staged:lint:common",
+    "lint:precommit:fix-autofixable": "pnpm --workspace-root run --sequential '/^shared:staged:fix:/'",
+    "transpile": "tsc --project ./tsconfig.build.json",
+    "dev": "pnpm --filter='{.}^...' build && pnpm run dev:watch",
+    "dev:with-deps": "pnpm --filter='{.}^...' build && pnpm --filter='{.}...' run --parallel '/^dev:(watch|serve)$/'",
+    "build": "pnpm run transpile",
+    "dev:watch": "pnpm run transpile --watch",
+    "staged:lint": "cd $PACKAGE_DIR && lint-staged --shell '/bin/bash' --no-stash --config .lintstagedrc.mjs",
+    "staged:fix:lint": "LINT_AUTOFIX=true pnpm run staged:lint",
+    "lint-staged-but-for-all-package-files": "SCRIPT_PATH=$PWD/run-lint-staged-config-but-for-all-package-files.mjs && cd $PACKAGE_DIR && node $SCRIPT_PATH",
+    "fix:lint-staged-but-for-all-package-files": "LINT_AUTOFIX=1 pnpm run lint-staged-but-for-all-package-files --is-sequential"
+  },
+  "dependencies": {
+    "@yotpo-common/shared-linter-config": "workspace:^",
+    "get-tsconfig": "^4.8.1",
+    "glob": "^11.0.0",
+    "lint-staged": "~15.4.1",
+    "micromatch": "^4.0.8",
+    "prettier": "^3.4.2",
+    "typescript": "^5.3.3"
+  },
+  "devDependencies": {
+    "@repo/tsconfig-bases": "workspace:^",
+    "@types/micromatch": "^4.0.9",
+    "tslib": "^2.7.0"
+  },
+  "peerDependencies": {
+    "tslib": "^2.7.0"
+  },
+  "devtoolsDependencies": {
+    "@repo/circular-dependency-workaround": "workspace:^",
+    "@repo/eslint-base-isolated": "workspace:^",
+    "eslint": "^8.57.1",
+    "prettier": "^3.4.2"
+  }
+}

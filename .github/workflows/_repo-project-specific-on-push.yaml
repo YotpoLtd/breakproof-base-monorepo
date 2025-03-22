@@ -1,0 +1,22 @@
+name: Project-specific logic to be triggered on push
+on:
+  workflow_dispatch:
+    inputs:
+      packages-with-potentially-affected-build:
+        description: |
+          List of packages with potentially affected build in the format: `<package name>@<version> <path/to/project>;...`
+        type: string
+      packages-with-upcoming-releases:
+        description: |
+          List of packages with upcoming new releases in the format: `<package name>@<new version>;...`
+        type: string
+
+jobs:
+  example:
+    if:
+      ${{ contains(inputs.packages-with-potentially-affected-build,
+      'project-name-form-package-json@') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Hello 👋️
+        run: echo 'Hello from project-specific job on push'

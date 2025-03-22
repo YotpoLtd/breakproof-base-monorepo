@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    // 1. let's add browser APIs
+    // 2. projects are transpiled & polyfill-ed (e.g. babel + corejs), so we can expose ESNext APIs
+    "lib": ["dom", "ESNext"],
+    "target": "ESNext",
+    // we never build via tsc for the browser
+    "noEmit": true,
+    // let's make sure package.json "exports" and "imports" sections are respected
+    "moduleResolution": "bundler",
+    "module": "esnext"
+  }
+}

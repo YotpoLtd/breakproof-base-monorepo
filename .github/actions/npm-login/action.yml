@@ -1,0 +1,23 @@
+name: Login to npm registry
+description: Configure needed files to be authenticated in a npm registry
+
+#
+# Unlike reusable workflows, reusable actions like this one can't inherit secrets
+#
+# For that reason, the authentication secrets for npm registry are exposed as environment variables:
+#
+#  - `SECRET_NPM_REGISTRY_AUTH_TOKEN` – for this to have a value you must create a secret in your
+#     repository settings called `NPM_REGISTRY_AUTH_TOKEN`
+#  - `SECRET_NPM_REGISTRY_USER` – for this to have a value you must create a secret in your
+#     repository settings called `NPM_REGISTRY_USER`
+#  - `SECRET_NPM_REGISTRY_PASSWORD` – for this to have a value you must create a secret in your
+#     repository settings called `NPM_REGISTRY_PASSWORD`
+#
+
+runs:
+  using: composite
+  steps:
+    - name: Login to <your npm registry>
+      shell: bash
+      run: |
+        echo "👋️ Replace with your actual login steps"

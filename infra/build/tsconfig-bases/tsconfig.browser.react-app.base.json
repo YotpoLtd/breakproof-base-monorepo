@@ -1,0 +1,6 @@
+{
+  "extends": [
+    "./tsconfig.browser-app.base.json",
+    "./partials/tsconfig.browser.react.options.json"
+  ]
+}

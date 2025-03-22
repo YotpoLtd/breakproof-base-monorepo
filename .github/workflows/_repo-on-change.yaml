@@ -1,0 +1,570 @@
+#
+# This workflow will trigger on: push, pull_request and adding PR to merge queue
+# Jobs that must run only for certain events are made conditional: if ${{ ... }}
+#
+name: On change (all of PR, push & PR queue)
+on:
+  # Triggers on each pull request with ANY base branch
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+  #
+  # This triggers runs ONLY IF the branch receiving the changes
+  # is configured to require `Merge Queue` in the GitHub repo settings
+  #
+  # The `merge_group` must be on the same workflow file that has a pull_request
+  # event, otherwise it's not possible to choose a check for the merge group in
+  # the GitHub repo settings
+  #
+  merge_group:
+
+  #
+  # Triggers when on push to ANY branch
+  # We are using the same workflow file as the `merge_group` because it is more obvious
+  # that the concurrency group between the main branch push and `merge_group` is the same
+  #
+  push:
+    branches:
+      - '**'
+      - '!gh-readonly-queue/**'
+    tags:
+      - '!**'
+
+#
+# We transfer some secrets to env vars so we don't have to repeat them in reusable
+# actions which unlike reusable workflows, can't inherit secrets
+#
+env:
+  SECRET_NPM_REGISTRY_AUTH_TOKEN: ${{ secrets.NPM_REGISTRY_AUTH_TOKEN }}
+  SECRET_NPM_REGISTRY_USER: ${{ secrets.NPM_REGISTRY_USER }}
+  SECRET_NPM_REGISTRY_PASSWORD: ${{ secrets.NPM_REGISTRY_PASSWORD }}
+
+concurrency:
+  # if this is triggered by branch in a merge_queue -> wait for the current run of this workflow on the main branch
+  # if this is triggered by PR or push to non-main branch -> don't wait for workflows running on the main branch
+  # if this is triggered by the main branch -> make the same concurrency as merge_queue
+  # for understanding the `|-` @see https://stackoverflow.com/a/67532120
+  group: |-
+    ${{ 
+      github.event_name == 'pull_request' 
+        && format('{0}-{1}', github.workflow, github.head_ref) 
+        || (
+          ((github.event_name == 'push' && github.ref_name == github.event.repository.default_branch) || github.event_name == 'merge_group')
+            && 'release-or-wait-until-release-is-done'
+            || github.ref_name 
+        ) 
+    }}
+  cancel-in-progress:
+    ${{ github.event_name == 'pull_request' || (github.event_name == 'push' &&
+    github.ref_name != github.event.repository.default_branch)}}
+
+jobs:
+  #
+  # Compute the basic data that will be needed by almost all jobs
+  # Create a GitHub summary with this same data.
+  #
+  # This is the only job that will run for the `merge_group` event because all we need
+  # for this event is use the workflow concurrency group to wait for anything running on the main branch
+  #
+  basics:
+    if: |-
+      ${{
+           github.event_name != 'push' 
+        || github.ref_name != github.event.repository.default_branch
+        || github.event.commits[0].author.email != vars.AUTORELEASE_BOT_EMAIL 
+      }}
+    runs-on: ubuntu-latest
+    outputs:
+      is-bot-push: ${{ steps.get-basics.outputs.is-bot-push }}
+      git-diff-base: ${{ steps.get-basics.outputs.git-diff-base }}
+      git-diff-base-depth: ${{ steps.get-basics.outputs.git-diff-base-depth }}
+      current-branch: ${{ steps.get-basics.outputs.current-branch }}
+      target-branch: ${{ steps.get-basics.outputs.target-branch }}
+      concurrency-group: ${{ steps.get-basics.outputs.concurrency-group }}
+      is-code-import: ${{ steps.get-basics.outputs.is-code-import }}
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: ./.github/actions/get-basics
+        id: get-basics
+        with:
+          autorelease-bot-email: ${{ vars.AUTORELEASE_BOT_EMAIL }}
+
+  #
+  # Make sure we have the dependencies cached for the next jobs that need them
+  #
+  cache-affected-install:
+    if: ${{ github.event_name != 'merge_group' }}
+    needs: basics
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: ${{ needs.basics.outputs.git-diff-base-depth }}
+          fetch-tags: false
+
+      - uses: ./.github/actions/setup-pnpm
+        id: setup-pnpm
+        with:
+          save-store-cache: true
+          store-and-tasks-cache-package-filter:
+            '...[${{ needs.basics.outputs.git-diff-base }}]...'
+
+      - uses: ./.github/actions/npm-login
+
+      - name:
+          Install changed packages, their dependencies and any other that
+          directly or indirectly use them
+        # no need to warm up the cache if it already existed
+        if: steps.setup-pnpm.outputs.pnpm-store-cache-hit != 'true'
+        run: |
+          pnpm \
+            --filter="...[${{ needs.basics.outputs.git-diff-base }}]..." \
+            install --frozen-lockfile --prefer-offline
+
+  #
+  # Verify the changed packages in the PR pass our code checks
+  #
+  lint:
+    if: ${{ github.event_name == 'pull_request' }}
+    needs: [cache-affected-install, basics]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: ${{ needs.basics.outputs.git-diff-base-depth }}
+          fetch-tags: false
+
+      - uses: ./.github/actions/setup-pnpm
+        with:
+          store-and-tasks-cache-package-filter:
+            '...[${{ needs.basics.outputs.git-diff-base }}]...'
+          task-cache-name: lint
+
+      - uses: ./.github/actions/npm-login
+
+      - name: Install changed packages & their dependencies
+        run: |
+          pnpm --filter="[${{ needs.basics.outputs.git-diff-base }}]..." \
+               --filter="@repo/citools..." \
+               install --frozen-lockfile --prefer-offline
+
+      - name: Build changed packages & their dependencies
+        run: |
+          pnpm --filter="[${{ needs.basics.outputs.git-diff-base }}]..."\
+               --filter="@repo/citools..." \
+               run build
+
+      - name: Lint changed files for changed packages
+        env:
+          ESLINT_PLUGIN_DIFF_COMMIT: ${{ needs.basics.outputs.git-diff-base }}
+        run: |
+          export GIT_DIFF_BASE='${{ needs.basics.outputs.git-diff-base }}'
+          pnpm --filter="[${{ needs.basics.outputs.git-diff-base }}]" \
+               --parallel --workspace-concurrency="$(nproc)" --aggregate-output \
+               run lint:github-pr
+
+  reset-releases-comment:
+    needs: [basics]
+    if: ${{ github.event_name == 'pull_request' }}
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Reset PR comment with upcoming releases
+        uses: mshick/add-pr-comment@v2
+        if: ${{ ! needs.basics.outputs.is-code-import }}
+        with:
+          refresh-message-position: true
+          message-id: 555 # just some magic number, need to be uniq for different comments!
+          message: |
+            ### ...⏳🔮*waiting to compute the list of upcoming releases*...
+
+      - name:
+          Announce this PR will not release anything because it's importing code
+        uses: mshick/add-pr-comment@v2
+        if: ${{ needs.basics.outputs.is-code-import }}
+        with:
+          refresh-message-position: true
+          message-id: 555 # just some magic number, need to be uniq for different comments!
+          message: |
+            ### 🏳️️ This PR will *NOT RELEASE* any packages 🏳️️
+            **📥 This PR imports code from another repo 📥** 
+
+            If you actually intend to trigger a release, you need to remove the commit with the message `chore: import code from another repo`
+
+  #
+  # Create a list of packages that will have to release a new version because of the changes
+  #
+  upcoming-releases:
+    if:
+      ${{ github.event_name != 'merge_group' && !
+      needs.basics.outputs.is-code-import }}
+    needs: [cache-affected-install, basics]
+    runs-on: ubuntu-latest
+    outputs:
+      # List of packages with upcoming new releases in the format: `<package name>@<version> ...`
+      list: ${{ steps.releases.outputs.list }}
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.head_ref }}
+          token: ${{ secrets.AUTORELEASE_BOT_TOKEN }}
+
+      - uses: ./.github/actions/setup-pnpm
+        with:
+          store-and-tasks-cache-package-filter:
+            '...[${{ needs.basics.outputs.git-diff-base }}]...'
+          task-cache-name: upcoming-release
+
+      - uses: ./.github/actions/npm-login
+
+      - uses: ./.github/actions/get-releases
+        id: releases
+        with:
+          package-filter: '[${{ needs.basics.outputs.git-diff-base }}]'
+
+      - name: Add/update PR comment with LIST OF UPCOMING RELEASES
+        if:
+          ${{ github.event_name == 'pull_request' && steps.releases.outputs.list
+          }}
+        uses: mshick/add-pr-comment@v2
+        with:
+          refresh-message-position: true
+          message-id: 555 # just some magic number, need to be uniq for different comments!
+          message: |
+            ### 🚀️ This PR will release the following packages 🚀️
+
+            ${{ steps.releases.outputs.list-as-md }}
+
+      - name: Add/update PR comment with info about NO RELEASES
+        uses: mshick/add-pr-comment@v2
+        if:
+          ${{ github.event_name == 'pull_request' && !
+          steps.releases.outputs.list }}
+        with:
+          refresh-message-position: true
+          message-id: 555 # just some magic number, need to be uniq for different comments!
+          message: |
+            ### 🏳️️ This PR will *NOT RELEASE* any packages 🏳️️
+            If you actually intend to trigger a release, you need to rewrite your [commit messages to fit the expected format for autorelease](${{ github.server_url }}/${{ github.repository }}/blob/master/docs/autorelease-commits.md).
+
+  #
+  # Create a list of packages with potentially affected build by the changes
+  #
+  packages-with-potentially-affected-build:
+    needs: basics
+    if: ${{ github.event_name != 'merge_group' }}
+    runs-on: ubuntu-latest
+    outputs:
+      # List of packages with potentially affected build in the format: `<package name>@<version> <path/to/project> ...`
+      list: ${{ steps.list.outputs.packages-with-potentially-affected-build }}
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: ${{ needs.basics.outputs.git-diff-base-depth }}
+          fetch-tags: false
+
+      - uses: ./.github/actions/setup-pnpm
+        with:
+          store-and-tasks-cache-package-filter:
+            '...[${{ needs.basics.outputs.git-diff-base }}]...'
+
+      - uses: ./.github/actions/npm-login
+
+      - name:
+          List all packages potentially affected by changes since the main
+          branch
+        id: list
+        run: |
+          # shellcheck disable=2129
+          echo '### 📦📦📦 Packages with potentially affected build 📦️📦️📦️ ' >> "$GITHUB_STEP_SUMMARY"
+
+          echo -e "Looking for affected packages between: **[${{ needs.basics.outputs.git-diff-base }}](${{ github.server_url }}/${{ github.repository }}/tree/${{ needs.basics.outputs.git-diff-base }})..[${{ needs.basics.outputs.current-branch }}](${{ github.server_url }}/${{ github.repository }}/tree/${{ needs.basics.outputs.current-branch }})**\n\n" >> "$GITHUB_STEP_SUMMARY"
+          echo '------------------' >> "$GITHUB_STEP_SUMMARY"
+
+          export GIT_DIFF_BASE='${{ needs.basics.outputs.git-diff-base }}'
+          source ./infra/devx-and-repo/repo-shell-scripts/pnpm_shortcut_fns.sh
+
+          echo '#### Packages with modified files' >> "$GITHUB_STEP_SUMMARY"
+          MODIFIED_PACKAGES_LIST_JSON=$(pnpm_changed_filter list --depth -1 --json)
+          echo "$MODIFIED_PACKAGES_LIST_JSON" | jq -r --arg pwd "$PWD" '.[] | " - **\(.name)** — \(.path | sub("^" + $pwd + "/"; ""))"' >> "$GITHUB_STEP_SUMMARY"
+
+          echo '#### Packages with directly or indirectly _potentially_ affected build/release' >> "$GITHUB_STEP_SUMMARY"
+          echo -n 'The list below is calculated by explicitly ignoring some changed files & packages'  >> "$GITHUB_STEP_SUMMARY"
+          echo -n 'that we consider not related to the build. The definition of what is ignored lives in' >> "$GITHUB_STEP_SUMMARY"
+          echo ' [`<repo root>/infra/devx-and-repo/repo-shell-scripts/repo_context_vars.sh`](${{ github.server_url }}/${{ github.repository }}/master/infra/devx-and-repo/repo-shell-scripts/repo_context_vars.sh)' >> "$GITHUB_STEP_SUMMARY"
+
+          AFFECTED_PACKAGES_LIST_JSON=$(pnpm_affected_build_filter list --depth -1 --json)
+          if [ -z "$AFFECTED_PACKAGES_LIST_JSON" ]; then
+            AFFECTED_PACKAGES_LIST=""
+          else
+            AFFECTED_PACKAGES_LIST=$(pnpm_affected_build_filter list --depth -1)
+          fi
+          AFFECTED_PACKAGES_LIST_NO_NEW_LINES=$(echo -n "$AFFECTED_PACKAGES_LIST" | tr -s '\n' | tr '\n' ';')
+          echo "$AFFECTED_PACKAGES_LIST_JSON" | jq -r --arg pwd "$PWD" '.[] | " - **\(.name)** — \(.path | sub("^" + $pwd + "/"; ""))"' >> "$GITHUB_STEP_SUMMARY"
+
+          # shellcheck disable=2086
+          echo -n packages-with-potentially-affected-build=$AFFECTED_PACKAGES_LIST_NO_NEW_LINES >> "$GITHUB_OUTPUT"
+
+  #
+  # Verify the affected packages in the PR pass tests executed in the `test:github-pr` script defined in `pockage.json`
+  #
+  test:
+    if: ${{ github.event_name == 'pull_request' }}
+    needs: [cache-affected-install, basics]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: ${{ needs.basics.outputs.git-diff-base-depth }}
+          fetch-tags: false
+
+      - uses: ./.github/actions/setup-pnpm
+        with:
+          store-and-tasks-cache-package-filter:
+            '...[${{ needs.basics.outputs.git-diff-base }}]...'
+          task-cache-name: test
+
+      - uses: ./.github/actions/npm-login
+
+      - name:
+          Install changed packages, their dependencies and any other that
+          directly or indirectly use them
+        run: |
+          pnpm --filter="...[${{ needs.basics.outputs.git-diff-base }}]..." install --frozen-lockfile --prefer-offline
+
+      - name:
+          Build changed packages, their dependencies and any other that directly
+          or indirectly use them
+        run: |
+          pnpm --filter="...[${{ needs.basics.outputs.git-diff-base }}]..." run build
+
+      - name:
+          Run unit tests for changed packages and anything that directly or
+          indirectly use them
+        run: |
+          export GIT_DIFF_BASE='${{ needs.basics.outputs.git-diff-base }}'
+          source ./infra/devx-and-repo/repo-shell-scripts/pnpm_shortcut_fns.sh
+          # we have 4 cores in the runner so let's limit concurrency to that
+          pnpm_affected_test_filter --parallel --workspace-concurrency="$(nproc)" --aggregate-output run test:github-pr
+          # now, let's run tests that can only run sequentially
+          # ideally those should be use GitHub matrix (each 1 to have a separate run in parallel)
+          # but let's see if that becomes a bottle-neck
+          pnpm_affected_test_filter --sequential run test:github-pr:sequential
+
+  #
+  # Create a list of affected packages that have e2e tests
+  #
+  packages-with-affected-e2e-cypress-tests:
+    if: ${{ github.event_name == 'pull_request' }}
+    needs: [basics]
+    runs-on: ubuntu-latest
+    outputs:
+      list-for-job-matrix:
+        ${{ steps.list-for-matrix.outputs.packages-with-affected-e2e-tests }}
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: ${{ needs.basics.outputs.git-diff-base-depth }}
+          fetch-tags: false
+
+      - uses: ./.github/actions/setup-pnpm
+        with:
+          store-and-tasks-cache-package-filter:
+            '...[${{ needs.basics.outputs.git-diff-base }}]...'
+          task-cache-name: test
+
+      - uses: ./.github/actions/npm-login
+
+      - id: list-for-matrix
+        name:
+          Collect affected packages that have defined
+          "test:e2e:github-pr:cypress" script in their "package.json"
+        run: |
+          PACKAGES_WITH_CYPRESS_E2E_TESTS=$(\
+            pnpm --filter="...[${{ needs.basics.outputs.git-diff-base }}]" \
+              exec pnpm node -e \
+                "require('./package.json').scripts['test:e2e:github-pr:cypress'] && console.log(require('./package.json').name)" \
+          )
+          if [ -z "$PACKAGES_WITH_CYPRESS_E2E_TESTS" ]; then
+            echo "packages-with-affected-e2e-tests=" >> $GITHUB_OUTPUT
+          else
+            echo "packages-with-affected-e2e-tests=[$(printf \"%s\" "$PACKAGES_WITH_CYPRESS_E2E_TESTS" | tr '\n' ',' )]" >> $GITHUB_OUTPUT
+          fi
+
+  #
+  # Run e2e tests that use cypress in parallel
+  #
+  test-e2e-cypress:
+    needs:
+      [cache-affected-install, packages-with-affected-e2e-cypress-tests, basics]
+    if: |-
+      ${{ 
+        github.event_name == 'pull_request' &&
+        needs.packages-with-affected-e2e-cypress-tests.outputs.list-for-job-matrix
+      }}
+    runs-on: ubuntu-latest-8-cores # our larger runner!
+    container: cypress/included:13.17.0
+    strategy:
+      fail-fast: false
+      matrix:
+        package: ${{fromJSON(needs.packages-with-affected-e2e-cypress-tests.outputs.list-for-job-matrix)}}
+        container: [1, 2, 3, 4]
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: ${{ needs.basics.outputs.git-diff-base-depth }}
+          fetch-tags: false
+
+      # This should be addressed by passing `set-safe-directory: true` to actions/checkout@v4 but that doesn't work
+      - name: Fix git permissions in this Docker container
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
+      - uses: ./.github/actions/setup-pnpm
+        with:
+          # the more accurate cache key here is: '${{ matrix.package }}...' but we want to reuse the existing one
+          store-and-tasks-cache-package-filter:
+            '...[${{ needs.basics.outputs.git-diff-base }}]...'
+          task-cache-name: e2e_test
+
+      - uses: ./.github/actions/npm-login
+
+      - name: Install the package dependencies
+        run: |
+          # skip installing the `cypress` binary since this job runs on container that already has that
+          export CYPRESS_INSTALL_BINARY=0
+          pnpm --filter='${{ matrix.package }}...' install --frozen-lockfile --prefer-offline
+
+      - name: Get the Cypress Recording Key
+        id: get-cypress-key
+        run: |
+          # passing --silent here to pnpm so that it doesn't output its own helper info, we only want the script output
+          CYPRESS_KEY_SECRET_NAME="$(pnpm --filter='${{ matrix.package }}' --silent test:e2e:github-cypress-key-secret-name)"
+          echo "key=$CYPRESS_KEY_SECRET_NAME" >> $GITHUB_OUTPUT
+
+      - name: Run the e2e tests
+        env:
+          CYPRESS_RECORD_KEY:
+            ${{ secrets[format('{0}', steps.get-cypress-key.outputs.key)] }}
+        run: |
+          if [ -z "$CYPRESS_RECORD_KEY" ]; then
+            echo "You must add a repository secret named '${{ steps.get-cypress-key.outputs.key }}'"
+            echo
+            echo "The value of '${{ steps.get-cypress-key.outputs.key }}' should be the Cypress Cloud key for your package."
+            echo "How to get this key: https://docs.cypress.io/cloud/account-management/projects#A-record-key-is-a-GUID-that-looks-like-this"
+            exit 1
+          fi
+          pnpm --filter='${{ matrix.package }}' run test:e2e:github-pr:cypress
+
+  #
+  # Verify the PR matches the repository conventions
+  #
+  repo-conventions:
+    if: ${{ github.event_name == 'pull_request' }}
+    needs: [cache-affected-install, basics]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: ${{ needs.basics.outputs.git-diff-base-depth }}
+          fetch-tags: false
+
+      - uses: ./.github/actions/setup-pnpm
+        with:
+          store-and-tasks-cache-package-filter:
+            '...[${{ needs.basics.outputs.git-diff-base }}]...'
+          task-cache-name: repo-conventions
+
+      - uses: ./.github/actions/npm-login
+
+      - name:
+          Install changed packages, their dependencies and any other that
+          directly or indirectly use them
+        run: |
+          pnpm --filter="[${{ needs.basics.outputs.git-diff-base }}]..." \
+               --filter="@repo/citools..." \
+               install --frozen-lockfile --prefer-offline
+
+      - name: Build changed packages & their dependencies
+        run: |
+          pnpm --filter="[${{ needs.basics.outputs.git-diff-base }}]..." \
+               --filter="@repo/citools..." \
+               run build
+
+      - name: Check repo conventions
+        run: |
+          export GIT_DIFF_BASE='${{ needs.basics.outputs.git-diff-base }}'
+          source ./infra/devx-and-repo/repo-shell-scripts/conventions_shortcut_fns.sh
+          validate_package_json
+
+  #
+  # Trigger automatic npm releases (in the future this might include MFE deployments as well)
+  #
+  # We don't wait for install since this workflow currently runs pnpm setup on its own
+  # and using a different cache prefix
+  #
+  autorelease-all-affected:
+    needs: [cache-affected-install, basics]
+    if:
+      ${{ github.event_name == 'push' && github.ref_name ==
+      github.event.repository.default_branch && !
+      needs.basics.outputs.is-code-import}}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.AUTORELEASE_BOT_TOKEN }}
+
+      - uses: ./.github/actions/setup-pnpm
+        with:
+          store-and-tasks-cache-package-filter:
+            '[${{ needs.basics.outputs.git-diff-base }}]'
+          task-cache-name: autorelease
+
+      - uses: ./.github/actions/npm-login
+
+      - uses: ./.github/actions/release
+        with:
+          AUTORELEASE_GITHUB_TOKEN: ${{ secrets.AUTORELEASE_GITHUB_TOKEN }}
+          autorelease-bot-name: ${{ vars.AUTORELEASE_BOT_NAME }}
+          autorelease-bot-email: ${{ vars.AUTORELEASE_BOT_EMAIL }}
+          package-filter: '[${{ needs.basics.outputs.git-diff-base }}]'
+
+  #
+  # Mark this workflow as complete but trigger other separate project-specific workflows
+  #
+  dispatch-project-specific-on-push:
+    needs: [upcoming-releases, packages-with-potentially-affected-build]
+    if: ${{ github.event_name == 'push' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Invoke project-specific actions
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: _repo-project-specific-on-push.yaml
+          inputs: |-
+            {
+              "packages-with-potentially-affected-build": "${{ needs.packages-with-potentially-affected-build.outputs.list }}",
+              "packages-with-upcoming-releases": "${{ needs.upcoming-releases.outputs.list }}"
+            }

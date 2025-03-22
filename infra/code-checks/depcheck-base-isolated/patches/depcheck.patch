@@ -1,0 +1,14 @@
+diff --git a/dist/cli.js b/dist/cli.js
+index 5675de88e8ca9c38c8d44c8b1844a03f3633037b..6b31ba7c5ee8badcfe932b4c436580649cbe978f 100755
+--- a/dist/cli.js
++++ b/dist/cli.js
+@@ -87,7 +87,8 @@ async function cli(args, log, error, exit) {
+       parsers: getParsers(opt.parsers),
+       detectors: getDetectors(opt.detectors),
+       specials: getSpecials(opt.specials),
+-      skipMissing: opt.skipMissing
++      skipMissing: opt.skipMissing,
++      ...opt.package && { package: opt.package }
+     });
+     print(depcheckResult, log, opt, rootDir);
+     exit(noIssue(depcheckResult) ? 0 : -1);

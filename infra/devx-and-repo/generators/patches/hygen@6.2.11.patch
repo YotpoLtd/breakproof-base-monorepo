@@ -1,0 +1,28 @@
+diff --git a/dist/logger.js b/dist/logger.js
+index 312f11227726918211f4990b257b73b3b785732c..5194ca3ffb69d1cfd297e4010a592c4a20f68b7d 100644
+--- a/dist/logger.js
++++ b/dist/logger.js
+@@ -4,8 +4,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
+ };
+ Object.defineProperty(exports, "__esModule", { value: true });
+ const chalk_1 = __importDefault(require("chalk"));
++const template = require("chalk/source/templates");
+ // chalk 4.1.2 doesn't type template property
+-const { yellow, red, green, magenta, template } = chalk_1.default;
++const { yellow, red, green, magenta } = chalk_1.default;
+ class Logger {
+     constructor(log) {
+         this.log = log;
+diff --git a/dist/prompt.js b/dist/prompt.js
+index 0908d1e56d215e8306f6d20dac8109a847c63888..d120997673d4f2c63dfe2005e8d5cc5dc065e6ec 100644
+--- a/dist/prompt.js
++++ b/dist/prompt.js
+@@ -51,7 +51,7 @@ const prompt = (createPrompter, actionfolder, args) => __awaiter(void 0, void 0,
+     const isTypeScriptHook = /\.ts$/.test(hooksfile);
+     // Lazily support TS hook files
+     if (isTypeScriptHook) {
+-        require('ts-node/register/transpile-only');
++        require('tsx/cjs');
+     }
+     // shortcircuit without prompter
+     let hooksModule = yield Promise.resolve().then(() => __importStar(require(hooksfile)));

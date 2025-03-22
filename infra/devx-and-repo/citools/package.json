@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json.schemastore.org/package.json",
+  "name": "@repo/citools",
+  "version": "0.0.1",
+  "pnpm": {
+    "executionEnv": {
+      "nodeVersion": "22.6.0"
+    }
+  },
+  "packageManager": "pnpm@9.15.3",
+  "scripts": {
+    "preinstall": "[ -n \"$(pwd | grep '/node_modules/')\" ] || echo $npm_config_user_agent | grep -q 'pnpm/' || (echo 'PLEASE USE PNPM, not NPM' && exit 1)",
+    "postinstall": "pnpm --filter='@repo/eslint-base-isolated...' build && pnpm --filter='{.}...' --filter='!@repo/eslint-base-isolated...' build",
+    "lint:everything": "pnpm --workspace-root run '/^shared:lint:*/'",
+    "lint:everything:fix-autofixable": "pnpm --workspace-root run --sequential '/^shared:fix:/'",
+    "lint:precommit": "pnpm --workspace-root run '/^shared:(staged:lint:.*|lint:dependencies:misused)/'",
+    "lint:precommit:fix-autofixable": "pnpm --workspace-root run --sequential '/^shared:staged:fix:/'",
+    "lint:github-pr": "pnpm --workspace-root run '/^shared:(github-pr:lint:.*|lint:dependencies:misused)/'"
+  },
+  "dependencies": {
+    "@repo/depcheck-base-isolated": "workspace:^",
+    "@repo/dpdm-base-isolated": "workspace:^",
+    "@repo/eslint-base-isolated": "workspace:^",
+    "@repo/eslint-problem-snapshotter": "workspace:^",
+    "@repo/lint-staged-base-isolated": "workspace:^",
+    "@repo/syncpack-base-isolated": "workspace:^"
+  },
+  "devtoolsDependencies": {
+    "@repo/eslint-base-isolated": "workspace:^",
+    "@repo/tsconfig-bases": "workspace:^",
+    "prettier": "^3.4.2",
+    "typescript": "^5.3.3"
+  }
+}

@@ -1,0 +1,20 @@
+// CURRENTLY NOT USED, WE NEED TO FIRST FINISH THE CODE GENERATOR FOR PACKAGES BASED ON ANGULAR 13
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": ["es2017", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": "."
+  },
+  "exclude": ["node_modules", "tmp"]
+}
