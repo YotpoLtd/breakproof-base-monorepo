@@ -5,7 +5,7 @@
  */
 {
   // VSCode has built-in version of TypeScript, we want to make sure we use our own
-  "typescript.tsdk": "./infra/code-checks/lint-staged-base-isolated/node_modules/typescript/lib",
+  "typescript.tsdk": "./infra/build/typescript-base-isolated/node_modules/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
   // We use prettier
   "json5.format.enable": false,
