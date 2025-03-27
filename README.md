@@ -79,7 +79,7 @@
 
 1. 🔀 This is **a repository for frontend projects** and **it's meant to be
    fork-ed**.
-
+ 
 2. ⚡ Once you do that, you have your own
    [monorepo](https://en.wikipedia.org/wiki/Monorepo 'Repository intended for multiple projects')
    to develop your frontend projects in, but **now with**:
