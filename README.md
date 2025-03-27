@@ -65,7 +65,7 @@
 
 <div align="center">
 
-[![ForkButton.png](ForkButton.svg)](https://github.com/YotpoLtd/breakproof-base-monorepo/fork)
+[![ForkButton.png](./docs/ForkButton.svg)](https://github.com/YotpoLtd/breakproof-base-monorepo/fork)
 [![Open
 `breakproof base repo` in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/YotpoLtd/breakproof-base-monorepo)
 
