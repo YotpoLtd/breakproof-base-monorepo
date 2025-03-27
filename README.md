@@ -1,3 +1,5 @@
+<picture><img alt="Breakproof Base Repo BETA VERSION" src="./docs/Header.svg" /></picture>
+
 ## TLDR-_ish_
 
 1. **❓️What is it**: consider this a template repository but instead of copying
