@@ -3,7 +3,7 @@
 Updating a fork with improvements from `breakproof-base-monorepo` happens by:
 
 1. Adding `breakproof-base-monorepo` as a remote to your fork. Typically, these kinds of remotes are called `upstream`
-2. Creating a new branch where you run `git pull upstream master`
+2. Creating a new branch where you run `git pull upstream main`
 3. Creating a PR from that new branch
 
 ## Caveats

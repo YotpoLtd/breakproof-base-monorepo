@@ -372,7 +372,7 @@ The link below will show you a list of the available shared scripts in one such 
 Most commonly you would use them by running `pnpm --workspace-root <shared script name>`
 from the directory of your package or from a script defined in your package `package.json`.
 
-Example: [top-level scripts in `breakproof-base-monorepo` repository.](https://github.com/YotpoLtd/breakproof-base-monorepo/blob/master/package.json5#L10-L100)
+Example: [top-level scripts in `breakproof-base-monorepo` repository.](https://github.com/YotpoLtd/breakproof-base-monorepo/blob/main/package.json5#L10-L100)
 
 ## Creating a new package in the repo
 

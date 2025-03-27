@@ -75,9 +75,9 @@ cleanup() {
 
   git remote remove import-source > /dev/null 2>&1
 
-  echo "Checking out master..."
+  echo "Checking out 'main' branch..."
 
-  git checkout master
+  git checkout main
 
   echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
   echo -e "$STOP_COLOR_TEXT"
@@ -155,8 +155,9 @@ echo -e "$STOP_COLOR_TEXT"
 cd "$IMPORT_TARGET_REPO_DIR"
 git remote add import-source "$IMPORT_SOURCE_REPO_DIR"
 git fetch import-source
+IMPORT_SOURCE_REMOTE_DEFAULT_BRANCH=$(git remote show import-source | sed -n 's/^  HEAD branch: *//p')
 git checkout -b "$TASK_ID-import-$ORIGINAL_REPO_NAME"
-git merge import-source/master --allow-unrelated-histories --no-edit
+git merge "import-source/$IMPORT_SOURCE_REMOTE_DEFAULT_BRANCH" --allow-unrelated-histories --no-edit
 git commit --allow-empty -m "chore: import code from another repo"
 
 echo -e "$START_BOLD_BRIGHT_BLUE_TEXT"

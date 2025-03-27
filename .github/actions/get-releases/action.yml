@@ -102,4 +102,4 @@ runs:
       shell: bash
       run: |
         echo '### 🏳️️ NO PACKAGE RELEASES 🏳️' >> $GITHUB_STEP_SUMMARY
-        echo 'If you actually intend to trigger a release, you need to rewrite your [commit messages to fit the expected format for autorelease](${{ github.server_url }}/${{ github.repository }}/blob/master/docs/autorelease-commits.md).' >> $GITHUB_STEP_SUMMARY
+        echo 'If you actually intend to trigger a release, you need to rewrite your [commit messages to fit the expected format for autorelease](${{ github.server_url }}/${{ github.repository }}/blob/${{ github.event.repository.default_branch }}/docs/autorelease-commits.md).' >> $GITHUB_STEP_SUMMARY

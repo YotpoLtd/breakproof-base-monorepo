@@ -38,8 +38,9 @@ Install `pnpm` & all white-listed `node.js` versions:
 > - don't use `corepack` to install `pnpm`
 > - don't use `brew` to install `pnpm`
 
-3. Every time you update `master` or your branch is rebased/merged with latest
-   `master`, please update your dependencies by running:
+3. Every time you update your default branch (_e.g._ `main`/`master`) or your
+   branch is rebased/merged with latest changes from the default branch, please
+   update your dependencies by running:
    ```shell
    pnpm --filter="devtools..." install
    pnpm --filter="<your package name in its package.json>..." install
@@ -240,15 +241,15 @@ CLI interface.
 
 ## Updating your branch
 
-After you rebase or merge your branch on latest `master` it's important that
-you:
+After you rebase or merge your branch on latest default branch (_e.g._
+`main`/`master`) it's important that you:
 
 1. Refresh dependencies:
    `pnpm --filter="<Your package name>..." --filter="devtools..." install`
 2. Likely you need to restart your code editor
 3. If you get conflicts in `pnpm-lock.yaml`, it's best to entirely accept the
-   version in `master` and rerun the install for your changed packages so you
-   re-create the lock file changes.
+   version from the default branch (_e.g._ `main`/`master`) and rerun the install
+   for your changed packages so you re-create the lock file changes.
 
 ## Code editor integration
 

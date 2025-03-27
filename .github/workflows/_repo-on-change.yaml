@@ -259,7 +259,7 @@ jobs:
           message-id: 555 # just some magic number, need to be uniq for different comments!
           message: |
             ### 🏳️️ This PR will *NOT RELEASE* any packages 🏳️️
-            If you actually intend to trigger a release, you need to rewrite your [commit messages to fit the expected format for autorelease](${{ github.server_url }}/${{ github.repository }}/blob/master/docs/autorelease-commits.md).
+            If you actually intend to trigger a release, you need to rewrite your [commit messages to fit the expected format for autorelease](${{ github.server_url }}/${{ github.repository }}/blob/${{ github.event.repository.default_branch }}/docs/autorelease-commits.md).
 
   #
   # Create a list of packages with potentially affected build by the changes
@@ -306,7 +306,7 @@ jobs:
           echo '#### Packages with directly or indirectly _potentially_ affected build/release' >> "$GITHUB_STEP_SUMMARY"
           echo -n 'The list below is calculated by explicitly ignoring some changed files & packages'  >> "$GITHUB_STEP_SUMMARY"
           echo -n 'that we consider not related to the build. The definition of what is ignored lives in' >> "$GITHUB_STEP_SUMMARY"
-          echo ' [`<repo root>/infra/devx-and-repo/repo-shell-scripts/repo_context_vars.sh`](${{ github.server_url }}/${{ github.repository }}/master/infra/devx-and-repo/repo-shell-scripts/repo_context_vars.sh)' >> "$GITHUB_STEP_SUMMARY"
+          echo ' [`<repo root>/infra/devx-and-repo/repo-shell-scripts/repo_context_vars.sh`](${{ github.server_url }}/${{ github.repository }}/${{ github.event.repository.default_branch }}/infra/devx-and-repo/repo-shell-scripts/repo_context_vars.sh)' >> "$GITHUB_STEP_SUMMARY"
 
           AFFECTED_PACKAGES_LIST_JSON=$(pnpm_affected_build_filter list --depth -1 --json)
           if [ -z "$AFFECTED_PACKAGES_LIST_JSON" ]; then
