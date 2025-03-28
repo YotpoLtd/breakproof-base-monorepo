@@ -419,7 +419,7 @@ jobs:
         github.event_name == 'pull_request' &&
         needs.packages-with-affected-e2e-cypress-tests.outputs.list-for-job-matrix
       }}
-    runs-on: ubuntu-latest-8-cores # our larger runner!
+    runs-on: ubuntu-latest
     container: cypress/included:13.17.0
     strategy:
       fail-fast: false
