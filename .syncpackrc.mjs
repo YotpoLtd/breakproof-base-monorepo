@@ -15,21 +15,21 @@ const config = {
     // syncpack doesn't check optional deps by default
     optional: {
       path: 'optionalDependencies',
-      strategy: 'versionsByName'
+      strategy: 'versionsByName',
     },
     // Our custom section of dependencies, @see .pnpmfile.cjs for more
     devtools: {
       path: 'devtoolsDependencies',
-      strategy: 'versionsByName'
+      strategy: 'versionsByName',
     },
     packageManager: {
       path: 'packageManager',
-      strategy: 'name@version'
+      strategy: 'name@version',
     },
     version: {
       path: 'version',
-      strategy: 'version'
-    }
+      strategy: 'version',
+    },
   },
   versionGroups: [
     {
@@ -38,14 +38,14 @@ const config = {
       dependencyTypes: ['peer'],
       specifierTypes: ['*', 'workspace-protocol'],
       packages: ['**'],
-      isIgnored: true
+      isIgnored: true,
     },
     {
       label:
         'Versions of `rollup`-related packages IN SPECIFIC REPO PACKAGES should match whatever `@repo/rollup-base-isolated` has installed',
       dependencies: ['rollup*', '@rollup/*'],
       packages: ['@repo/rollup-base-isolated'],
-      snapTo: ['@repo/rollup-base-isolated']
+      snapTo: ['@repo/rollup-base-isolated'],
     },
     /**
      * This is the place where to specify if we want certain dependency to be
@@ -75,8 +75,8 @@ const config = {
       // Don't force versions by default
       label: 'Ignore all by default',
       dependencies: ['**'],
-      isIgnored: true
-    }
+      isIgnored: true,
+    },
   ],
   dependencyTypes: [
     'prod',
@@ -88,8 +88,8 @@ const config = {
     'pnpmOverrides',
     'resolutions',
     'packageManager',
-    'version'
-  ]
+    'version',
+  ],
 };
 
 export default config;

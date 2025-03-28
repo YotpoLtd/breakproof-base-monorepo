@@ -2,38 +2,33 @@
 
 ## Basics `#1` — the fundamentals
 
-!!! abstract "TL;DR & Motivation"
-
-    `pnpm` is a `npm` alternative with backward-compatible CLI interface
-    that has additional functionality. In other words, it's a **superset** of
-    `npm`.
-
-    A single tool with a small CLI interface which can do what multiple tools
-    previously did, replacing `nvm`, `npm` and `nx`  🎉️
-
-    When you develop your package in a `pnpm` monorepo, you get infrastructure out-of-the box, so
-    `git checks`, `lint checks`, `formatting checks`, `type checks`,
-    code `generators`, `release` process, PR checks, _etc_. **And** since
-    other packages in the same repo are already using the same infra,
-    you should be more confident that it works.
+> [!NOTE]
+>
+> `pnpm` is a `npm` alternative with mostly backward-compatible CLI interface
+> that has additional functionality. In other words, it's a ~**superset** of
+> `npm`.
+>
+> A single tool with a small CLI interface which can do what multiple tools
+> previously were used for, capable of replacing `nvm`, `npm` and things like
+> `nx` 🎉️
 
 The **main 6** added functionalities in `pnpm` (_not an exhaustive list_):
 
 1. 🎯 **Selecting specific packages**
 
    `pnpm` understands when you have multiple packages inside a single
-   repository. So if you want to run `npm` commands, it lets you select
-   which from the packages you want to run the commands for. For example:
-   instead a single `npm install` for the entire repository you can do
+   repository. So if you want to run `npm` commands, it lets you select which
+   from the packages you want to run the commands for. For example: instead a
+   single `npm install` for the entire repository you can do
    `pnpm --filter="<selector of packages>" install` which will only run
-   `install` for those packages. Same applies for `npm run script-name`,
-   which can be `pnpm --filter="<selector of packages>" run script-name`.
+   `install` for those packages. Same applies for `npm run script-name`, which
+   can be `pnpm --filter="<selector of packages>" run script-name`.
 
 2. 📦 **Individual dependencies for each package**
 
-   The packages in a `pnpm` monorepo are treated as real isolated packages.
-   This means that you don't have a single `pnpm install` which installs
-   the dependencies of all packages in the repo bunched together in a single
+   The packages in a `pnpm` monorepo are treated as real isolated packages. This
+   means that you don't have a single `pnpm install` which installs the
+   dependencies of all packages in the repo bunched together in a single
    `node_modules`. The dependencies of each package live in the respective
    directory of that package and others can't use them. So you can use whatever
    version of a library you need **&** you don't have to deal with version
@@ -41,29 +36,29 @@ The **main 6** added functionalities in `pnpm` (_not an exhaustive list_):
 
 3. 📌 pnpm is **not tied to specific `node.js` version**
 
-   In fact the third major functionality is that `pnpm` can manage
-   different `node.js` versions on your OS, very much like `nvm` does.
-   This means we don't need `nvm` for `pnpm` projects. Additionally,
-   because `pnpm` sits _above_ `node.js`, we get more up-to-date
-   dependency-management algorithms even for the older `node.js` versions
-   that we have.
+   In fact the third major functionality is that `pnpm` can manage different
+   `node.js` versions on your OS, very much like `nvm` does. This means we don't
+   need `nvm` for `pnpm` projects. Additionally, because `pnpm` sits _above_
+   `node.js`, we get more up-to-date dependency-management algorithms even for
+   the older `node.js` versions that we have.
 
-4. 🗄️ pnpm enables **each package in the same repo to use different `node.js` version** 🎉️
+4. 🗄️ pnpm enables **each package in the same repo to use different `node.js`
+   version** 🎉️
 
-   If you want to use higher/lower version of `node.js` for specific package
-   now you can. This unlocks gradual upgrades where we use newer technology in one
-   area without having to upgrade everything everywhere at once. This is especially
-   useful when parts of your project doesn't have to run in the same `node.js`
-   as others, like `lint checks`, `e2e tests`, etc. Or when one package is
-   intended to run `node` but another in a browser. All you need to do
-   is declare the `node.js` version in the `package.json` of your package.
+   If you want to use higher/lower version of `node.js` for specific package now
+   you can. This unlocks gradual upgrades where we use newer technology in one
+   area without having to upgrade everything everywhere at once. This is
+   especially useful when parts of your project doesn't have to run in the same
+   `node.js` as others, like `lint checks`, `e2e tests`, etc. Or when one
+   package is intended to run `node` but another in a browser. All you need to
+   do is declare the `node.js` version in the `package.json` of your package.
 
 5. 🔗 **Use other unreleased packages from the repo just like you would if they
    were published**
 
-   `pnpm` allows you to link packages with each other in the repository in
-   a very intuitive way. If you have `packageA` & `packageB`, and you
-   want `packageA` to use `packageB`, then you can simply do:
+   `pnpm` allows you to link packages with each other in the repository in a
+   very intuitive way. If you have `packageA` & `packageB`, and you want
+   `packageA` to use `packageB`, then you can simply do:
 
    ```shell
    cd ./path/to/package-a
@@ -71,31 +66,28 @@ The **main 6** added functionalities in `pnpm` (_not an exhaustive list_):
    ```
 
    **That's it**. This simply creates a directory
-   `path/to/packageA/node_modules/packageB` **but** this directory points
-   to the actual `packageB` location in the repository. This can be useful
-   for developing packages together or organizing your supporting/utility code
-   into multiple packages with their own dependencies, **without** having to
-   publish them or do weird path-to-package-name mapping.
+   `path/to/packageA/node_modules/packageB` **but** this directory points to the
+   actual `packageB` location in the repository. This can be useful for
+   developing packages together or organizing your supporting/utility code into
+   multiple packages with their own dependencies, **without** having to publish
+   them or do weird path-to-package-name mapping.
 
 6. ⚡ **executing multiple scripts in a single command**.
 
-   If you've done `npm run lint` and `npm run test` sequentially, then
-   with `pnpm` you can do the same but in parallel by simply executing
-   `pnpm run '/^(lint|test)$/'`. This uses a regex to identify the script
-   names.
+   If you've done `npm run lint` and `npm run test` sequentially, then with
+   `pnpm` you can do the same but in parallel by simply executing
+   `pnpm run '/^(lint|test)$/'`. This uses a regex to identify the script names.
 
-Given everything pointed out above, `pnpm` (_a single tool_) can do the job
-of `nvm`, `npm` and **_even monorepo tools like_** `nx` 🎉️.
+Given everything pointed out above, `pnpm` (_a single tool_) can do the job of
+`nvm`, `npm` and **_even monorepo tools like_** `nx` 🎉️.
 
-The only **incompatible CLI difference** between `npm` and `pnpm` is
-that the `npx` command is split into 2:
+The only **incompatible CLI difference** between `npm` and `pnpm` is that the
+`npx` command is split into 2:
 
-- use `pnpm exec <some-package-executable>` if you have
-  `<some-package>` in your dependencies and you are trying to execute stuff
-  from it
-- use `pnpm dlx <some-package-executable>` if you don't have
-  `<some-package>` in your dependencies, and you want it downloaded on the
-  fly
+- use `pnpm exec <some-package-executable>` if you have `<some-package>` in your
+  dependencies and you are trying to execute stuff from it
+- use `pnpm dlx <some-package-executable>` if you don't have `<some-package>` in
+  your dependencies, and you want it downloaded on the fly
 
 ## Basics `#2` — using the fundamentals
 
@@ -122,9 +114,8 @@ appZ
         └── depends on -> packageC
 ```
 
-For the example, let's say every app and every lib have a `package.json`
-with a `scripts` section which includes a `dev` script. Something
-like:
+For the example, let's say every app and every lib have a `package.json` with a
+`scripts` section which includes a `dev` script. Something like:
 
 ```json
 {
@@ -135,9 +126,8 @@ like:
 }
 ```
 
-Given the above, `pnpm` lets you do stuff that you can't with `npm` by
-itself, and you would usually need to learn the vast `nx` ecosystem to do.
-For example:
+Given the above, `pnpm` lets you do stuff that you can't with `npm` by itself,
+and you would usually need to learn the vast `nx` ecosystem to do. For example:
 
 ```shell
 # runs the `dev` script ONLY of packageA
@@ -175,13 +165,12 @@ pnpm --filter="*" run dev
 ```
 
 This **_"package selection mechanism"_** is not limited only to running scripts,
-you can do the same for any `npm` command like `install`,
-`publish`, `audit`.
+you can do the same for any `npm` command like `install`, `publish`, `audit`.
 
 ## Basics `#3` — getting efficient
 
-- `pnpm --filter="this-is-the-name-of-my-unique-package" run dev` is
-  equivalent to:
+- `pnpm --filter="this-is-the-name-of-my-unique-package" run dev` is equivalent
+  to:
 
   ```shell
   pnpm --filter="*-my-unique-package" run dev
@@ -233,18 +222,16 @@ you can do the same for any `npm` command like `install`,
   ```
 
 - If you have multiple scripts that you want to run at the same time such as
-  `lint` and `test` you can do it by passing a regex to match script
-  names:
+  `lint` and `test` you can do it by passing a regex to match script names:
 
   ```shell
   pnpm --filter='<selector of packages>' run --parallel '/^(lint|test)$/'",
   ```
 
 - If you have 2 packages that don't share dependencies, and you select both and
-  run a script, `pnpm` will assume it can run the script in parallel since
-  they don't depend on each other. If you need to specifically run those in
-  sequence, for example when each command needs to modify the same file, you can
-  do:
+  run a script, `pnpm` will assume it can run the script in parallel since they
+  don't depend on each other. If you need to specifically run those in sequence,
+  for example when each command needs to modify the same file, you can do:
   ```shell
   pnpm --filter='<selector of packages>' run --sequential <script name that modifies the same file>",
   ```
@@ -253,17 +240,17 @@ you can do the same for any `npm` command like `install`,
   into each individual `package.json`? You can read about them later in the
   section **"Shared `scripts`"**.
 
-## Other specifics of `pnpm` monorepo
+## Other specifics of a `pnpm` monorepo
 
-1. There is no `nx` in the repo. So far there was no need for it since
-   `pnpm` has been doing its job.
+1. There is no `nx` in the repo. So far there was no need for it since `pnpm`
+   has been doing its job.
 2. You can use different versions of dependencies in different packages. If you
-   have `appA` that uses `typescript@5.3`, you can have `appB`
-   that uses `typescript@4.6`
-3. What you define in `package.json` as dependencies is the only thing you
-   get in `node_modules` of your package. Nested dependencies of your
-   dependencies don't float up to the top of your `node_modules`. This
-   helps you avoid dependency mis-matches.
+   have `appA` that uses `typescript@5.3`, you can have `appB` that uses
+   `typescript@4.6`
+3. What you define in `package.json` as dependencies is the only thing you get
+   in `node_modules` of your package. Nested dependencies of your dependencies
+   don't float up to the top of your `node_modules`. This helps you avoid
+   dependency mis-matches.
 4. Peer dependencies of packages **are not** automatically installed. This is
    intentional, so that the developers which are adding a package are aware of
    everything that it brings and are responsible for deciding to install a
@@ -298,16 +285,15 @@ you can do the same for any `npm` command like `install`,
    pnpm --filter="<package name>..." --filter="devtools..." install
    ```
 
-   The `...` bit is important here since it tells `pnpm` you want to
-   install not only that package but also any of its dependencies from this
-   repo.
+   The `...` bit is important here since it tells `pnpm` you want to install not
+   only that package but also any of its dependencies from this repo.
 
-4. Keep in mind that depending on what you are working on (`application` or
-   a `library`), you probably have additional packages inside the
-   repository that you want to install. The `application` packages usually
-   come with a separate `<app name>-e2e` package where `library`
-   packages will likely have a `<library name>-sandbox` and
-   `<library name>-sandbox-e2e` packages. Install those as well:
+4. Keep in mind that depending on what you are working on (`application` or a
+   `library`), you probably have additional packages inside the repository that
+   you want to install. The `application` packages usually come with a separate
+   `<app name>-e2e` package where `library` packages will likely have a
+   `<library name>-sandbox` and `<library name>-sandbox-e2e` packages. Install
+   those as well:
    ```shell
    pnpm --filter="<package name>-sandbox..."  --filter="<package name>-sandbox-e2e..." install
    ```
@@ -321,9 +307,9 @@ you can do the same for any `npm` command like `install`,
    pnpm --filter="<package name>-sandbox" run dev
    ```
 
-   This will start `<package name>` in dev mode **but NOT its
-   dependencies**. If you want to also start all of it dependencies in their
-   respective dev mode run:
+   This will start `<package name>` in dev mode **but NOT its dependencies**. If
+   you want to also start all of it dependencies in their respective dev mode
+   run:
 
    ```shell
    pnpm --filter="<package name>" run dev:with-deps
@@ -332,8 +318,8 @@ you can do the same for any `npm` command like `install`,
    pnpm --filter="<package name>-sandbox" run dev:with-deps
    ```
 
-   which is pre-defined in the `scripts` section of the `package.json`
-   for your package and is a shortcut for:
+   which is pre-defined in the `scripts` section of the `package.json` for your
+   package and is a shortcut for:
 
    ```shell
    pnpm --filter='{.}^...' build && pnpm --filter='{.}...' run --parallel '/^(dev|serve|watch)$/'
@@ -361,18 +347,21 @@ pnpm --filter="name of e2e package" test
 
 ## Shared `scripts` between packages in the repository
 
-Across the packages in a `pnpm` monorepo you will likely have some useful scripts
-that are going to be the same for each package. How do we define such scripts without
-having to duplicate their definition into each individual `package.json`?
+Across the packages in a `pnpm` monorepo you will likely have some useful
+scripts that are going to be the same for each package. How do we define such
+scripts without having to duplicate their definition into each individual
+`package.json`?
 
-We use the top-level ([`<repo root dir>/package.json`](package.json)) for
-that!
+We use the top-level
+([`<repo root dir>/package.json5`](https://github.com/YotpoLtd/breakproof-base-monorepo/blob/main/package.json5#L45-L83))
+for that! All of
+[their names are prefixed with `shared:`](https://github.com/YotpoLtd/breakproof-base-monorepo/blob/main/package.json5#L45-L83).
 
-The link below will show you a list of the available shared scripts in one such `pnpm` repo.
-Most commonly you would use them by running `pnpm --workspace-root <shared script name>`
-from the directory of your package or from a script defined in your package `package.json`.
+Most commonly you would use them by running
+`pnpm --workspace-root <shared script name>` from the directory of your package
+or from a script defined in the `package.json` of your package.
 
-Example: [top-level scripts in `breakproof-base-monorepo` repository.](https://github.com/YotpoLtd/breakproof-base-monorepo/blob/main/package.json5#L10-L100)
+<a name="creating-a-new-package-in-the-repo"></a>
 
 ## Creating a new package in the repo
 
@@ -385,49 +374,26 @@ pnpm --workpace-root generate package new
 Follow the questions in the command line, and you will end up with a new
 package.
 
-You will get a package with pre-existing `scripts` section in
-`package.json`. You can change those to whatever best fits your package.
-Some info on the default behaviour:
+You will get a package with pre-existing `scripts` section in `package.json`.
+You can change those to whatever best fits your package. Some info on the
+default behaviour:
 
 - `lint:*` — Those scripts will run multiple other scripts defined in the
-  top-level `<repo root dir>/package.json`. And specifically it will run
-  the scripts which name begins with `shared:lint:` or
-  `shared:ts:check`
-- `build` — builds only the package itself, not its dependencies. See above
-  how to build the package and its dependencies
+  top-level `<repo root dir>/package.json`. And specifically it will run the
+  scripts which name begins with `shared:lint:` or `shared:ts:check`
+- `build` — builds only the package itself, not its dependencies. See above how
+  to build the package and its dependencies
 - `dev` — starts the package in dev mode.
-- `dev:with-dep` — starts the package + all of its dependencies in dev
-  mode.
-- [`release`] — optionally if you opted in to have a release-able package
-  you will have this release script. If you decide to customize it should, it
-  should either be based on the `release-it` library or accept the same CLI
-  arguments.
-- `preinstall` — This will prevent team members from accidentally using
-  `npm` instead of `pnpm`
-- `test:units:run` & `test:units:dev` — Runs the unit tests for the
-  package. The `dev` version is for running the tests in watch mode.
+- `dev:with-dep` — starts the package + all of its dependencies in dev mode.
+- \[`release`\] — optionally if you opted in to have a release-able package you
+  will have this release script. If you decide to customize it should, it should
+  either be based on the `release-it` library or accept the same CLI arguments.
+- `preinstall` — This will prevent team members from accidentally using `npm`
+  instead of `pnpm`
+- `test:units:run` & `test:units:dev` — Runs the unit tests for the package. The
+  `dev` version is for running the tests in watch mode.
 
 ## Tips, Tricks & Best practices
-
-### Don't edit dependencies in `package.json` manually
-
-Instead:
-
-```shell
-# for removing dependencies run:
-pnpm rm <name of dependency>
-
-# for adding dependencies run one of:
-pnpm install <name of dependency> --save # same as pnpm install <name of dependency>
-pnpm install <name of dependency> --save-dev
-pnpm install <name of dependency> --save-peer
-pnpm install <name of dependency> --save-optional
-```
-
-This will add the correct semver, in the correct alphabetical order and in the
-correct sections. For example `pnpm install somepackage --save-peer` will
-add `somepackage` in both `peerDependencies` and `devDependencies`
-sections.
 
 ### Avoid `.json` configs wherever possible
 
@@ -436,25 +402,8 @@ Prefer `.ts`, `.mjs`, or `.cjs` because:
 - they allow comments which are often needed to explain specific settings
 - they are easier to extend or programmatically change
 
-### Don't use webpack aliases, tsconfig paths, jest aliases, etc.
+### Avoid using webpack aliases, tsconfig paths, jest aliases, etc.
 
-For projects using `Angular` 14+ or not using angular `Angular` at
-all, prefer the `imports` and `exports` property of the
-`package.json` since this is native to `node.js` and all the above
-tools understand it.
-
-## Special cases
-
-### What's with `[ -n "$(pwd | grep '/node_modules/')" ] || echo $npm_config_user_agent | grep -q 'pnpm/' || (echo 'PLEASE USE PNPM, not NPM' && exit 1)`?
-
-We want to prevent accidental usage of `pnpm` in the `pnpm` repos.
-So we add this script to every package `preinstall` hook.
-
-Ideally it would be just `npx only-allow pnpm` as described in
-[pnpm docs](https://pnpm.io/only-allow-pnpm), but:
-
-1. [There is a bug](https://github.com/pnpm/only-allow/pull/14) in
-   `only-allow` so we work around it.
-1. If developer is only using `pnpm` they might not have `node`
-   installed at all, so we need to check if `npx` exists (_via
-   `which npx`_)
+For projects using `Angular` 14+ or not using angular `Angular` at all, prefer
+the `imports` and `exports` properties of the `package.json` since this is
+native to `node.js` and all the above tools understand it.
