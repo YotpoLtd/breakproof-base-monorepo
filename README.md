@@ -240,7 +240,8 @@ You need to add some GitHub configuration for your repository:
 
 3. Set up GitHub repository `secret`s:
 
-   - `AUTORELEASE_BOT_TOKEN`: a GitHub token with rights to push to repository
+   - `AUTORELEASE_BOT_TOKEN`: a
+     [GitHub token with rights to push to repository](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#personal-access-tokens-classic)
      to be used by the bot doing automatic releases
    - `NPM_REGISTRY_USER`: your npm registry user
    - _\[Optional\]_ `NPM_REGISTRY_AUTH_TOKEN`: your npm registry auth token, if

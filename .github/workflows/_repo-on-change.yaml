@@ -546,7 +546,7 @@ jobs:
 
       - uses: ./.github/actions/release
         with:
-          AUTORELEASE_GITHUB_TOKEN: ${{ secrets.AUTORELEASE_GITHUB_TOKEN }}
+          AUTORELEASE_BOT_TOKEN: ${{ secrets.AUTORELEASE_BOT_TOKEN }}
           autorelease-bot-name: ${{ vars.AUTORELEASE_BOT_NAME }}
           autorelease-bot-email: ${{ vars.AUTORELEASE_BOT_EMAIL }}
           package-filter: '[${{ needs.basics.outputs.git-diff-base }}]'
