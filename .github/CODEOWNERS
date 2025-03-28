@@ -1,9 +1,2 @@
-# Repo-infra - check in with FE infra
-/infra @YotpoLtd/ivys-admins
-/.githooks @YotpoLtd/ivys-admins
-/.github @YotpoLtd/ivys-admins
-/.vscode @YotpoLtd/ivys-admins
-/.idea @YotpoLtd/ivys-admins
-
-# Repo-wide top level files
-/{*.mjs,*.js,*.cjs,*.json,*.md,catalog-info.yaml,pnpm-workspace.yaml,.npmrc,.gitignore} @YotpoLtd/ivys-admins
+# Everything in this repo is owned by one team — Yotpo FE Infra
+/** @YotpoLtd/ivys-admins
