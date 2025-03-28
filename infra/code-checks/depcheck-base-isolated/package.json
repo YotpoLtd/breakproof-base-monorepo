@@ -33,7 +33,7 @@
     "depcheck": "^1.4.7"
   },
   "devDependencies": {
-    "@repo/tsconfig-bases": "workspace:^",
+    "@repo/typescript-base-isolated": "workspace:^",
     "tslib": "^2.7.0",
     "typescript": "^5.3.3"
   },

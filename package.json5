@@ -151,11 +151,10 @@
    */
   pnpm: {
     /**
-     * Override the older versions of those so we get some bug fixes
+     * Override the older versions of those nested dependencies so we get some bug fixes
      */
     overrides: {
-      'cosmiconfig': '^9',
-      'prosemirror-model': '1.23.0',
+      cosmiconfig: '^9',
     },
     packageExtensions: {
       /**
@@ -173,22 +172,12 @@
        */
       '@reactflow/core': {
         peerDependencies: {
-          '@types/react': '>=17',
-        },
-      },
-      'react-i18next': {
-        peerDependencies: {
-          '@types/react': '^18.2.52',
-        },
-      },
-      'emoji-picker-react': {
-        peerDependencies: {
-          react: '16.2.0',
+          '@types/react': '*',
         },
       },
       'react-toastify': {
         peerDependencies: {
-          'react-dom': '^16.13.1',
+          'react-dom': '*',
         },
       },
       // We want webpack-cli always available to webpack when installed as peer dependency

@@ -44,7 +44,7 @@
     "tslib": "^2.8.1"
   },
   "devDependencies": {
-    "@repo/tsconfig-bases": "workspace:^",
+    "@repo/typescript-base-isolated": "workspace:^",
     "@types/babel__core": "^7.20.5",
     "typescript": "^5.4.2"
   },

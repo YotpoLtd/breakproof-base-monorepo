@@ -42,7 +42,7 @@
   "dependencies": {
     "@release-it/conventional-changelog": "^8",
     "@repo/conventional-changelog-preset": "workspace:^",
-    "@repo/tsconfig-bases": "workspace:^",
+    "@repo/typescript-base-isolated": "workspace:^",
     "find-root": "^1.1.0",
     "git-semver-tags": "^8.0.0",
     "release-it": "^17.6.0"

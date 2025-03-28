@@ -41,7 +41,7 @@
     "webpack-bundle-analyzer": "^4.10.1"
   },
   "devtoolsDependencies": {
-    "@repo/tsconfig-bases": "workspace:^",
+    "@repo/typescript-base-isolated": "workspace:^",
     "prettier": "^3.4.2",
     "typescript": "^5.3.3"
   }

@@ -27,7 +27,7 @@
   },
   "devtoolsDependencies": {
     "@repo/eslint-base-isolated": "workspace:^",
-    "@repo/tsconfig-bases": "workspace:^",
+    "@repo/typescript-base-isolated": "workspace:^",
     "prettier": "^3.4.2",
     "typescript": "^5.3.3"
   }

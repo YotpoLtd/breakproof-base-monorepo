@@ -38,7 +38,7 @@
     "@repo/eslint-base-isolated": "workspace:^",
     "@repo/jest-base-isolated": "workspace:^",
     "@repo/lint-staged-base-isolated": "workspace:^",
-    "@repo/tsconfig-bases": "workspace:^",
+    "@repo/typescript-base-isolated": "workspace:^",
     "conventional-commits-parser": "3.2.4",
     "eslint-plugin-jest": "27.9.0",
     "find-root": "^1.1.0",

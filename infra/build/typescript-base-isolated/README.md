@@ -1,4 +1,4 @@
-# `@repo/tsconfig-bases`
+# `@repo/typescript-base-isolated`
 
 This package does 1 thing: define detailed base configurations for the
 `tsconfig*.json` file(s) in your project.

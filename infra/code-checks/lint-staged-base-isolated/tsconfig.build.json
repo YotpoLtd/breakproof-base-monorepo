@@ -1,5 +1,5 @@
 {
-  "extends": "@repo/tsconfig-bases/tsconfig.node-14.base.json",
+  "extends": "@repo/typescript-base-isolated/tsconfig.node-14.base.json",
   "compilerOptions": {
     "outDir": "lib",
     "incremental": true,

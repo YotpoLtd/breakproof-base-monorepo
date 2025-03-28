@@ -1,6 +1,6 @@
 {
   "$schema": "https://json.schemastore.org/package.json",
-  "name": "@repo/tsconfig-bases",
+  "name": "@repo/typescript-base-isolated",
   "private": true,
   "version": "0.0.1",
   "pnpm": {
@@ -15,13 +15,19 @@
     "lint:precommit": "pnpm --workspace-root run shared:staged:lint:common",
     "lint:precommit:fix-autofixable": "pnpm --workspace-root run --sequential '/^shared:staged:fix:/'",
     "lint:github-pr": "pnpm --workspace-root run shared:github-pr:lint:common",
-    "preinstall": "[ -n \"$(pwd | grep '/node_modules/')\" ] || echo $npm_config_user_agent | grep -q 'pnpm/' || (echo 'PLEASE USE PNPM, not NPM' && exit 1)"
+    "preinstall": "[ -n \"$(pwd | grep '/node_modules/')\" ] || echo $npm_config_user_agent | grep -q 'pnpm/' || (echo 'PLEASE USE PNPM, not NPM' && exit 1)",
+    "tsc": "cd $INIT_CWD && tsc",
+    "tsx": "TSX=$(node -p 'require.resolve(\"tsx/esm\")') && cd $INIT_CWD && node --import=\"$TSX\""
   },
   "dependencies": {
     "@tsconfig/node14": "^14.1.2",
     "@tsconfig/node20": "^20.1.4",
     "@tsconfig/strictest": "^2.0.2",
-    "@types/node": "^20.11.5"
+    "@types/node": "^20.11.5",
+    "tsx": "^4.19.3"
+  },
+  "devDependencies": {
+    "typescript": "5.6.2"
   },
   "peerDependencies": {
     "typescript": "*"

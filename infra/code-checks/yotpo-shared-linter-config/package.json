@@ -52,7 +52,7 @@
     "tslib": "*"
   },
   "devDependencies": {
-    "@repo/tsconfig-bases": "workspace:^",
+    "@repo/typescript-base-isolated": "workspace:^",
     "@types/eslint": "^8.56.10",
     "@types/eslint__eslintrc": "^2.1.2",
     "@types/eslint__js": "^8.42.3",
