@@ -419,7 +419,7 @@ jobs:
         github.event_name == 'pull_request' &&
         needs.packages-with-affected-e2e-cypress-tests.outputs.list-for-job-matrix
       }}
-    runs-on: ubuntu-latest-8-cores # our larger runner!
+    runs-on: ubuntu-latest
     container: cypress/included:13.17.0
     strategy:
       fail-fast: false
@@ -546,7 +546,7 @@ jobs:
 
       - uses: ./.github/actions/release
         with:
-          AUTORELEASE_GITHUB_TOKEN: ${{ secrets.AUTORELEASE_GITHUB_TOKEN }}
+          AUTORELEASE_BOT_TOKEN: ${{ secrets.AUTORELEASE_BOT_TOKEN }}
           autorelease-bot-name: ${{ vars.AUTORELEASE_BOT_NAME }}
           autorelease-bot-email: ${{ vars.AUTORELEASE_BOT_EMAIL }}
           package-filter: '[${{ needs.basics.outputs.git-diff-base }}]'

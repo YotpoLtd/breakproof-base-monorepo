@@ -7,7 +7,10 @@ import baseLintStagedConfig from './infra/code-checks/lint-staged-base-isolated/
 
 // limit checks to only files at the repository root
 const baseConfigButOnlyTopLevelFiles = Object.fromEntries(
-  Object.entries(baseLintStagedConfig).map(([pattern, command]) => [`./${pattern}`, command])
+  Object.entries(baseLintStagedConfig).map(([pattern, command]) => [
+    `./${pattern}`,
+    command,
+  ]),
 );
 
 export default baseConfigButOnlyTopLevelFiles;

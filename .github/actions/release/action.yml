@@ -3,7 +3,7 @@ description:
   Release by specifying a pnpm filter/selector of packages you want to release
 
 inputs:
-  AUTORELEASE_GITHUB_TOKEN:
+  AUTORELEASE_BOT_TOKEN:
     description: 'The github token used for release'
     required: true
   autorelease-bot-name:
@@ -44,7 +44,7 @@ runs:
     - name: ✨Automatically release ✨
       if: ${{ steps.releases.outputs.list-as-names-only }}
       env:
-        GITHUB_TOKEN: ${{ inputs.AUTORELEASE_GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ inputs.AUTORELEASE_BOT_TOKEN }}
       shell: bash
       run: |
         # transform the list of package names to multiple `--filter=<PACKAGE NAME>` arguments for pnpm

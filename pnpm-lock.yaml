@@ -10,7 +10,7 @@ overrides:
 
 packageExtensionsChecksum: 90ff616e50f308d4436e89104159a1f6
 
-pnpmfileChecksum: 25ey5sf57awapczwsyqxsgv7di
+pnpmfileChecksum: 2to4msiwfr52wvvi455qlimz7m
 
 patchedDependencies:
   depcheck:
@@ -46,7 +46,7 @@ importers:
       '@repo/lint-staged-base-isolated':
         specifier: workspace:^
         version: link:../infra/code-checks/lint-staged-base-isolated
-      '@yotpo-common/tsconfig-bases':
+      '@repo/tsconfig-bases':
         specifier: workspace:^
         version: link:../infra/build/tsconfig-bases
       prettier:

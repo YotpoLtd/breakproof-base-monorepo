@@ -1,6 +1,6 @@
 # The breakproof base monorepo
 
-[↬ Repository goals and how it works. ](./docs/monorepo.md)
+[↬ Repository goals and how it works. ](./docs/breakproof-repo-base.README.md)
 
 ## Quick start
 
@@ -57,50 +57,6 @@ development you need to complete an interactive CLI script:
 pnpm --workspace-root run generate repo onboard
 ```
 
-### If you just forked the base repository
-
-1. 📥 Set up GitHub Merge Queue:
-
-   - Head to
-     `<your github repo> -> Settings -> Rules -> Rulesets -> New ruleset -> Import a ruleset`
-   - And upload `<repo root>/.github/branch-rulesets/Default Branch.json`. This
-     will:
-
-     - Require a `Merge Queue` for your default branch.
-     - Require `basics` job from the main GitHub workflow to pass before PRs can
-       be merged
-
-     The above is used to make sure that while the automatic releases of `npm`
-     packages run and might push version bumps & changelogs to your default
-     branch, no PR is merged in the meanwhile (which would risk a race
-     condition)
-
-2. 👀️ Double-check the defaults & tools in the repo that will be used in your
-   projects:
-
-   - The structure & files of projects in this repo:
-     - [`./.nodejs-versions-whitelist.cjs`](../.nodejs-versions-whitelist.cjs) —
-       Define an array of allowed `node.js` versions for your projects, used
-       during code generation & code checks
-     - [`./.npm-scopes-whitelist.cjs`](../.npm-scopes-whitelist.cjs) — Define an
-       array of allowed npm scopes (`@scope/<project name>`) for your projects
-       to be used when publishing to the npm registry
-     - [ `./infra/devx-and-repo/generators/_templates/package/new`](../infra/devx-and-repo/generators/_templates/package/new)
-       — the templates that `hygen` uses to generate the files of your new
-       projects.
-     - [`./infra/build/environment/src/index.ts`](../infra/build/environment/src/index.ts)
-       — Define your target browsers here (_as browserlist queries_)
-   - The base configurations of tools that your project files extend:
-     - [`jest` base config](./tools-details.md#jest-config)
-     - [`cypress` base config](./tools-details.md#cypress-config)
-     - [`babel` base config](./tools-details.md#babel-config)
-     - [`webpack` base config](./tools-details.md#webpack-config)
-     - [`typescript` base configs](./tools-details.md#typescript-config)
-     - [`eslint` base configs](./tools-details.md#eslint-config)
-       - special shout out to the import-order rule that you should define your
-         own packages scopes
-     - _[...all other secondary tools](./docs/monorepo.md#tools-list)_
-
 ### Install, import or create your package
 
 #### Installing dependencies of existing package
@@ -130,7 +86,7 @@ pnpm --workspace-root generate package new
 ```
 
 Check
-[the existing guide on how to create a new package](./docs/pnpm-intro.md/#creating-a-new-package-in-the-repo)
+[the existing guide on how to create a new package](./docs/pnpm-intro.md#creating-a-new-package-in-the-repo)
 in `pnpm` monorepo for more details.
 
 #### Importing a new package from another repository
@@ -248,8 +204,8 @@ After you rebase or merge your branch on latest default branch (_e.g._
    `pnpm --filter="<Your package name>..." --filter="devtools..." install`
 2. Likely you need to restart your code editor
 3. If you get conflicts in `pnpm-lock.yaml`, it's best to entirely accept the
-   version from the default branch (_e.g._ `main`/`master`) and rerun the install
-   for your changed packages so you re-create the lock file changes.
+   version from the default branch (_e.g._ `main`/`master`) and rerun the
+   install for your changed packages so you re-create the lock file changes.
 
 ## Code editor integration
 

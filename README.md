@@ -13,10 +13,10 @@
    configuration** for it.
 
 3. **🤔 What's different**: the repo utilizes a lesser known functionality of
-   `pnpm` which allows individual packages to choose their own `node.js`
+   `pnpm` which allows each individual package to choose its own `node.js`
    version; when you combine this with the idea that each existing package
-   installs only 1 tool, you essentially get isolated `tool + node.js`, e.g.
-   `eslint + node22` which lets you always execute `eslint` using `node22` even
+   installs only 1 tool, you essentially get isolated `<tool> + <node.js>`, e.g.
+   `eslint + node22` which lets you always execute `eslint` using `node22`, even
    from other packages via
    `pnpm --filter=<PACKAGE NAME THAT INSTALLS TOOL IN IT> run <TOOL NAME>`
 
@@ -56,8 +56,7 @@
 [List of Best Practices](#best-practices-list)
 
 ⚙️ [Tools & Configuration](#how-it-works) — ⚖️
-[Conventions](#conventions-and-core-principles) — 📋️
-[Known TODO](#known-todo-loose-roadmap)
+[Conventions](#conventions-and-core-principles) — 📋️ [What's next](#whats-next)
 
 <sub>[How can tools use different node.js?](#but-how-multiple-nodejs)</sub>
 
@@ -79,7 +78,7 @@
 
 1. 🔀 This is **a repository for frontend projects** and **it's meant to be
    fork-ed**.
- 
+
 2. ⚡ Once you do that, you have your own
    [monorepo](https://en.wikipedia.org/wiki/Monorepo 'Repository intended for multiple projects')
    to develop your frontend projects in, but **now with**:
@@ -116,8 +115,8 @@
    upgrade it without having to immediately upgrade your project or vice versa
 
 To make things easier (_and to serve as example_), there is
-[code generation](#generators-TODO) that creates new projects which extend all
-the base configs.
+[code generation](./docs/pnpm-intro.md#creating-a-new-package-in-the-repo) that
+creates new projects which extend all the base configs.
 
 <p> </p>
 
@@ -163,10 +162,19 @@ if any of those fit your setup:
 
 1. 🔀 **Fork this repo.**
 
-   At this point, you can already try [generating a new project](TODO) and see
-   how tools & CI work out of the box!
+2. 🔀 Initialize your fork with your preferences:
 
-2. 🎛️ Tweak the tools in the repo to fit the needs/preferences of your projects:
+   ```shell
+   pnpm --workspace-root generate repo init
+   ```
+
+3. 🔀 Onboard yourself and your code editor:
+
+   ```shell
+   pnpm --workspace-root generate repo onboard
+   ```
+
+4. 🎛️ Tweak the tools in the repo to fit the needs/preferences of your projects:
 
    - The structure & files of your new projects:
      - [`./.nodejs-versions-whitelist.cjs`](./.nodejs-versions-whitelist.cjs) —
@@ -200,15 +208,18 @@ if any of those fit your setup:
          where you can define yours or leave
      - _[...all other secondary tools](#tools-list)_
 
-3. 🙋 Edit `<repo root>/.github/CODEOWNERS` and add your team as owners to the
-   existing paths there
+5. 🙋 Edit `<repo root>/.github/CODEOWNERS` and add your team as owners to the
+   existing paths there. Or add `/** @<github user or team>` if there is going
+   to be only one owner.
 
-4. 📚 Move `<repo root>/README.md` to
+6. 📚 Move `<repo root>/README.md` to
    `<repo root>/docs/breakproof-repo-base.README.md` (or similar) & create your
-   own `<repo root>/README.md`
+   own `<repo root>/README.md`. You move or copy the
+   `<repo root>/docs/after-fork-setup/README.md` as your main one.
 
-5. If you haven't already, it's a good time to generate the files for your first
-   project!
+7. [Generate new](./docs/pnpm-intro.md#creating-a-new-package-in-the-repo) or
+   [import your existing](./infra/devx-and-repo/repo-shell-scripts/README.md#using-import-from-other-repo)
+   projects.
 
 ## If you want to automatically release projects as `npm` packages
 
@@ -229,8 +240,14 @@ You need to add some GitHub configuration for your repository:
 
 3. Set up GitHub repository `secret`s:
 
-   - `AUTORELEASE_BOT_TOKEN`: a GitHub token with rights to push to repository
+   - `AUTORELEASE_BOT_TOKEN`: a
+     [GitHub token with rights to push to repository](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#personal-access-tokens-classic)
      to be used by the bot doing automatic releases
+   - `NPM_REGISTRY_USER`: your npm registry user
+   - _\[Optional\]_ `NPM_REGISTRY_AUTH_TOKEN`: your npm registry auth token, if
+     you don't use a password instead
+   - _\[Optional\]_ `NPM_REGISTRY_PASSWORD`: your npm registry password if you
+     use this instead of auth token
 
 4. Set up GitHub Merge Queue:
 
@@ -243,17 +260,19 @@ You need to add some GitHub configuration for your repository:
      - Require `basics` job from the main GitHub workflow to pass before PRs can
        be merged
 
-     The above is used to make sure that while the automatic releases runs and
-     might push version bumps & changelogs to your default branch, no PR is
-     merged in the meanwhile (which would risk a race condition)
+     The above is used to make sure that no PR is merged while the CI for
+     automatic releases of `npm` packages is running. This CI job can push
+     version bumps & changelogs to your default branch. Without the merge queue
+     there is a risk of a race condition.
 
 5. Write the steps in `<repo root>/.github/actions/npm-login` that will
    authenticate you in the `npm` registry.
+
    - This action is empty by default and gets called on all places where
      packages are installed
    - To authenticate you would need to configure some repository secrets,
-     depending on your auth approach. All of the secrets will be accessible as
-     environment variables, and not through the github `${{ secrets }}`. This is
+     depending on your auth approach. All the secrets will be accessible as
+     environment variables, and not through the GitHub `${{ secrets }}`. This is
      done to overcome a limitation in GitHub reusable actions: they can't
      inherit secrets but do inherit environment variables.
      - `SECRET_NPM_REGISTRY_AUTH_TOKEN` – for this to have a value you must
@@ -263,6 +282,9 @@ You need to add some GitHub configuration for your repository:
        secret in your repository settings called `NPM_REGISTRY_USER`
      - `SECRET_NPM_REGISTRY_PASSWORD` – for this to have a value you must create
        a secret in your repository settings called `NPM_REGISTRY_PASSWORD`
+
+6. If you are publishing to a private registry set this at the top of the
+   [`<repo root>/.npmrc`](./.npmrc).
 
 <p> </p>
 
@@ -326,8 +348,7 @@ You need to add some GitHub configuration for your repository:
 ## 🧰 The current list of tools configured to work together
 
 Nothing is perfect, so this list will inevitably change
-(_[see ⬇️ "Known TODO/loose roadmap"](#known-todo-loose-roadmap)_). Here are the
-currently used tools:
+(_[see ⬇️ "What's next?"](#whats-next)_). Here are the currently used tools:
 
 | Tool                                                                                                                                               | What it's used for                                                       | Provided Configuration                                                              | `node.js` version used                       |
 | :------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------- | :---------------------------------------------------------------------------------- | :------------------------------------------- |
@@ -373,11 +394,11 @@ currently used tools:
    1. in a monorepo, everything can be an individual package
    2. industry-standard tools like `pnpm` can define package-specific behaviour
 
-1. 📦 So in a monorepo, **each of your projects are individual packages**. In
+2. 📦 So in a monorepo, **each of your projects are individual packages**. In
    the same way, it's possible to create a package inside the repository that
    **only installs 1 tool and nothing else**.
 
-1. ↪️ Instead of installing the tools directly, your projects install the other
+3. ↪️ Instead of installing the tools directly, your projects install the other
    packages from the repo that isolate the tool they need inside of them. **In
    other words**:
 
@@ -463,145 +484,35 @@ currently used tools:
 
 <p> </p>
 
-<a name="known-todo-loose-roadmap"></a>
+<a name="whats-next"></a>
 
-# 📋️ Known TODO / Loose Roadmap
+# 📋️ What's next?
 
-**====== !!!! WIP !!!!! ======**
+The
+[GitHub issues of type `Feature`](https://github.com/YotpoLtd/breakproof-base-monorepo/issues?q=is%3Aissue%20state%3Aopen%20type%3AFeature)
+can give you a picture of what kind of improvements we've been looking into.
 
-- When projects within `./infra/code-checks/*` change -> run lint for all
-  packages that depend on them
-  - Can be achieved by an additional script in their `"test:github-pr"`
-    - This means `lint-stage-isolated` must depend on things like
-      `eslint-problem-snapshotter` but that creates a circular dependency
-      - OR simply to install `eslint-problem-snapshotter` to each package that
-        uses the default lint base (which is all packages )
-        - but that again won't work for `lint-stage-isolated`
-        - or `code-problem-snapshotter`
-  - Another simple way: run lint checks for all packages if a package under
-    `./infra/code-checks/*` changed?
-- Ask for `projectId` when creating e2e app
-- Ask for CYPRESS SECRET NAME WHEN CREATING e2e APP
-- CODEOWNERS
-  - validate all files have code owners
-- Unify/standartize naming
-  - `tsconfig-bases` -> `typescript-isolated-base`
-  - `[?unsure?]` consider isolated package for `prettier` — is it really useful
-    since we always link it to the `prettier eslint plugin` which is linked to
-    `eslint` itself?
-- Configuration that is not related to a tool directly:
-  - supported browsers: it can be exposed to some empty file, less likely to
-    conflict
-  - sentence for generators to prompt for help
-  - link for the generators to point you for help
-  - allowed npm scopes
-  - allowed node versions
-- CODEOWNERS
-  - Ask for team name and add them to CODEOWNERS after package generation
-- Enable eslint plugin that uses schema to check `angular.json` files
-- Have a generator for Angular app and lib
-- Document repo requires "No squash" methodology so keep commits clear
-- Base `tsconfig` for `lit`-based projects.
-- Repo-level check for subsequent commits with the same message and forbid this
-  one.
-- Document when to use pnpm patch and when not to and when this repository is
-  using it already
-- Generate empty README.md and validate that something is actually added by
-  developer
-- Document existing packages and 1-line description
-- CI job that runs `eslint` instead of `eslint-snapshotter` and comments on each
-  PR that some of the (affected/repo?) packages have eslint problems they have
-  "ignored"
-- Add test for code generators which:
-  - generate a new lib package
-    - run its build & test
-    - run its sandbox recursive build
-  - generate release-able lib package and test that it's included in the list of
-    upcoming versions
-  - generate app package, run build & test
-- Make script for the `e2e` apps that can build the app it depends on and then
-  start a http server from its `dist` directory
-- Create `esbuild/vite/rollup-isolator-env` package to host webpack &
-  `evergreen-esbuuld/vite/rollup-lib-builder` that can be used by any app/lib
-  that doesn't require its own build or CLI system (like `angular`, or
-  `svelte-kit`)
-  - With this the lib will only have browser-related dependencies which means
-    its `node.js` will no longer be relevant
-- Create `webpack-isolator-env` package to host webpack &
-  `evergreen-webpack-builder` that can be used by any app/lib that doesn't
-  require its own build or CLI system (like `angular`, or `svelte-kit`)
-  - With this the app/lib will only have browser-related dependencies which
-    means its `node.js` will no longer be relevant
-- Make `dev:with-deps` only run direct specific dependencies or add a new script
-  that does that
-- Shared `--workspace-root` script to be used as an easy way to snapshot all
-  current eslint errors
-- Shared `--workspace-root` script to be used as an easy way to snapshot all
-  current TypeScript errors
-- Add `lit-analyzer` in base `lint-staged` config
-- Document merge queue settings for GitHub that will prevent merging of PRs
-  while automatic releases are happening
-- Lint script to forbid googlefonts references, same for fullstory
-- Create a mandatory code check via eslint to verify that there are no missing
-  or mismatched peer depenencies OR each of the problems are intentionally
-  ignored by providing a reason. Use a `.ts` config file for defining ignored
-  problems.
-  - Provide base config for known ignored problems
-- Create a mandatory code check that verifies that dependencies declared as
-  optional are really optional.
-- Consider splitting `dependencies`, `devDependencies` and
-  `optionalDependencies` into even more, purpose-specific sections like:
+Since the repository is done in a way that allows tools to be swapped there are
+some ideas, that we haven't yet created issues for. For example:
 
-  - App deps
-  - Peer deps required by runtime
-  - Release
-  - Release peer
-  - Test
-  - Test peer
-  - Build
-  - Build peer
-  - Deprecated/legacy runtime
-  - DeprecatedPeer
-
-- Shared script to list all \*-isolated packages
-
-  Notes:
-
-  - `pnpm prune --no-optional`
-  - then try to build
-
-  ```shell
-  ########################## Some notes for commands that we can execute for code checks ##########################
-  # FOR THE following commands we need to remove pnpm.patchedDependencies from package.json
-  jq 'del(.pnpm.patchedDependencies)' package.json > package.json.tmp && mv package.json.tmp package.json
-  # if there are package json changes validate that peer deps of the changed packages are correct
-  # ref: https://github.com/pnpm/pnpm/issues/6893#issuecomment-1944828397
-  pnpm install --filter="[HEAD]..." install --resolution-only
-  # if there are changes in lock file, validate peer deps are correct for ALL packages
-  pnpm install --filter="*" install --resolution-only
-  ```
-
-- Create a mandatory code check via eslint to verify that `tsconfig*json` files
-  do not define `types` or `typeRoots`.
-  - executed via eslint plugin for json schema
-  - custom error message: "Instead `type`/`typeRoots` create a `.d.ts` file that
-    you add to the `include` section of your config. This is done so that base
-    `tsconfig` can use `type`/`typeRoots` since they can't use `include`"
-- If there is a use-case for `"composite": true` in `tsconfig*json` files,
-  always define `"tsBuildInfoFile"` to something like
-  `"./node_modules/.cache/tsconfig.node.tsbuildinfo"`
-- FORBID major version changes for packages that are directly used via the
-  `workspace:` version
-- Add extra config to the existing eslint rule for package.json and make sure
-  `packageExtensions` section in the root `package.json5` is sorted
-  alphabetically
-- Add extra config to the existing eslint rule for package.json and make sure
-  `codeEditorIntegrationDependencies` section in the root `package.json5` is
-  sorted alphabetically
-- Create a wrapper package around url handling in React
-- Create a @repo/tscore package
-
-**====== !!!! WIP !!!!! ======**
+- `eslint` might in the future be swapped out with another tool like `oxc`
+  linter or perhaps whatever void0 are working on.
+- `rollup` might in the future be swapped out with `rolldown`
+- `webpack` is a build tool that served the FE community well. People can see it
+  as "old" or "outdated", but it keeps on living, used by `next.js` or reborn as
+  `rspack`, or `turpopack`. Currently, the sandbox applications in the
+  breakproof repo use `webpack`, but that could be swapped for any other build
+  tool
+- so far `lint-staged` has served us well, but we might just replace it with a
+  simple `.ts` script, since we are starting to tweak more from it, and we
+  actually only use its config format and its ability to list staged files and
+  then show their execution + some meta sugar in the terminal.
+- `cypress` + Cypress Cloud can be a great combo which has been a good friend in
+  end-to-end and integration testing. But for a while we can see developers can
+  are drawn to the more native way of writing tests with `playwright`.
+- ... _check out the
+  [GitHub issues](https://github.com/YotpoLtd/breakproof-base-monorepo/issues)
+  or create one if you have an idea_.
 
 <p> </p>
 
@@ -609,29 +520,52 @@ currently used tools:
 
 <p> </p>
 
-# Yotpo specifics
+# Breakproof repo specifics
 
-**====== !!!! WIP !!!!! ======**
+- conventional changelog allows a lot of prefixes, the repo only respects `fix`,
+  `feat` and breaking changes.
 
-- We have 2 packages providing base config for `eslint` and `prettier`. One
-  (`@repo/eslint-base-isolated`) depends on the other
-  (`@yotpo-common/shared-linter-config`). We've done this since we still have
-  projects in their own separate repos and we want to expose eslint config for
-  them but still have specific for this repo tweaks.
+## Yotpo specifics
 
-**====== !!!! WIP !!!!! ======**
+There are 2 packages providing base config for `eslint` and `prettier`. One
+(`@repo/eslint-base-isolated`) which depends on the other
+(`@yotpo-common/shared-linter-config`).
 
-### What's with
+We've done this because internally some projects in yotpo still live in their
+own separate repos. `@yotpo-common/shared-linter-config` is used to share the
+configuration with projects outside our breakproof repo, while
+`@repo/eslint-base-isolated` extends it with some tweaks.
 
-`[ -n \"$(pwd | grep '/node_modules/')\" ] || echo $npm_config_user_agent | grep -q 'pnpm/' || (echo 'PLEASE USE PNPM, not NPM' && exit 1)`?
+# Breakproof repo fixes
 
-We want to disallow package managers other than `pnpm` to be used in this repo.
-So we add this script to every package `preinstall` hook.
+1. For better integration with JetBrains IDEs, there is a _"fake"_
+   `<repo root>/package.json`. It's intentionally a symlink to a non-existent
+   path
 
-Ideally it would be just `npx only-allow pnpm` as described in
-[pnpm docs](https://pnpm.io/only-allow-pnpm), but:
+2. To work around a limitation in `pnpm` filtering, we introduce a new section
+   of dependencies in `package.json` called `devtoolsDependencies`. It's
+   intended for packages that do not affect the runtime or the build. So things
+   like lint, tests, or local development helpers.
 
-1. [There is a bug](https://github.com/pnpm/only-allow/pull/14) in `only-allow`
-   so we work around it.
-1. If developer is only using `pnpm` they might not have `node` installed at
-   all, so we need to check if `npx` exists (_via `which npx`_)
+3. In order to be strict and avoid packages accessing `<repo root>/node_modules`
+   but still let code-editors find installations of tools (_e.g._ `prettier`) we
+   introduced `codeEditorDependencies` in root `package.json5` that installs a
+   few dependencies only for local development (**_NOT_** _in CI_) and **_DOES
+   NOT SAVE_** them to the lock file.
+
+4. The preinstall script:
+
+   ```shell
+   [ -n \"$(pwd | grep '/node_modules/')\" ] || echo $npm_config_user_agent | grep -q 'pnpm/' || (echo 'PLEASE USE PNPM, not NPM' && exit 1)
+   ```
+
+   We want to disallow package managers other than `pnpm` to be accidentally
+   used in this repo. So we add this script to every package `preinstall` hook.
+
+   Ideally it would be just `npx only-allow pnpm` as described in
+   [pnpm docs](https://pnpm.io/only-allow-pnpm), but:
+
+   1. [There is a bug](https://github.com/pnpm/only-allow/pull/14) in
+      `only-allow` so we work around it.
+   2. If developer is only using `pnpm` they might not have `node` installed at
+      all, so we need to check if `npx` exists (_via `which npx`_)

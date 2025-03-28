@@ -1,6 +1,6 @@
 ## `breakproof-base-repo`
 
-[⬅️️ Back to the list of tools 🧰](./monorepo.md#tools-list) – [⬅️️ Back to main nav 📌](./monorepo.md#breakproof-nav)
+[⬅️️ Back to the list of tools 🧰](../README.md#tools-list) – [⬅️️ Back to main nav 📌](../README.md#breakproof-nav)
 
 ## 🗃️ Tool details
 
@@ -49,13 +49,13 @@ files, not by extending them. That's why we call this `forkable` instead of `bas
 
 #### Possible alternatives of `pnpm`
 
-_[see 📋 "Known TODO/loose roadmap"](./monorepo.md#known-todo-loose-roadmap)_
+_[see 📋 "What's next?"](../README.md#whats-next)_
 
 <p> </p>
 
 <p> </p>
 
-[⬅️️ Back to the list of tools 🧰](./monorepo.md#tools-list)
+[⬅️️ Back to the list of tools 🧰](../README.md#tools-list)
 
 ---
 
@@ -78,7 +78,7 @@ Nothing considered.
 
 <p> </p>
 
-[⬅️️ Back to the list of tools 🧰](./monorepo.md#tools-list)
+[⬅️️ Back to the list of tools 🧰](../README.md#tools-list)
 
 ---
 
@@ -99,7 +99,7 @@ Nothing considered.
 
 <p> </p>
 
-[⬅️️ Back to the list of tools 🧰](./monorepo.md#tools-list)
+[⬅️️ Back to the list of tools 🧰](../README.md#tools-list)
 
 ---
 
@@ -133,13 +133,13 @@ Nothing considered.
 
 #### Possible alternatives of `eslint`
 
-_[see 📋 "Known TODO/loose roadmap"](./monorepo.md#known-todo-loose-roadmap)_ \*(eslint 8 to be upgraded to eslint 9)
+_[see 📋 "What's next?"](../README.md#whats-next)_ \*(eslint 8 to be upgraded to eslint 9)
 
 <p> </p>
 
 <p> </p>
 
-[⬅️️ Back to the list of tools 🧰](./monorepo.md#tools-list)
+[⬅️️ Back to the list of tools 🧰](../README.md#tools-list)
 
 ---
 
@@ -167,7 +167,7 @@ Nothing considered.
 
 <p> </p>
 
-[⬅️️ Back to the list of tools 🧰](./monorepo.md#tools-list)
+[⬅️️ Back to the list of tools 🧰](../README.md#tools-list)
 
 ---
 
@@ -200,7 +200,7 @@ Nothing considered.
 
 <p> </p>
 
-[⬅️️ Back to the list of tools 🧰](./monorepo.md#tools-list)
+[⬅️️ Back to the list of tools 🧰](../README.md#tools-list)
 
 ---
 
@@ -225,7 +225,7 @@ Nothing considered.
 
 <p> </p>
 
-[⬅️️ Back to the list of tools 🧰](./monorepo.md#tools-list)
+[⬅️️ Back to the list of tools 🧰](../README.md#tools-list)
 
 ---
 
@@ -264,7 +264,7 @@ Nothing considered.
 
 <p> </p>
 
-[⬅️️ Back to the list of tools 🧰](./monorepo.md#tools-list)
+[⬅️️ Back to the list of tools 🧰](../README.md#tools-list)
 
 ---
 
@@ -285,7 +285,7 @@ Nothing considered.
 
 <p> </p>
 
-[⬅️️ Back to the list of tools 🧰](./monorepo.md#tools-list)
+[⬅️️ Back to the list of tools 🧰](../README.md#tools-list)
 
 ---
 
@@ -313,7 +313,7 @@ Nothing considered.
 
 <p> </p>
 
-[⬅️️ Back to the list of tools 🧰](./monorepo.md#tools-list)
+[⬅️️ Back to the list of tools 🧰](../README.md#tools-list)
 
 ---
 
@@ -341,7 +341,7 @@ Nothing considered.
 
 <p> </p>
 
-[⬅️️ Back to the list of tools 🧰](./monorepo.md#tools-list)
+[⬅️️ Back to the list of tools 🧰](../README.md#tools-list)
 
 ---
 
@@ -369,14 +369,14 @@ Nothing considered.
 
 #### Possible alternatives of `cypress`
 
-_[see 📋 "Known TODO/loose roadmap"](./monorepo.md#known-todo-loose-roadmap)_ \*(playwright is under consideration as
+_[see 📋 "What's next?"](../README.md#whats-next)_ \*(playwright is under consideration as
 replacement)
 
 <p> </p>
 
 <p> </p>
 
-[⬅️️ Back to the list of tools 🧰](./monorepo.md#tools-list)
+[⬅️️ Back to the list of tools 🧰](../README.md#tools-list)
 
 ---
 
@@ -414,14 +414,14 @@ replacement)
 
 #### Possible alternatives of `jest`
 
-_[see 📋 "Known TODO/loose roadmap"](./monorepo.md#known-todo-loose-roadmap)_ \*(vitest is under consideration as
+_[see 📋 "What's next?"](../README.md#whats-next)_ \*(vitest is under consideration as
 replacement)
 
 <p> </p>
 
 <p> </p>
 
-[⬅️️ Back to the list of tools 🧰](./monorepo.md#tools-list)
+[⬅️️ Back to the list of tools 🧰](../README.md#tools-list)
 
 ---
 
@@ -451,7 +451,7 @@ Nothing considered.
 
 <p> </p>
 
-[⬅️️ Back to the list of tools 🧰](./monorepo.md#tools-list)
+[⬅️️ Back to the list of tools 🧰](../README.md#tools-list)
 
 ---
 
@@ -484,13 +484,13 @@ Nothing considered.
 
 #### Possible alternatives of `release-it`
 
-_[see 📋 "Known TODO/loose roadmap"](./monorepo.md#known-todo-loose-roadmap)_
+_[see 📋 "What's next?"](../README.md#whats-next)_
 
 <p> </p>
 
 <p> </p>
 
-[⬅️️ Back to the list of tools 🧰](./monorepo.md#tools-list)
+[⬅️️ Back to the list of tools 🧰](../README.md#tools-list)
 
 ---
 
@@ -524,18 +524,18 @@ _[see 📋 "Known TODO/loose roadmap"](./monorepo.md#known-todo-loose-roadmap)_
 
 #### Possible alternatives of `webpack`
 
-_[see 📋 "Known TODO/loose roadmap"](./monorepo.md#known-todo-loose-roadmap)_ \*(import maps as replacement in the
+_[see 📋 "What's next?"](../README.md#whats-next)_ \*(import maps as replacement in the
 long-term)
 
 #### Planned additional features using `webpack`
 
-_[see 📋 "Known TODO/loose roadmap"](./monorepo.md#known-todo-loose-roadmap)_
+_[see 📋 "What's next?"](../README.md#whats-next)_
 
 <p> </p>
 
 <p> </p>
 
-[⬅️️ Back to the list of tools 🧰](./monorepo.md#tools-list)
+[⬅️️ Back to the list of tools 🧰](../README.md#tools-list)
 
 ---
 
@@ -570,13 +570,13 @@ For example:
 
 #### Possible alternatives of `sucrase`, `ts-node` & `tsx`
 
-_[see 📋 "Known TODO/loose roadmap"](./monorepo.md#known-todo-loose-roadmap)_
+_[see 📋 "What's next?"](../README.md#whats-next)_
 
 <p> </p>
 
 <p> </p>
 
-[⬅️️ Back to the list of tools 🧰](./monorepo.md#tools-list)
+[⬅️️ Back to the list of tools 🧰](../README.md#tools-list)
 
 ---
 
@@ -607,13 +607,13 @@ _[see 📋 "Known TODO/loose roadmap"](./monorepo.md#known-todo-loose-roadmap)_
 
 #### Possible alternatives of `babel` + plugins in the repo
 
-_[see 📋 "Known TODO/loose roadmap"](./monorepo.md#known-todo-loose-roadmap)_
+_[see 📋 "What's next?"](../README.md#whats-next)_
 
 <p> </p>
 
 <p> </p>
 
-[⬅️️ Back to the list of tools 🧰](./monorepo.md#tools-list)
+[⬅️️ Back to the list of tools 🧰](../README.md#tools-list)
 
 ---
 
@@ -640,13 +640,13 @@ _[see 📋 "Known TODO/loose roadmap"](./monorepo.md#known-todo-loose-roadmap)_
 
 #### Possible alternatives of `rollup` + plugins in the repo
 
-_[see 📋 "Known TODO/loose roadmap"](./monorepo.md#known-todo-loose-roadmap)_
+_[see 📋 "What's next?"](../README.md#whats-next)_
 
 <p> </p>
 
 <p> </p>
 
-[⬅️️ Back to the list of tools 🧰](./monorepo.md#tools-list)
+[⬅️️ Back to the list of tools 🧰](../README.md#tools-list)
 
 ---
 
@@ -674,7 +674,7 @@ Nothing considered.
 
 <p> </p>
 
-[⬅️️ Back to the list of tools 🧰](./monorepo.md#tools-list)
+[⬅️️ Back to the list of tools 🧰](../README.md#tools-list)
 
 ---
 
@@ -734,7 +734,7 @@ Nothing considered.
 
 <p> </p>
 
-[⬅️️ Back to the list of tools 🧰](./monorepo.md#tools-list)
+[⬅️️ Back to the list of tools 🧰](../README.md#tools-list)
 
 ---
 
@@ -761,7 +761,7 @@ Nothing considered.
 
 <p> </p>
 
-[⬅️️ Back to the list of tools 🧰](./monorepo.md#tools-list)
+[⬅️️ Back to the list of tools 🧰](../README.md#tools-list)
 
 ---
 
@@ -793,7 +793,7 @@ Nothing considered.
 
 <p> </p>
 
-[⬅️️ Back to the list of tools 🧰](./monorepo.md#tools-list)
+[⬅️️ Back to the list of tools 🧰](../README.md#tools-list)
 
 ---
 
@@ -819,7 +819,7 @@ Nothing considered.
 
 <p> </p>
 
-[⬅️️ Back to the list of tools 🧰](./monorepo.md#tools-list)
+[⬅️️ Back to the list of tools 🧰](../README.md#tools-list)
 
 ---
 
@@ -845,4 +845,4 @@ Nothing considered.
 
 <p> </p>
 
-[⬅️️ Back to the list of tools 🧰](./monorepo.md#tools-list) — [⬆️ Back to top nav ⬆️](#breakproof-nav)
+[⬅️️ Back to the list of tools 🧰](../README.md#tools-list) — [⬆️ Back to top nav ⬆️](#breakproof-nav)
