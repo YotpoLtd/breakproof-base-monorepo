@@ -29,7 +29,7 @@
   "devtoolsDependencies": {
     "@repo/eslint-base-isolated": "workspace:^",
     "@repo/lint-staged-base-isolated": "workspace:^",
-    "@yotpo-common/tsconfig-bases": "workspace:^",
+    "@repo/tsconfig-bases": "workspace:^",
     "prettier": "^3.4.2",
     "shellcheck": "^3.0.0"
   }

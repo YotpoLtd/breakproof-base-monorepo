@@ -1,4 +1,4 @@
 {
-  "extends": "@yotpo-common/tsconfig-bases/tsconfig.node-transpiled.base.json",
+  "extends": "@repo/tsconfig-bases/tsconfig.node-transpiled.base.json",
   "include": ["./*"]
 }
