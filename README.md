@@ -1,4 +1,8 @@
 <picture><img alt="Breakproof Base Repo BETA VERSION" src="./docs/Header.svg" /></picture>
+![Linux is supported](https://img.shields.io/badge/Linux-Supported-pass)
+![macOS is supported](https://img.shields.io/badge/macOS-Supported-pass)
+![Windows is not supported](https://img.shields.io/badge/Windows-Not%20Supported-red)
+
 
 ## TLDR-_ish_
 
