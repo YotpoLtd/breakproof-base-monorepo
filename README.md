@@ -1,65 +1,19 @@
-<picture><img alt="Breakproof Base Repo BETA VERSION" src="./docs/Header.svg" /></picture>
+<div align="center">
+
+<picture><img alt="Breakproof Base Repo BETA VERSION" src="./docs/logo-big.svg" heigth=200px /></picture>
+
 ![Linux is supported](https://img.shields.io/badge/Linux-Supported-pass)
 ![macOS is supported](https://img.shields.io/badge/macOS-Supported-pass)
 ![Windows is not supported](https://img.shields.io/badge/Windows-Not%20Supported-red)
 
-
-## TLDR-_ish_
-
-1. **❓️What is it**: consider this a template repository but instead of copying
-   it, you fork it, and this way you can keep receiving updates simply via `git`
-
-2. **📦️ What's included**: it is monorepo managed only using `pnpm` (_no
-   abstraction on top of it_) and it has several packages already in it; each of
-   those packages installs only one dependency; this dependency is an
-   industry-standard tool like `eslint` or `TypeScript` or `rollup` or `jest`,
-   etc. and the package that installs it includes **detailed base
-   configuration** for it.
-
-3. **🤔 What's different**: the repo utilizes a lesser known functionality of
-   `pnpm` which allows each individual package to choose its own `node.js`
-   version; when you combine this with the idea that each existing package
-   installs only 1 tool, you essentially get isolated `<tool> + <node.js>`, e.g.
-   `eslint + node22` which lets you always execute `eslint` using `node22`, even
-   from other packages via
-   `pnpm --filter=<PACKAGE NAME THAT INSTALLS TOOL IN IT> run <TOOL NAME>`
-
-4. **🎯 What's the goal**: you focus on **only on your project code**, not on
-   maintaining the tooling around it up-to-date or spending hours/days trying to
-   make different tools work well together; the tooling for lint & type checks,
-   testing, building, CI/CD, etc. is already working, well configured and
-   **always up-to-date**; you get that when you install a package from this repo
-   that includes a specific tool and then extend the provided tool config;
-
-5. **🔍 How is this achieved**: your project **can lag behind or have newer
-   `node.js` version from any of the tools it uses** and this means you can
-   safely upgrade only your project, without having to think about upgrading the
-   tools; in fact this repository keeps each individual tool up-to-date, you
-   simply pull in the changes in your fork and ✨️*voilà* ✨you are using the
-   latest & greatest again.
-
-6. **🎁 CI/CD that just works**: if your projects have specific scripts defined
-   in their `package.json`, this repo includes the needed GitHub CI/CD workflows
-   & git pre-commit hooks that will pick them up and run them at the correct
-   time & place; scripts names are not controversial, so things like `build` for
-   building, `test` for testing, `relese` for npm release; some script name
-   conventions are not typical but are very explicit, e.g.
-   `lint:precommit`/`lint:github-pr` for linting at the given event.
-
-<p> </p>
-
-<picture><img alt="GitHub Cover" src="./docs/Diagram.svg" /></picture>
-
-<div align="center">
-
 <a name="breakproof-nav"></a>
 
-💡 [What's the idea?](#the-idea) — 🚀
-[Getting started](#getting-started-with-your-breakproof-repo) — 🎯
-[Where is this useful?](#purpose) — 🏆
+🎯 [What problems does it solve?](#the-problems-it-solves) — 💡
+[How is it done?](#how-it-works) — 🚀
+[Getting started](#getting-started-with-your-breakproof-repo) — 🏆
 [List of Best Practices](#best-practices-list)
 
-⚙️ [Tools & Configuration](#how-it-works) — ⚖️
+⚙️ [Tools & Configuration](#tools-list) — ⚖️
 [Conventions](#conventions-and-core-principles) — 📋️ [What's next](#whats-next)
 
 <sub>[How can tools use different node.js?](#but-how-multiple-nodejs)</sub>
@@ -74,53 +28,81 @@
 
 </div>
 
----
+# The Breakproof monorepo base: **TLDR**
 
-<a name="the-idea"></a>
+The breakproof base monorepo offers **a new home 🏠** for **your frontend
+projects** (_for both enterprise or pet projects_). It's designed to let you
+focus entirely on them, to make upgrading them easier and to ensure all
+processes around them are always up to date, optimized & following best
+practices, all of that **without breaking your code or _breaking-the-bank_**.
 
-# 💡What's the idea here?
+Forking 🔀 the breakproof base monorepo creates **your new breakproof home** 🏠,
+where you **import your existing** projects or **create new** ones. ⚡
+**_Immediately_** those projects get a ton of **working** processes like
+**optimized** CI/CD, **meticulous** code checks, **automatic** `npm` releases,
+**precise** code-editor integration, etc. **_Because_** you forked the repo, you
+keep receiving updates for those processes simply via `git pull`.
 
-1. 🔀 This is **a repository for frontend projects** and **it's meant to be
-   fork-ed**.
+All of that 🔼 is implemented by making **industry-standard tools 🏆** work
+together, **_NOT_** introducing "_yet-another-abstraction_" and **_NOT_**
+requiring specific project tech stack.
 
-2. ⚡ Once you do that, you have your own
-   [monorepo](https://en.wikipedia.org/wiki/Monorepo 'Repository intended for multiple projects')
-   to develop your frontend projects in, but **now with**:
+<a name="the-problems-it-solves"></a>
 
-   1. [**best-practices** _( listed below ⬇️ )_](#best-practices-list) already
-      **configured** and **operational**.
-      (_[see "🚀 Get Started"](#getting-started-with-your-breakproof-repo)_)
-   2. each individual tool running in its own isolated version of `nodej.js`,
-      which means **you can upgrade it without having to immediately upgrade
-      your project** or vice versa
+# 🎯 What problems does `Breakproof Base Repo` fork solve?
 
-3. 🌟 When the best practices **_inevitably change_** or tools get outdated, you
-   simply pull updates from this base repo into your forked repo, and you will
-   once again be using the latest best practices & newer tools, instead of
-   spending time re-reconfiguring them yourself.
+<picture><img alt="project-vs-tools-problem" src="./docs/project-vs-tools.svg" /></picture>
 
-4. 🛠️ All the applied best practices are achieved using only
-   [**industry-standard tools** _( listed below ⬇️ )_](#tools-list) configured
-   to _work together_.
+🛠️ You want to **focus building your project**, not waste time in upgrading the
+tooling around it or making different tools for code checks, testing, build &
+release behave well together or with your code editor, **_BUT at the same
+time_** you want to get the bug fixes and performance improvements from latest
+versions of all tools 🤔 ([solution in next section](#how-it-works)).
 
-5. ⚪ There is **_no abstraction wrapping those tools_** or **their configs**,
-   and there is **_nothing that magically injects code_** in them.
+<p> </p>
 
-6. 🧱 This repo provides a
-   [set of conventions](#conventions-and-core-principles) & working base configs
-   for the tools, so each individual project can extend & modify them thus
-   remaining in full control of its own configuration.
+<picture><img alt="project-vs-cicd-problem" src="./docs/project-vs-cicd.svg" /></picture>
 
-7. 🔄 Each individual tool can be swapped with another as long as it does it's
-   job. _([role of each tool is listed below ⬇️](#tools-list)_
+👨‍🔧 It's hard to create a well-optimized, precise & cost-effective CI/CD that
+doesn't break with scale and informs developers what is going to happen without
+noise. You want someone else to create & maintain 90% of CD/CD processes,
+without requiring your projects to have specific tech stack 🤔
+([solution in next section](#how-it-works)).
 
-8. 📦 (_this one deserves repetition_): Each individual tool runs in its own
-   isolated environment with its own `nodejs` version, which means you can
-   upgrade it without having to immediately upgrade your project or vice versa
+<p> </p>
 
-To make things easier (_and to serve as example_), there is
-[code generation](./docs/pnpm-intro.md#creating-a-new-package-in-the-repo) that
-creates new projects which extend all the base configs.
+<picture><img alt="project-vs-upgrade-problem" src="./docs/project-vs-upgrade.svg" /></picture>
+
+🗄 You **cannot regularly stop** development until you upgrade everything
+everywhere, you want to do it **piece by piece in isolation** 🤔
+([solution in next section](#how-it-works)).
+
+<p> </p>
+
+<picture><img alt="project-vs-strictness" src="./docs/project-vs-strictness.svg" /></picture>
+
+🕊 You want to improve your codebase but cannot fix all problems at once. You
+need to be **tolerant of existing problems** but **forbid new problematic code**
+🤔 ([solution in next section](#how-it-works)).
+
+<p> </p>
+
+<picture><img alt="project-vs-yet-another-config-and-wrapper" src="./docs/project-vs-yet-another-config-and-wrapper.svg" /></picture>
+
+🥴 You are **tired of learning new configuration formats** with each new
+repo-management tool that comes out and then **hitting its customization
+limits**. You want to **directly deal with the tools** used but still rely on
+**sensible default configuration** you can extend 🤔
+([solution in next section](#how-it-works)).
+
+<p> </p>
+
+<picture><img alt="project-vs-industry-standard-and-swap" src="./docs/project-vs-industry-standard-and-swap.svg" /></picture>
+
+🏆 You want to use industry-standard best practices without having to design the
+entire process from scratch, **_BUT at the same time_** be free to swap
+individual tools without having to redo the entire system 🤔
+([solution in next section](#how-it-works)).
 
 <p> </p>
 
@@ -128,31 +110,100 @@ creates new projects which extend all the base configs.
 
 <p> </p>
 
-<a name="purpose"></a>
+<a name="how-it-works"></a>
 
-## 🎯 Where is this useful? (_purpose_)
+# 💡 How does `Breakproof Base Repo` solve those problems?
 
-Using a fork of this repository as the place to develop your projects is useful
-if any of those fit your setup:
+<picture><img alt="Breakproof package isolation" src="./docs/breakproof-isolation.svg" /></picture>
 
-- 🗄 You work in a company with large-enough codebase that you cannot regularly
-  stop development until you upgrade everything at once. You need **gradual**
-  isolated **upgrades**.
+- The repo is a `pnpm` workspace — _a.k.a._ monorepo managed only using `pnpm`
+  without any abstraction on top of it. This, by itself, lets you isolate one
+  project from another by making each a separate package. The breakproof repo
+  goes **_a step further_**.
 
-- 🔍 You have a legacy codebase that you want to gradually bring up to latest
-  standards. You need to be able to split it and focus on one piece at time.
+- When using the breakproof repo, your projects are isolated from the tools they
+  use. This is achieved by installing the tools in a separate package instead of
+  the same package as your project. In fact each different tool is installed in
+  its own individual package. This allows us to leverage an ability of `pnpm` to
+  specify a different `node.js` for each package. Essentially you get an
+  isolated pair of `<tool> + <node.js>`, e.g. `eslint + node22` which lets you
+  execute `eslint` using `node22` from any place in the repo with command
+  similar to:
+  `pnpm --filter=<PACKAGE NAME THAT INSTALLS TOOL IN IT> run <TOOL NAME>`
 
-- 👨‍🔧 You have a codebase (_of any size_), and you don't want to spend time
-  wiring different tools together just to make your software lifecycle work. And
-  then doing the **_same thing again_** when they have new versions. You need
-  those processes **already working** and **their upgrades managed** for you.
+- The breakproof repo comes with several tool packages already in it, each
+  installs one industry-standard tool like `eslint` or `TypeScript` or `rollup`
+  or `jest`, …[_( full list below ⬇️ )_](#tools-list). Additionally, each of
+  those packages include **detailed base configuration** for the specific tool
+  that your projects can extend. 🔄 Each individual tool can be swapped with
+  another as long as it does it's job.
+  _([role of each tool is listed below ⬇️](#tools-list)_
 
-- 🕊 You want to improve your codebase but cannot fix all problems at once. You
-  need to be tolerant of existing problems but forbid new problematic code.
+- On many occasions the base configuration is tweaked so it accounts for
+  limitation of another tool, thus making them behave well together. Not all
+  tools accept all their settings through a config file, some require CLI
+  arguments. For those occasions, each package that contains an isolated tool
+  defines a command in the "script" section of its `package.json` to act as a
+  shortcut. This shortcut can be executed from anywhere running:
+  `pnpm --filter=<PACKAGE NAME THAT INSTALLS TOOL IN IT> run <SHORTCUT NAME>`
 
-- 🥴 You are tired of learning new configuration formats with each new
-  repo-management tool that comes out and then hitting its customization limits.
-  You want to **directly deal with the tools** used.
+- The above 🔼 means that suddenly you can upgrade one tool in complete
+  isolation from the rest & your project, even if the newer version requires a
+  newer `node.js` version. This will not affect other packages. It also means
+  your code can use whatever `node.js` version you need while some useful tool
+  is "stuck" in the past without dragging you down
+
+<p> </p>
+
+<picture><img alt="Breakproof CI/CD setup" src="./docs/breakproof-cicd.svg" /></picture>
+
+- The CI/CD process is implemented as GitHub actions/workflows. Because it knows
+  the repo uses `pnpm`, we can target only a subset of the packages inside it
+  when running tasks. For example, if a PR changes only your project the CI/CD
+  will run test & linting checks **only for your project**. It will also run
+  them in parallel, and install only the dependencies that your project needs
+  which are cached, so subsequent runs with the same dependencies don't waste
+  time re-downloading them.
+
+- The only requirement from your projects to participate in the CI/CD is to
+  define properties in the `"scripts"` section of their `package.json` with
+  specific names. You can run whatever command you like there, but probably you
+  will run some of the isolated tools as shown above. For example, if you want
+  your project tested in GitHub PRs, the project must define a `lint:github-pr`
+  script with value of `pnpm --filter='@repo/jest-base-isolated' run jest` where
+  `@repo/jest-base-isolated` is just the name of the package that isolates
+  `jest`. The convention for the names of those scripts is as straightforward as
+  possible, so you need `build` for building, `release` for `npm` releases, etc.
+
+- Because the CI/CD is a GitHub action, it easily posts comments on your PRs
+  with useful info about the upcoming releases when PR is merged, or summary of
+  code problems found in the changed packages. The CI/CD will also run specific
+  checks for repository [conventions](#conventions-and-core-principles) like
+  making sure every `package.json` explicitly defines desired `node.js` version
+  to use. The breakproof repo even implements
+  [GitHub job summary](https://github.blog/news-insights/product-news/supercharging-github-actions-with-job-summaries/)
+  which allows for a friendly way to overview the progress of the running
+  workflow without the noise of going through logs.
+
+- You can implement your custom CI/CD bits like running deployment as just
+  another GitHub workflow, **_BUT_** with the benefit that your workflow can
+  receive extra inputs — the list of packages that have been changed or the list
+  of packages that will be automatically released to `npm`. You can then use
+  that information to only trigger logic in certain cases.
+
+<picture><img alt="Tolerance for past problems" src="./docs/breakproof-snapshot-errors.svg" /></picture>
+
+- To allow you to work on projects that have some code problems **_BUT at the
+  same time_** stop new problems from popping up, the breakproof repo has
+  created a few `node.js` scripts inspired by `esplint` that basically
+  "snapshots"/"remembers" what kind of problems each of your files have and how
+  many occurrences per problem type there are. This allows you to ignore the
+  existing ones but error out if the number of problems increase. This same
+  ability of "remembering existing problems" is useful when tools are upgraded
+  or their configuration changes. At this point they can become stricter or
+  change the way they detect problems. To unblock the upgrade without investing
+  immediately investing time you can snapshot the new results and continue with
+  your day.
 
 <p> </p>
 
@@ -166,13 +217,13 @@ if any of those fit your setup:
 
 1. 🔀 **Fork this repo.**
 
-2. 🔀 Initialize your fork with your preferences:
+2. 🎛️ Initialize your fork with your preferences:
 
    ```shell
    pnpm --workspace-root generate repo init
    ```
 
-3. 🔀 Onboard yourself and your code editor:
+3. 🚀 Onboard yourself and your code editor:
 
    ```shell
    pnpm --workspace-root generate repo onboard
@@ -298,7 +349,7 @@ You need to add some GitHub configuration for your repository:
 
 <a name="best-practices-list"></a>
 
-## 🏆 List of Best Practices
+# 🏆 List of Best Practices
 
 |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        badge | details                                                                                                                                                                                                                                                   |
 | -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -329,27 +380,9 @@ You need to add some GitHub configuration for your repository:
 
 <p> </p>
 
-<a name="how-it-works"></a>
-
-# ⚙️ How the repo works
-
-**What you see is what you get**:
-
-- Installation of industry-standard tools
-- Base configs of those tools, which are created to work well together
-- Code-generation tool that creates your new project with ~empty config files
-  that extend the base ones.
-- Your projects can directly add/override specific config parts or optionally
-  use available helpers to do so
-- Since your project simply extends the config, you can modify it to fit your
-  package individual needs without learning new config formats specific to this
-  repo – _**you directly use the configs of each tool**_.
-- Each tool runs in isolated environment with its individual version of `nodejs`
-  (_[see ❓ How can tools use different node.js ❓](#but-how-multiple-nodejs)_)
-
 <a name="tools-list"></a>
 
-## 🧰 The current list of tools configured to work together
+# 🧰 The current list of tools configured to work together
 
 Nothing is perfect, so this list will inevitably change
 (_[see ⬇️ "What's next?"](#whats-next)_). Here are the currently used tools:
@@ -381,53 +414,6 @@ Nothing is perfect, so this list will inevitably change
 | [🌐](https://github.com/features/actions) `github` CI                                                                                              | [🧩 multiple roles](./docs/tools-details.md#github-ci-role)              | [⚙️ forkable config in repo](./docs/tools-details.md#github-ci-config)              | n/a _(does not rely on `node.js`)_           |
 | [🌐](https://code.visualstudio.com/) `VSCode` calibration                                                                                          | [🧩 multiple roles](./docs/tools-details.md#vscode-calibration-role)     | [⚙️ hint + importable config](./docs/tools-details.md#vscode-calibration-config)    | `v22.6.0` (_editor itself uses that_)        |
 | [🌐](https://www.jetbrains.com/) `JetBrains` calibration                                                                                           | [🧩 multiple roles](./docs/tools-details.md#jetbrains-calibration-role)  | [⚙️ hint + importable config](./docs/tools-details.md#jetbrains-calibration-config) | `v22.6.0` (_editor itself uses that_)        |
-
-<p> </p>
-
-[⬆️ Back to top nav ⬆️](#breakproof-nav)
-
-<p> </p>
-
-<a name="but-how-multiple-nodejs"></a>
-
-## ❓ How can tools use different node.js? ❓
-
-1. 💡 **There's no magic!** `The Breakproof Repo` takes advantage of the 2
-   simple ideas:
-
-   1. in a monorepo, everything can be an individual package
-   2. industry-standard tools like `pnpm` can define package-specific behaviour
-
-2. 📦 So in a monorepo, **each of your projects are individual packages**. In
-   the same way, it's possible to create a package inside the repository that
-   **only installs 1 tool and nothing else**.
-
-3. ↪️ Instead of installing the tools directly, your projects install the other
-   packages from the repo that isolate the tool they need inside of them. **In
-   other words**:
-
-   - If you need `eslint`, instead of running `pnpm install eslint --save-dev`,
-     your project will do `pnpm install @repo/eslint-base-isolated --save-dev`
-   - And instead of running `npx eslint`, your project will do
-     `pnpm --filter="@repo/eslint-base-isolated" run eslint` which means they
-     run the `eslint` script defined in the `package.json` of the
-     `<tool name>-base-isolated` package
-   - The existence of `@repo/eslint-base-isolated` as individual package allow
-     us to define that all of its scripts (_including the `eslint`_ one) are
-     executed using a specific version of node. For this to happen we currently
-     rely on `pnpm`
-     (_[the roles of pnpm in this repo are listed below ⬇️](#pnpm-role)_)
-   - Finally, the `eslint` script simply needs to enter your project directory
-     (a.k.a. `cd <project dir>`) and run `eslint`.
-
-**Related:**
-
-- In reality, it's very unlikely that you ever run
-  `pnpm --filter="@repo/evergreen-eslint-isolator" run eslint` yourself, because
-  the base configuration files and code generators in this repo already know
-  about the packages that isolate tools and use them.
-- The name of the package `@repo/evergreen-eslint-isolator` is an example, so
-  practically it can be called anything
 
 <p> </p>
 
