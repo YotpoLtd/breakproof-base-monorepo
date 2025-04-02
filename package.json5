@@ -124,7 +124,7 @@
     // Install dependencies defined in codeEditorIntegrationDependencies of this file WITHOUT saving them to the lock file
     'code-editor:install-tools-at-top-level': 'CODE_EDITOR_INSTALL=1 npm_config_save=false npm_config_lockfile=false pnpm --workspace-root install --prefer-offline',
     'code-editor:jetbrains:fix-eslint-at-top-level': 'ln -sf ./this-file-should-not-exist-please-delete-me ./package.json',
-    'code-editor:symlink-default-node': 'ln -sf "$(pnpm which node)" ./infra/node',
+    'code-editor:symlink-default-node': 'ln -sf "$(readlink -f $(pnpm which node))" ./infra/node',
   },
 
   /**
