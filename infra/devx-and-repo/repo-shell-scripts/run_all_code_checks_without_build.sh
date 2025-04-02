@@ -31,5 +31,6 @@ validate_codeowners || exit 1
 # for affected packages (changed packages and any that depend on them)
 pnpm_affected_test_filter \
   --parallel \
+  --workspace-concurrency="$(nproc)" \
   run "/($TEST_SCRIPT_NAME)|($LINT_SCRIPT_NAME)/" \
   || exit 1
