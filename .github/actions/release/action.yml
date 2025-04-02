@@ -15,11 +15,18 @@ inputs:
   package-filter:
     description: The pnpm filter/selector of packages you want to release
     required: true
+  snapshot:
+    description:
+      Whether to release a snapshot version or use default strategy of finding
+      the next version based on the git commit messages
+    required: false
+    default: ''
 
 runs:
   using: composite
   steps:
     - name: ⚠️ Warning ⚠️
+      if: ${{ ! inputs.snapshot }}
       shell: bash
       run: |
         echo '## ⚠️ Warning ⚠️' >> "$GITHUB_STEP_SUMMARY"
@@ -42,14 +49,14 @@ runs:
         git config --local user.name "${{ inputs.autorelease-bot-name }}"
 
     - name: ✨Automatically release ✨
-      if: ${{ steps.releases.outputs.list-as-names-only }}
+      if: ${{ steps.releases.outputs.list-as-names-only || inputs.snapshot }}
       env:
         GITHUB_TOKEN: ${{ inputs.AUTORELEASE_BOT_TOKEN }}
       shell: bash
       run: |
         # transform the list of package names to multiple `--filter=<PACKAGE NAME>` arguments for pnpm
         PNPM_RELEASE_FILTER_ARGS=$(
-          echo "${{ steps.releases.outputs.list-as-names-only }}" | \
+          echo "${{ steps.releases.outputs.list-as-names-only || inputs.package-filter }}" | \
             sed 's/^/--filter=/' | \
             tr '\n' ' '
         )
@@ -58,8 +65,8 @@ runs:
         export IS_MAIN_BREAKPROOF_REPO='${{steps.releases.outputs.is-main-breakproof-repo}}'
 
         # try to release affected packages
-        # start from deepest dependencies to -> top level ones, bumping each version, releasing & pushing to git
-        pnpm $PNPM_RELEASE_FILTER_ARGS --workspace-concurrency=1 run release --ci --VV
+        # start from deepest dependencies to -> top level ones, bumping each version, releasing & pushing to git, unless it's a snapshot version
+        ${{ inputs.snapshot && 'DEFAULT_RELEASE_IT_VERSIONING_STRATEGY=SNAPSHOT' }} pnpm $PNPM_RELEASE_FILTER_ARGS --workspace-concurrency=1 run release --ci -VV
 
     - name: Check if new commits were added
       shell: bash
