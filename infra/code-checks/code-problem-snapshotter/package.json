@@ -36,7 +36,7 @@
   },
   "devDependencies": {
     "@repo/release-it-base-isolated": "workspace:^",
-    "@repo/tsconfig-bases": "workspace:^",
+    "@repo/typescript-base-isolated": "workspace:^",
     "@types/json-stable-stringify": "^1.0.36",
     "chalk": "^5.4.1",
     "json-stable-stringify": "^1.1.1",

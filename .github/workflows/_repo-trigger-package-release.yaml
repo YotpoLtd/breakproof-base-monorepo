@@ -1,12 +1,18 @@
-name:
-  Manually trigger release for specific packages, derive version from git
-  commits
+name: Manually trigger release for specific packages
 on:
   workflow_dispatch:
     inputs:
       package-filter:
         description: The pnpm filter/selector of packages you want to release
         required: true
+        type: string
+      ref:
+        description:
+          Name of the branch, tag or SHA hash you want to trigger a release
+          from. Default value will derive new version from git commits. Anything
+          different from the default value will trigger a snapshot release.
+        default: ${{ github.event.repository.default_branch }}
+        required: false
         type: string
 
 concurrency:
@@ -25,26 +31,26 @@ env:
   SECRET_NPM_REGISTRY_PASSWORD: ${{ secrets.NPM_REGISTRY_PASSWORD }}
 
 jobs:
-  abort:
-    if: ${{ github.ref_name != github.event.repository.default_branch }}
+  autorelease:
     runs-on: ubuntu-latest
     steps:
-      - name: ⚠️ YOU CAN'T TRIGGER RELEASE OUTSIDE THE MAIN BRANCH ⚠️
+      - name:
+          ⚠️ YOU CAN'T TRIGGER AN OFFICIAL RELEASE OUTSIDE THE DEFAULT BRANCH ⚠️
+        if:
+          ${{ github.ref_name != github.event.repository.default_branch &&
+          inputs.ref == github.event.repository.default_branch }}
         shell: bash
         run: |
-          echo '## ⚠️ YOU CAN'"'"'T TRIGGER RELEASE OUTSIDE THE MAIN BRANCH ⚠️' >> "$GITHUB_STEP_SUMMARY"
-          echo 'Release is only possible from the main branch' >> "$GITHUB_STEP_SUMMARY"
+          echo '## ⚠️ YOU CAN'"'"'T TRIGGER RELEASE OUTSIDE THE DEFAULT BRANCH ⚠️' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Release is only possible from the default branch' >> "$GITHUB_STEP_SUMMARY"
           exit 1
 
-  autorelease:
-    if: ${{ github.ref_name == github.event.repository.default_branch }}
-    runs-on: ubuntu-latest
-    steps:
       - name: Check out code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
           token: ${{ secrets.AUTORELEASE_BOT_TOKEN }}
+          ref: ${{ inputs.ref }}
 
       - uses: ./.github/actions/setup-pnpm
         with:
@@ -59,3 +65,6 @@ jobs:
           autorelease-bot-name: ${{ vars.AUTORELEASE_BOT_NAME }}
           autorelease-bot-email: ${{ vars.AUTORELEASE_BOT_EMAIL }}
           package-filter: '${{ inputs.package-filter }}'
+          snapshot:
+            ${{ inputs.ref == github.event.repository.default_branch && '' ||
+            'true' }}

@@ -1,5 +1,8 @@
 import sharedPrettierConfig from './lib/prettier-config-base.js';
 
-export default {
+/** @type {import('./lib/types').PrettierConfig} */
+const config = {
   ...sharedPrettierConfig,
 };
+
+export default config;

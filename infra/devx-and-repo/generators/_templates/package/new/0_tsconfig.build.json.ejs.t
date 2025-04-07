@@ -3,16 +3,16 @@ to: "<%- `${h.getDestinationByType({ type, subtype, name })}/tsconfig.build.json
 ---
 {
   <% if ((type === PackageType.APP || type === PackageType.E2E_APP) && techStack === TechStack.REACT) { %>
-    "extends": "@repo/tsconfig-bases/tsconfig.browser.react-app.base.json",
+    "extends": "@repo/typescript-base-isolated/tsconfig.browser.react-app.base.json",
   <% } %>
   <% if ((type === PackageType.APP || type === PackageType.E2E_APP) && techStack === TechStack.BASE) { %>
-    "extends": "@repo/tsconfig-bases/tsconfig.browser-app.base.json",
+    "extends": "@repo/typescript-base-isolated/tsconfig.browser-app.base.json",
   <% } %>
   <% if (type === PackageType.LIB && techStack === TechStack.REACT) { %>
-    "extends": "@repo/tsconfig-bases/tsconfig.browser.react-lib.base.json",
+    "extends": "@repo/typescript-base-isolated/tsconfig.browser.react-lib.base.json",
   <% } %>
   <% if ((type === PackageType.LIB || type === PackageType.INFRA_TOOL) && techStack === TechStack.BASE) { %>
-    "extends": "@repo/tsconfig-bases/tsconfig.browser-lib.base.json",
+    "extends": "@repo/typescript-base-isolated/tsconfig.browser-lib.base.json",
   <% } %>
   "compilerOptions": {
     <% if (type !== PackageType.E2E_APP) { %>

@@ -43,7 +43,7 @@
     "prettier": "^3.4.2"
   },
   "devDependencies": {
-    "@repo/tsconfig-bases": "workspace:^",
+    "@repo/typescript-base-isolated": "workspace:^",
     "tslib": "^2.7.0",
     "typescript": "^5.5.4"
   },

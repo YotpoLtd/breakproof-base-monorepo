@@ -136,7 +136,7 @@ to: <%- h.getDestinationByType({ type, subtype, name }) %>/package.json
 
 
   "devDependencies": {
-    "@repo/tsconfig-bases": "workspace:^",
+    "@repo/typescript-base-isolated": "workspace:^",
 
     <% if (type === PackageType.E2E_APP) { %>
       "@repo/cypress-base-isolated": "workspace:^",

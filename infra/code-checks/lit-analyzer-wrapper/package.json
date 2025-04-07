@@ -40,7 +40,7 @@
   },
   "devDependencies": {
     "@repo/release-it-base-isolated": "workspace:^",
-    "@repo/tsconfig-bases": "workspace:^",
+    "@repo/typescript-base-isolated": "workspace:^",
     "@types/markdown-it": "^14.1.2",
     "prettier": "^3.4.2",
     "tsx": "^4.19.1"

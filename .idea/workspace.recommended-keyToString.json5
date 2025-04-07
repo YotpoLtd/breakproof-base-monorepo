@@ -13,9 +13,6 @@
   "node.js.selected.package.standard": "",
   "nodejs_interpreter_path": "<repo root>/infra/node",
   // pnpm is our package manager
-  "nodejs_package_manager_path": "<result of `which pnpm`>",
-  // @TODO do we need a typescript-isolated repo package and reference its path here:
-  // (we might not need it since CODE EDITOR is just another environment for linting,
-  //  so the idea of matching the TS version to the default in the lint package fits)
-  "ts.external.directory.path": "<repo root>/infra/code-checks/lint-staged-base-isolated/node_modules/typescript/lib"
+  "nodejs_package_manager_path": "pnpm",
+  "ts.external.directory.path": "<repo root>/infra/build/typescript-base-isolated/node_modules/typescript/lib"
 }

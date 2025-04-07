@@ -8,5 +8,5 @@ to: <%- h.getPackageDir(name) %>/package.json
   "@repo/lint-staged-base-isolated": "workspace:^",
   "prettier": "3.2.4",
   <% if (hasTypescript && type !== PackageType.INFRA_TOOL) { %>
-    "@repo/tsconfig-bases": "workspace:^",
+    "@repo/typescript-base-isolated": "workspace:^",
   <% } %>

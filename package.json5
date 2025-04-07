@@ -124,7 +124,7 @@
     // Install dependencies defined in codeEditorIntegrationDependencies of this file WITHOUT saving them to the lock file
     'code-editor:install-tools-at-top-level': 'CODE_EDITOR_INSTALL=1 npm_config_save=false npm_config_lockfile=false pnpm --workspace-root install --prefer-offline',
     'code-editor:jetbrains:fix-eslint-at-top-level': 'ln -sf ./this-file-should-not-exist-please-delete-me ./package.json',
-    'code-editor:symlink-default-node': 'ln -sf "$(pnpm which node)" ./infra/node',
+    'code-editor:symlink-default-node': 'ln -sf "$(readlink -f $(pnpm which node))" ./infra/node',
   },
 
   /**
@@ -151,11 +151,10 @@
    */
   pnpm: {
     /**
-     * Override the older versions of those so we get some bug fixes
+     * Override the older versions of those nested dependencies so we get some bug fixes
      */
     overrides: {
-      'cosmiconfig': '^9',
-      'prosemirror-model': '1.23.0',
+      cosmiconfig: '^9',
     },
     packageExtensions: {
       /**
@@ -173,22 +172,12 @@
        */
       '@reactflow/core': {
         peerDependencies: {
-          '@types/react': '>=17',
-        },
-      },
-      'react-i18next': {
-        peerDependencies: {
-          '@types/react': '^18.2.52',
-        },
-      },
-      'emoji-picker-react': {
-        peerDependencies: {
-          react: '16.2.0',
+          '@types/react': '*',
         },
       },
       'react-toastify': {
         peerDependencies: {
-          'react-dom': '^16.13.1',
+          'react-dom': '*',
         },
       },
       // We want webpack-cli always available to webpack when installed as peer dependency

@@ -44,7 +44,7 @@
     "cypress": "^13.16.0"
   },
   "devDependencies": {
-    "@repo/tsconfig-bases": "workspace:^",
+    "@repo/typescript-base-isolated": "workspace:^",
     "typescript": "^5.3.3"
   },
   "devtoolsDependencies": {
