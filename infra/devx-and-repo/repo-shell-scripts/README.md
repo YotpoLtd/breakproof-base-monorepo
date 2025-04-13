@@ -37,16 +37,15 @@ about the role, config & alternatives of each tool.
 2. You need to merge all of your open PRs and active branches in your original
    repository to your default branch (_e.g._ `main`/`master`).
 
-3. Once you have them in your default branch, you need to check this new repo
-   out locally (`git clone`) and run `pnpm --filter=devtools... install` inside
-   of it
-   - 💡️If you've cloned this repo and then forgot about it for a while, make
-     sure you do `git pull`
-4. You can move each of your projects into this new repo by running an
-   ✨️*automated script* ✨️
+3. Once you have them in your default branch, you need to check out your
+   breakproof repo fork locally (`git clone`) and run
+   `pnpm --filter=devtools... install` inside of it
+   - 💡️If you've previously cloned it and then forgot about it for a while,
+     make sure you do `git pull`
+4. You can move each of your projects into this your breakproof fork by running
+   an ✨️*automated script* ✨️
    `pnpm --workspace-root run repo:import-from-other-repo`. To run this script
-   you need to enter the new repo directory, a.k.a.
-   `cd ./<your name>-frontend-monorepo`
+   you need to enter your fork directory, a.k.a. `cd ./<your fork name>`
    1. Simply running `pnpm --workspace-root run repo:import-from-other-repo`
       won't do anything, it will output help information
    2. You need to provide some input. **Before doing that, make sure your
