@@ -11,10 +11,6 @@ export default {
       reason: 'Used in package.json scripts to read the *.ts rollup config',
     }),
     defineIgnoredPackage({
-      package: '@swc/core',
-      reason: 'Peer dependency of @rollup/plugin-swc',
-    }),
-    defineIgnoredPackage({
       package: 'tslib',
       reason: 'Typescript compiled libs like this one need this',
     }),

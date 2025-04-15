@@ -8,7 +8,7 @@
       "nodeVersion": "22.6.0"
     }
   },
-  "packageManager": "pnpm@9.15.3",
+  "packageManager": "pnpm@9.15.9",
   "exports": {
     ".": {
       "types": "./src/index.ts",
@@ -44,17 +44,20 @@
     "tslib": "^2.8.1"
   },
   "devDependencies": {
-    "@repo/typescript-base-isolated": "workspace:^",
-    "@types/babel__core": "^7.20.5",
-    "typescript": "^5.4.2"
-  },
-  "devtoolsDependencies": {
     "@repo/depcheck-base-isolated": "workspace:^",
     "@repo/eslint-base-isolated": "workspace:^",
     "@repo/lint-staged-base-isolated": "workspace:^",
+    "@repo/typescript-base-isolated": "workspace:^",
+    "@types/babel__core": "^7.20.5",
     "eslint": "^8.57.1",
-    "prettier": "^3.4.2"
+    "prettier": "^3.4.2",
+    "typescript": "^5.4.2"
   },
+  "devtoolsDependencies": [
+    "@repo/depcheck-base-isolated",
+    "@repo/eslint-base-isolated",
+    "@repo/lint-staged-base-isolated"
+  ],
   "dependenciesComments": {
     "@babel/plugin-proposal-class-properties": "Temporarily needed while we have leftover angular-related dependencies",
     "@babel/plugin-proposal-decorators": "Temporarily needed while we have leftover angular-related dependencies",

@@ -10,10 +10,10 @@
   private: true,
   name: '@repo/root',
   engines: {
-    pnpm: '9.15.3',
+    pnpm: '9.15.9',
     node: '22.6.0',
   },
-  packageManager: 'pnpm@9.15.3',
+  packageManager: 'pnpm@9.15.9',
   /**
    * Scripts staring with `shared:` or `fix:shared` can only be executed in 3 ways:
    *
@@ -272,6 +272,10 @@
        * With this patch, we make sure `depcheck` recognizes the `package` option even when run as CLI
        */
       'depcheck': 'infra/code-checks/depcheck-base-isolated/patches/depcheck.patch',
+      /**
+       * Allow `filterPackages` to accept a new option called `createPkgGraph` to customize the graph
+       */
+      '@pnpm/filter-workspace-packages': 'infra/devx-and-repo/repo-shell-scripts/patches/@pnpm__filter-workspace-packages.patch',
     },
   },
 }

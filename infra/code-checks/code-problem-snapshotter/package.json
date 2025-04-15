@@ -7,7 +7,7 @@
       "nodeVersion": "14.21.3"
     }
   },
-  "packageManager": "pnpm@9.15.3",
+  "packageManager": "pnpm@9.15.9",
   "exports": {
     "./*": "./dist/*.js"
   },
@@ -35,6 +35,10 @@
     "__SEE_SHARED__": "echo \"You can run any script starting with 'shared:' defined in <repo-root>/package.json by executing `pnpm -w <name of script>` from your package directory\""
   },
   "devDependencies": {
+    "@repo/depcheck-base-isolated": "workspace:^",
+    "@repo/eslint-base-isolated": "workspace:^",
+    "@repo/jest-base-isolated": "workspace:^",
+    "@repo/lint-staged-base-isolated": "workspace:^",
     "@repo/release-it-base-isolated": "workspace:^",
     "@repo/typescript-base-isolated": "workspace:^",
     "@types/json-stable-stringify": "^1.0.36",
@@ -44,13 +48,13 @@
     "tsx": "^4.19.1",
     "typescript": "^5.3.3"
   },
+  "devtoolsDependencies": [
+    "@repo/depcheck-base-isolated",
+    "@repo/eslint-base-isolated",
+    "@repo/jest-base-isolated",
+    "@repo/lint-staged-base-isolated"
+  ],
   "peerDependencies": {
     "prettier": "*"
-  },
-  "devtoolsDependencies": {
-    "@repo/depcheck-base-isolated": "workspace:^",
-    "@repo/eslint-base-isolated": "workspace:^",
-    "@repo/jest-base-isolated": "workspace:^",
-    "@repo/lint-staged-base-isolated": "workspace:^"
   }
 }

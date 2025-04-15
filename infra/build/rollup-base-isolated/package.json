@@ -8,7 +8,7 @@
       "nodeVersion": "22.6.0"
     }
   },
-  "packageManager": "pnpm@9.15.3",
+  "packageManager": "pnpm@9.15.9",
   "exports": {
     ".": {
       "types": "./src/index.ts",
@@ -47,15 +47,18 @@
     "tslib": "^2.8.1"
   },
   "devDependencies": {
-    "@repo/typescript-base-isolated": "workspace:^",
-    "@rollup/plugin-swc": "^0.4.0",
-    "@swc/core": "^1.9.2",
-    "typescript": "^5.3.3"
-  },
-  "devtoolsDependencies": {
     "@repo/depcheck-base-isolated": "workspace:^",
     "@repo/eslint-base-isolated": "workspace:^",
     "@repo/lint-staged-base-isolated": "workspace:^",
-    "prettier": "^3.4.2"
-  }
+    "@repo/typescript-base-isolated": "workspace:^",
+    "@rollup/plugin-swc": "^0.4.0",
+    "@swc/core": "^1.9.2",
+    "prettier": "^3.4.2",
+    "typescript": "^5.3.3"
+  },
+  "devtoolsDependencies": [
+    "@repo/depcheck-base-isolated",
+    "@repo/eslint-base-isolated",
+    "@repo/lint-staged-base-isolated"
+  ]
 }

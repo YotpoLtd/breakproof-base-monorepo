@@ -29,7 +29,7 @@ const config: LintStagedConfig = {
            * @see https://pnpm.io/cli/run#--stream
            * @see https://pnpm.io/cli/run#options (search for --silent)
            */
-          `pnpm --silent --no-stream --filter="@repo/eslint-base-isolated" run eslint ${ESLINT_ARGS} --format json --no-error-on-unmatched-pattern ${stagedFiles.map((file) => `"${file}"`).join(' ')} | pnpm  --silent --no-stream --filter="@repo/eslint-problem-snapshotter" run bin:ts check-new-problems`,
+          `pnpm --silent --no-stream --filter="@repo/eslint-base-isolated" run eslint ${ESLINT_ARGS} --format json --no-error-on-unmatched-pattern ${stagedFiles.map((file) => `"${file}"`).join(' ')} | pnpm --silent --no-stream --filter="@repo/eslint-problem-snapshotter" run bin:ts check-new-problems`,
         ];
       },
 };

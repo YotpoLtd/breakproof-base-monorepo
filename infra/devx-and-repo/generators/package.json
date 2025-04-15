@@ -8,7 +8,7 @@
       "nodeVersion": "22.6.0"
     }
   },
-  "packageManager": "pnpm@9.15.3",
+  "packageManager": "pnpm@9.15.9",
   "imports": {
     "#extra-template-vars": "./extra-template-vars.ts",
     "#shared-prompts": "./shared-prompts.ts",
@@ -44,15 +44,15 @@
     "@repo/lint-staged-base-isolated": "workspace:^",
     "@repo/rollup-base-isolated": "workspace:^",
     "@repo/typescript-base-isolated": "workspace:^",
-    "@repo/webpack-base-isolated": "workspace:^"
-  },
-  "devtoolsDependencies": {
-    "@repo/depcheck-base-isolated": "workspace:^",
-    "@repo/eslint-base-isolated": "workspace:^",
-    "@repo/lint-staged-base-isolated": "workspace:^",
-    "@repo/typescript-base-isolated": "workspace:^",
+    "@repo/webpack-base-isolated": "workspace:^",
     "@types/yargs-unparser": "^2.0.3",
     "prettier": "^3.4.2",
     "typescript": "^5.4.5"
-  }
+  },
+  "devtoolsDependencies": [
+    "@repo/depcheck-base-isolated",
+    "@repo/eslint-base-isolated",
+    "@repo/lint-staged-base-isolated",
+    "@repo/typescript-base-isolated"
+  ]
 }

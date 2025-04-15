@@ -1,10 +1,10 @@
 ---
 inject: true
 after: name
-skip_if: devtoolsDependencies
+skip_if: devDependencies
 to: <%- h.getPackageDir(name) %>/package.json
 ---
 
-"devtoolsDependencies": [
+"devDependencies": {
 
-],
+},

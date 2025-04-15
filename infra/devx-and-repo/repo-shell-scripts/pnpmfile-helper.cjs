@@ -1,75 +1,11 @@
 const { execSync } = require("node:child_process");
-const util = require("node:util");
 const fs = require("node:fs");
 const path = require("node:path");
-
-/**
- * @see https://github.com/pnpm/pnpm/blob/main/config/config/src/types.ts
- * @see https://github.com/pnpm/pnpm/blob/428915cd9dcfe8c9a3c10c0bc2651dc488d0e828/pnpm/src/cmd/index.ts#L41
- * @see https://github.com/pnpm/pnpm/blob/4ca321903ca7aafb9407675d50b4cec325652b74/cli/parse-cli-args/src/index.ts#L38
- */
-const PNPM_CLI_OPTIONS = {
-  color: { type: "string" },
-  dir: { type: "string" },
-  depth: { type: "string" },
-  filter: {
-    type: "string",
-    short: "F",
-    multiple: true,
-  },
-  help: {
-    type: "boolean",
-    short: "h",
-  },
-  recursive: {
-    type: "boolean",
-    short: "r",
-  },
-  "filter-prod": {
-    type: "string",
-    multiple: true,
-  },
-  loglevel: { type: "string" },
-  parseable: { type: "boolean" },
-  prefix: { type: "string" },
-  reporter: { type: "string" },
-  stream: { type: "boolean" },
-  "aggregate-output": { type: "boolean" },
-  "test-pattern": {
-    type: "string",
-    multiple: true,
-  },
-  "changed-files-ignore-pattern": {
-    type: "string",
-    multiple: true,
-  },
-  "use-stderr": { type: "boolean" },
-  "ignore-workspace": { type: "boolean" },
-  "workspace-packages": {
-    type: "string",
-    multiple: true,
-  },
-  "workspace-root": { type: "boolean" },
-  "include-workspace-root": { type: "boolean" },
-  "fail-if-no-match": { type: "boolean" },
-};
 
 module.exports = {
   /**
    * Returns the pnpm command/action requested using the CLI
    */
-  getPnpmCommand: (scriptArguments) => {
-    const pnpmCliArgs = process.argv.slice(
-      scriptArguments.findIndex((arg) => arg.endsWith("pnpm.cjs")) + 1,
-    );
-    return util.parseArgs({
-      allowPositionals: true,
-      allowNegative: true,
-      strict: false,
-      args: pnpmCliArgs,
-      options: PNPM_CLI_OPTIONS,
-    }).positionals?.[0];
-  },
   getPnpmPackages: () => {
     try {
       /**

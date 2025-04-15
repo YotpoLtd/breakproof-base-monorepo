@@ -9,7 +9,7 @@
       "nodeVersion": "14.21.3"
     }
   },
-  "packageManager": "pnpm@9.15.3",
+  "packageManager": "pnpm@9.15.9",
   "keywords": [
     "conventional-changelog",
     "angular",
@@ -33,7 +33,7 @@
     "conventional-changelog-angular": "~5.0.13",
     "module-alias": "^2.2.3"
   },
-  "devtoolsDependencies": {
+  "devDependencies": {
     "@repo/depcheck-base-isolated": "workspace:^",
     "@repo/eslint-base-isolated": "workspace:^",
     "@repo/jest-base-isolated": "workspace:^",
@@ -43,5 +43,12 @@
     "eslint-plugin-jest": "27.9.0",
     "find-root": "^1.1.0",
     "prettier": "^3.4.2"
-  }
+  },
+  "devtoolsDependencies": [
+    "@repo/depcheck-base-isolated",
+    "@repo/eslint-base-isolated",
+    "@repo/jest-base-isolated",
+    "@repo/lint-staged-base-isolated",
+    "@repo/typescript-base-isolated"
+  ]
 }

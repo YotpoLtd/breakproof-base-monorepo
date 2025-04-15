@@ -1,13 +1,34 @@
+import { execSync } from 'node:child_process';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 
-const packageJson = JSON.parse(
-  String(fs.readFileSync(path.join(process.cwd(), 'package.json'))),
-) as {
-  dependencies?: Record<string, string>;
-  devDependencies: Record<string, string>;
-  devtoolsDependencies: Record<string, string>;
-};
+const NODE_MODULES_PACKAGE_DIRS = String(
+  execSync('pnpm list --depth=0 --parseable', {
+    shell: 'bash',
+  }),
+)
+  .trim()
+  .split('\n');
+
+const NODE_MODULES_PEER_DEPS = [
+  ...new Set(
+    NODE_MODULES_PACKAGE_DIRS.flatMap((dirPath) => {
+      try {
+        const packageJson = JSON.parse(
+          String(fs.readFileSync(path.join(dirPath, 'package.json'))),
+        ) as {
+          peerDependencies?: Record<string, string>;
+        };
+
+        return packageJson.peerDependencies
+          ? Object.keys(packageJson.peerDependencies)
+          : [];
+      } catch (e) {
+        return [];
+      }
+    }),
+  ),
+];
 
 const MINIMUM_REASON_LENGTH = 30;
 
@@ -28,6 +49,7 @@ export const defineIgnoredPackage = ({
 
 const config = {
   ignores: [
+    ...NODE_MODULES_PEER_DEPS,
     defineIgnoredPackage({
       package: 'eslint',
       reason: 'Used by the code editor to run checks',
@@ -49,18 +71,6 @@ const config = {
       reason: 'Used internally by many tools like `jest` to execute `ts` file',
     }),
   ],
-  package: {
-    ...packageJson,
-    ...((packageJson.dependencies || packageJson.devDependencies) && {
-      dependencies: {
-        ...packageJson.dependencies,
-        ...packageJson.devDependencies,
-      },
-    }),
-    ...(packageJson.devtoolsDependencies && {
-      devDependencies: packageJson.devtoolsDependencies,
-    }),
-  },
 };
 
 export default config;

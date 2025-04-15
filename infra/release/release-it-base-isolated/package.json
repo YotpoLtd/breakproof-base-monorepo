@@ -7,7 +7,7 @@
       "nodeVersion": "22.6.0"
     }
   },
-  "packageManager": "pnpm@9.15.3",
+  "packageManager": "pnpm@9.15.9",
   "exports": {
     "./base": {
       "types": "./lib/release-it.base.d.ts",
@@ -48,17 +48,20 @@
     "release-it": "^17.6.0"
   },
   "devDependencies": {
-    "@types/find-root": "^1.1.4",
-    "typescript": "^5.3.3"
-  },
-  "peerDependencies": {
-    "tsx": "*",
-    "typescript": "*"
-  },
-  "devtoolsDependencies": {
     "@repo/depcheck-base-isolated": "workspace:^",
     "@repo/eslint-base-isolated": "workspace:^",
     "@repo/lint-staged-base-isolated": "workspace:^",
-    "prettier": "^3.4.2"
+    "@types/find-root": "^1.1.4",
+    "prettier": "^3.4.2",
+    "typescript": "^5.3.3"
+  },
+  "devtoolsDependencies": [
+    "@repo/depcheck-base-isolated",
+    "@repo/eslint-base-isolated",
+    "@repo/lint-staged-base-isolated"
+  ],
+  "peerDependencies": {
+    "tsx": "*",
+    "typescript": "*"
   }
 }

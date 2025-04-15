@@ -7,7 +7,7 @@
       "nodeVersion": "22.6.0"
     }
   },
-  "packageManager": "pnpm@9.15.3",
+  "packageManager": "pnpm@9.15.9",
   "scripts": {
     "preinstall": "[ -n \"$(pwd | grep '/node_modules/')\" ] || echo $npm_config_user_agent | grep -q 'pnpm/' || (echo 'PLEASE USE PNPM, not NPM' && exit 1)",
     "postinstall": "pnpm --filter='@repo/eslint-base-isolated...' build && pnpm --filter='{.}...' --filter='!@repo/eslint-base-isolated...' build",
@@ -25,10 +25,14 @@
     "@repo/lint-staged-base-isolated": "workspace:^",
     "@repo/syncpack-base-isolated": "workspace:^"
   },
-  "devtoolsDependencies": {
+  "devDependencies": {
     "@repo/eslint-base-isolated": "workspace:^",
     "@repo/typescript-base-isolated": "workspace:^",
     "prettier": "^3.4.2",
     "typescript": "^5.3.3"
-  }
+  },
+  "devtoolsDependencies": [
+    "@repo/eslint-base-isolated",
+    "@repo/typescript-base-isolated"
+  ]
 }

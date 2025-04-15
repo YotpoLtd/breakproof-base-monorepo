@@ -7,7 +7,7 @@
       "nodeVersion": "22.6.0"
     }
   },
-  "packageManager": "pnpm@9.15.3",
+  "packageManager": "pnpm@9.15.9",
   "main": "./dist/index.js",
   "exports": {
     "./tsconfig.node.spec.base.json": "./tsconfig.node.spec.base.json",
@@ -52,21 +52,24 @@
     "whatwg-fetch": "^3.6.20"
   },
   "devDependencies": {
+    "@repo/depcheck-base-isolated": "workspace:^",
+    "@repo/eslint-base-isolated": "workspace:^",
+    "@repo/lint-staged-base-isolated": "workspace:^",
     "@repo/typescript-base-isolated": "workspace:^",
     "@types/find-root": "^1.1.4",
     "find-root": "^1.1.0",
     "jest": "^29.7.0",
     "jest-resolve": "^29.7.0",
+    "prettier": "^3.4.2",
     "tslib": "^2.7.0",
     "typescript": "^5.3.3"
   },
+  "devtoolsDependencies": [
+    "@repo/depcheck-base-isolated",
+    "@repo/eslint-base-isolated",
+    "@repo/lint-staged-base-isolated"
+  ],
   "peerDependencies": {
     "jest": "^29.7.0"
-  },
-  "devtoolsDependencies": {
-    "@repo/depcheck-base-isolated": "workspace:^",
-    "@repo/eslint-base-isolated": "workspace:^",
-    "@repo/lint-staged-base-isolated": "workspace:^",
-    "prettier": "^3.4.2"
   }
 }

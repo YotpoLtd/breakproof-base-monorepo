@@ -8,7 +8,7 @@
       "nodeVersion": "22.6.0"
     }
   },
-  "packageManager": "pnpm@9.15.3",
+  "packageManager": "pnpm@9.15.9",
   "exports": {
     "./package.json": "./package.json",
     "./base": {
@@ -33,17 +33,19 @@
     "depcheck": "^1.4.7"
   },
   "devDependencies": {
+    "@repo/eslint-base-isolated": "workspace:^",
+    "@repo/lint-staged-base-isolated": "workspace:^",
     "@repo/typescript-base-isolated": "workspace:^",
+    "eslint": "^8.57.1",
+    "prettier": "^3.4.2",
     "tslib": "^2.7.0",
     "typescript": "^5.3.3"
   },
+  "devtoolsDependencies": [
+    "@repo/eslint-base-isolated",
+    "@repo/lint-staged-base-isolated"
+  ],
   "peerDependencies": {
     "tslib": "^2.7.0"
-  },
-  "devtoolsDependencies": {
-    "@repo/eslint-base-isolated": "workspace:^",
-    "@repo/lint-staged-base-isolated": "workspace:^",
-    "eslint": "^8.57.1",
-    "prettier": "^3.4.2"
   }
 }

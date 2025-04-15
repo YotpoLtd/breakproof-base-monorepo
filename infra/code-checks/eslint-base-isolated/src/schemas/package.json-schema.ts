@@ -7,8 +7,17 @@
 /**
  * If you need to add another nodejs version, edit .nodejs-versions-whitelist.cjs
  */
+import fs from 'node:fs';
+import path from 'node:path';
+
 // @ts-expect-error -- no types for the whitelist
 import SUPPORTED_NODEJS_VERSIONS from '../../../../../.nodejs-versions-whitelist.cjs';
+
+const PACKAGE_JSON = JSON.parse(
+  String(fs.readFileSync(path.join(process.cwd(), 'package.json'))),
+) as {
+  devDependencies: Record<string, string>;
+};
 
 const NODEJS_VERSION_ERR_MSG = `You need to define ${JSON.stringify({
   pnpm: {
@@ -21,7 +30,7 @@ const NODEJS_VERSION_ERR_MSG = `You need to define ${JSON.stringify({
 /**
  * Managed by FE infra team
  */
-const ALLOWED_PACKAGE_MANAGER = 'pnpm@9.15.3';
+const ALLOWED_PACKAGE_MANAGER = 'pnpm@9.15.9';
 
 export default {
   type: 'object',
@@ -62,11 +71,19 @@ export default {
     packageManager: {
       enum: [ALLOWED_PACKAGE_MANAGER],
     },
+    ...(PACKAGE_JSON.devDependencies && {
+      devtoolsDependencies: {
+        type: 'array',
+        items: {
+          enum: Object.keys(PACKAGE_JSON.devDependencies),
+        },
+      },
+    }),
   },
-  required: ['pnpm', 'packageManager', 'scripts'],
   errorMessage: {
     properties: {
       packageManager: `The \`packageManager\` must exactly be "${ALLOWED_PACKAGE_MANAGER}"`,
+      devtoolsDependencies: `The \`devtoolsDependencies\` array can only contain the package names listed in 'devDependencies'`,
     },
     required: {
       pnpm: NODEJS_VERSION_ERR_MSG,

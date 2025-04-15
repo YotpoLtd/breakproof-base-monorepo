@@ -1,6 +1,6 @@
 ---
 inject: true
-after: devtoolsDependencies
+after: devDependencies
 to: <%- h.getPackageDir(name) %>/package.json
 ---
   "@repo/eslint-base-isolated": "workspace:^",

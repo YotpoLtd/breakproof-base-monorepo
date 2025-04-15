@@ -88,3 +88,54 @@ pnpm_is_package_build_affected() {
     `# check if provided argument exists in the list` \
     | grep -q "$1@"
 }
+
+#;
+# Transforms each argument passed to `--filter=$PACKAGE_NAME_SED_REPLACEMENT_VALUE`
+#
+# Default of `PACKAGE_NAME_SED_REPLACEMENT_VALUE` is `\1` which is just the name of the package
+# Use `PACKAGE_NAME_SED_REPLACEMENT_VALUE` to pnpm filter prefix or suffix
+#
+# Examples:
+# pnpm_convert_package_names_to_filters package-a package-b
+# // return value:
+# --filter=package-a --filter=package-b
+#
+# PACKAGE_NAME_SED_REPLACEMENT_VALUE='...^\1' pnpm_convert_package_names_to_filters package-a package-b
+# // return value:
+# --filter=...^package-a --filter=...^package-b
+#"
+#pnpm_convert_package_names_to_filters() {
+#  local NAME_REPLACEMENT_VALUE=${PACKAGE_NAME_SED_REPLACEMENT_VALUE:-'\1'}
+#
+#  LINE_SEPARATED_ARGS=""
+#  for arg in "$@"; do
+#    LINE_SEPARATED_ARGS="${LINE_SEPARATED_ARGS}${arg}
+#"
+#  done
+#
+#  echo -n "$LINE_SEPARATED_ARGS" | sed 's/\(.*\)/--filter='$NAME_REPLACEMENT_VALUE'/' | tr '\n' ' '
+#}
+#
+#expand_pnpm_filter() {
+#  local NAME_REPLACEMENT_VALUE=${PACKAGE_NAME_SED_REPLACEMENT_VALUE:-'\1'}
+#
+#  LINE_SEPARATED_ARGS=""
+#  for arg in "$@"; do
+#    LINE_SEPARATED_ARGS="${LINE_SEPARATED_ARGS}${arg}
+#"
+#  done
+#
+#  echo -n "$LINE_SEPARATED_ARGS" | sed 's/\(.*\)/--filter='$NAME_REPLACEMENT_VALUE'/' | tr '\n' ' '
+#}
+#
+#expand_pnpm_filter_ignore_devtools() {
+#  local NAME_REPLACEMENT_VALUE=${PACKAGE_NAME_SED_REPLACEMENT_VALUE:-'\1'}
+#
+#  LINE_SEPARATED_ARGS=""
+#  for arg in "$@"; do
+#    LINE_SEPARATED_ARGS="${LINE_SEPARATED_ARGS}${arg}
+#"
+#  done
+#
+#  echo -n "$LINE_SEPARATED_ARGS" | sed 's/\(.*\)/--filter='$NAME_REPLACEMENT_VALUE'/' | tr '\n' ' '
+#}
