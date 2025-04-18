@@ -234,62 +234,14 @@ individual tools without having to redo the entire system 🤔
 
 1. 🔀 **Fork this repo.**
 
-2. 🎛️ Initialize your fork with your preferences:
+2. 🎛️ Initialize your fork with your preferences & automatically configure your
+   code editor:
 
    ```shell
    pnpm --workspace-root generate repo init
    ```
 
-3. 🚀 Onboard yourself and your code editor:
-
-   ```shell
-   pnpm --workspace-root generate repo onboard
-   ```
-
-4. 🎛️ Tweak the tools in the repo to fit the needs/preferences of your projects:
-
-   - The structure & files of your new projects:
-     - [`./.nodejs-versions-whitelist.cjs`](./.nodejs-versions-whitelist.cjs) —
-       Define an array of allowed `node.js`
-     - [`./.npm-scopes-whitelist.cjs`](./.npm-scopes-whitelist.cjs) — Define an
-       array of allowed npm scopes
-     - [`./infra/build/environment/src/index.ts`](./infra/build/environment/src/index.ts)
-       — Define your target browsers here (_as browserlist queries_)
-     - [ `./infra/devx-and-repo/generators/_templates/package/new`](./infra/devx-and-repo/generators/_templates/package/new)
-       — the templates that `hygen` uses to generate the files of your new
-       projects. versions for your projects, used during code generation & code
-       checks (`@scope/<project name>`) for your projects to be used when
-       publishing to the npm registry
-     - [ `./infra/devx-and-repo/generators/extra-template-vars.ts`](./infra/devx-and-repo/generators/extra-template-vars.ts)
-       — some constants that are used during code generation or CLI guides like
-       the text or contact channel you want to output for help
-   - The base configurations of tools that your project files extend:
-     - [`eslint` base configs](./docs/tools-details.md#eslint-config)
-       - take a look at the import-order rule where you should define your own
-         packages' scopes
-     - [`release-it` base config](./docs/tools-details.md#release-it-config) &
-       the
-       [`conventional-changelog` used by it](./docs/tools-details.md#conventional-changelog-config)
-     - [`jest` base config](./docs/tools-details.md#jest-config)
-     - [`cypress` base config](./docs/tools-details.md#cypress-config)
-     - [`rollup` base config](./docs/tools-details.md#rollup-config)
-     - [`babel` base config](./docs/tools-details.md#babel-config)
-     - [`webpack` base config](./docs/tools-details.md#webpack-config)
-     - [`typescript` base configs](./docs/tools-details.md#typescript-config)
-       - special shout out to the `customConditions` in `tsconfig.base.json`,
-         where you can define yours or leave as-is.
-     - _[...all other secondary tools](#tools-list)_
-
-5. 🙋 Edit `<repo root>/.github/CODEOWNERS` and add your team as owners to the
-   existing paths there. Or add `/** @<github user or team>` if there is going
-   to be only one owner.
-
-6. 📚 Move `<repo root>/README.md` to
-   `<repo root>/docs/breakproof-repo-base.README.md` (or similar) & create your
-   own `<repo root>/README.md`. You move or copy the
-   `<repo root>/docs/after-fork-setup/README.md` as your main one.
-
-7. [Generate new](./docs/pnpm-intro.md#creating-a-new-package-in-the-repo) or
+3. 🚀 [Generate new](./docs/pnpm-intro.md#creating-a-new-package-in-the-repo) or
    [import your existing](./infra/devx-and-repo/repo-shell-scripts/README.md#using-import-from-other-repo)
    projects.
 

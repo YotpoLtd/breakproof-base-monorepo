@@ -11,6 +11,7 @@
   "packageManager": "pnpm@9.15.9",
   "main": "./dist/index.js",
   "exports": {
+    ".": "./src/index.ts",
     "./*": "./src/*.ts"
   },
   "scripts": {

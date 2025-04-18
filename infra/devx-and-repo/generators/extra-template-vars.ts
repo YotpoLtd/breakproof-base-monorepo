@@ -1,7 +1,7 @@
 import { Project as PnpmProject } from '@pnpm/types';
 
 import { NODE_VERSIONS } from '@repo/environment';
-import { getAllPackages } from '@repo/pnpm-helpers/list';
+import { getAllPackages } from '@repo/pnpm-helpers';
 
 /**
  *

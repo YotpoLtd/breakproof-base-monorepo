@@ -33,13 +33,16 @@ const cliOptions = Object.fromEntries(
 ) as FilterPackagesExtendedOptions;
 
 const selectedGraph = await filterPackagesExtended(cliOptions);
+const graphNodes = Object.entries(selectedGraph);
 
-// eslint-disable-next-line no-console -- This script purpose is to log
-console.log(
-  Object.entries(selectedGraph)
-    .map(
-      ([, workspacePackageGraphNode]) =>
-        `--filter=${String(workspacePackageGraphNode.package.manifest.name)}`,
-    )
-    .join(' '),
-);
+if (graphNodes.length) {
+  // eslint-disable-next-line no-console -- This script purpose is to log
+  console.log(
+    graphNodes
+      .map(
+        ([, workspacePackageGraphNode]) =>
+          `--filter=${String(workspacePackageGraphNode.package.manifest.name)}`,
+      )
+      .join(' '),
+  );
+}

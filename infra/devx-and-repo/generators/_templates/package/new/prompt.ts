@@ -148,7 +148,7 @@ export const params = async ({
   const nameWithScope = `@${npmScope}/${name}`;
 
   if (!cliArgs.skipCodeownersCheck) {
-    await ensureCodeowners(getRepoRootDir(), [
+    await ensureCodeowners(await getRepoRootDir(), [
       getDestinationByType({ type, subtype, name }),
       ...(type === PackageType.LIB
         ? [

@@ -1,5 +1,6 @@
-import { findWorkspaceDir } from '@pnpm/find-workspace-dir';
 import { findWorkspacePackagesNoCheck } from '@pnpm/workspace.find-packages';
 
+import { getRepoRootDir } from './root';
+
 export const getAllPackages = async () =>
-  findWorkspacePackagesNoCheck(String(await findWorkspaceDir(process.cwd())));
+  findWorkspacePackagesNoCheck(await getRepoRootDir());

@@ -13,6 +13,7 @@ import {
 import { applyJetBrainsRecommendations } from './code-editor/jetbrains';
 import { printHelpForOtherEditors } from './code-editor/other';
 import { applyVsCodeRecommendations } from './code-editor/vscode';
+import { printWelcome } from './welcome';
 
 enum CodeEditor {
   JETBRAINS = 'JetBrains IDE (IDEA/PHPStorm/Webstorm/...)',
@@ -23,24 +24,24 @@ enum CodeEditor {
 /**
  * @see For list of built-in types: https://github.com/enquirer/enquirer/tree/master/lib/prompts
  */
-export const params = async () => {
-  let stepNum = 0;
+export const params = async ({
+  options,
+}: {
+  options?: {
+    isSingleTeam?: boolean;
+    initialStep?: number;
+  };
+} = {}) => {
+  let stepNum = options?.initialStep || 0;
   const actionListItems: Array<{
     step: number;
     actionText: string;
     done: boolean;
   }> = [];
 
-  // generated via https://textfancy.com/text-art/
-  printToTerminal(
-    chalk.blueBright(`
-  👋 Welcome to: 
-▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
-█ ▄▄▀█ ▄▄▀█ ▄▄█ ▄▄▀█ █▀█▀▄▄▀█ ▄▄▀█▀▄▄▀█▀▄▄▀█ ▄▄███ ▄▄▀█ ▄▄█▀▄▄▀█▀▄▄▀█
-█ ▄▄▀█ ▀▀▄█ ▄▄█ ▀▀ █ ▄▀█ ▀▀ █ ▀▀▄█ ██ █ ██ █ ▄████ ▀▀▄█ ▄▄█ ▀▀ █ ██ █
-█▄▄▄▄█▄█▄▄█▄▄▄█▄██▄█▄█▄█ ████▄█▄▄██▄▄███▄▄██▄█████▄█▄▄█▄▄▄█ █████▄▄██
-▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀`),
-  );
+  if (stepNum === 0) {
+    printWelcome();
+  }
 
   /**
    * pnpm --filter=devtools... install
@@ -53,9 +54,9 @@ export const params = async () => {
       `
  ${chalk.yellow(`Running \`${chalk.green('pnpm --filter=devtools... install')}\` is required for local development & after updating your branch`)}`,
     ),
-    message: `Confirm this was executed and didn't fail`,
+    message: `Are you ok doing that?`,
     choices: createDeveloperQuizOptions({
-      yes: 'Ok, done AND I will also rerun after updating my branches',
+      yes: 'Yes, I will rerun this after updating my branches',
     }),
   });
   actionListItems.push({
@@ -79,7 +80,7 @@ export const params = async () => {
     message: `What are you using?`,
     choices: Object.values(CodeEditor),
   });
-  const repoRootDir = getRepoRootDir();
+  const repoRootDir = await getRepoRootDir();
 
   if (codeEditor === CodeEditor.JETBRAINS) {
     await applyJetBrainsRecommendations(repoRootDir);
@@ -133,27 +134,29 @@ Make sure you accept the prompts that appear at the lower right`,
     });
   }
 
-  /**
-   * CODEOWNERS MAINTENANCE
-   */
-  stepNum++;
-  const willAddCodeowners = await prompts.quiz({
-    ...COMMON_DEVELOPER_QUIZ_OPTIONS,
-    prefix: createQuizStepHeader(
-      3,
-      `
+  if (!options?.isSingleTeam) {
+    /**
+     * CODEOWNERS MAINTENANCE
+     */
+    stepNum++;
+    const willAddCodeowners = await prompts.quiz({
+      ...COMMON_DEVELOPER_QUIZ_OPTIONS,
+      prefix: createQuizStepHeader(
+        3,
+        `
  ${chalk.yellow('`<repo root>/.github/CODEOWNERS` is very important and when creating a new library you need to add a line there for your team')}`,
-    ),
-    message: `Confirm you are ok maintaining CODEOWNERS correct`,
-    choices: createDeveloperQuizOptions({
-      yes: 'Yes, I will keep the CODEOWNERS file in sync with my projects!',
-    }),
-  });
-  actionListItems.push({
-    step: stepNum,
-    actionText: willAddCodeowners.selectedAnswer,
-    done: willAddCodeowners.correct,
-  });
+      ),
+      message: `Are you ok maintaining CODEOWNERS correct`,
+      choices: createDeveloperQuizOptions({
+        yes: 'Yes, I will keep the CODEOWNERS file in sync with my projects!',
+      }),
+    });
+    actionListItems.push({
+      step: stepNum,
+      actionText: willAddCodeowners.selectedAnswer,
+      done: willAddCodeowners.correct,
+    });
+  }
 
   printToTerminal(`
 
@@ -174,6 +177,5 @@ ${actionListItems
   return {
     hasInstalledDevtools,
     codeEditor,
-    willAddCodeowners,
   };
 };

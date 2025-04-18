@@ -1,8 +1,9 @@
-import { execSync } from 'node:child_process';
 import * as path from 'node:path';
 
 import chalk from 'chalk';
 import yargsUnparse from 'yargs-unparser';
+
+import { getRepoRootDir as getRepoRootDir_original } from '@repo/pnpm-helpers';
 
 import {
   CONTACT_HELP_URL,
@@ -14,13 +15,9 @@ import {
 
 // eslint-disable-next-line @typescript-eslint/naming-convention -- Mimicking a constant on purpose
 let REPO_ROOT_DIR: string;
-export const getRepoRootDir = () => {
+export const getRepoRootDir = async () => {
   if (!REPO_ROOT_DIR) {
-    REPO_ROOT_DIR = String(
-      execSync(`pnpm --workspace-root exec pwd`, {
-        shell: 'bash',
-      }),
-    ).trim();
+    REPO_ROOT_DIR = await getRepoRootDir_original();
   }
   return REPO_ROOT_DIR;
 };
@@ -69,7 +66,7 @@ export const printCheck = (checkDescription: string) =>
  */
 export const printError = (err: string, prefix = 'PACKAGE PROBLEM') => {
   printToTerminal(`
-${chalk.bgRed(chalk.whiteBright(`${prefix}:`))} ${chalk.red(err)}`);
+${chalk.bgRed(chalk.whiteBright(` ${prefix}: `))} ${chalk.red(err)}`);
 };
 
 export const printContactHelp = () => {

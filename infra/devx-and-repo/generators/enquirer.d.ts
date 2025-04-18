@@ -10,13 +10,15 @@ declare module 'enquirer' {
 
   export interface PromptChoice<T> {
     title?: string;
+    message?: string;
     value: T;
   }
 
   export interface BasePromptOptions<T> {
     message: string;
-    prefix?: string;
+    prefix?: string | { pending: string; submitted: string };
     hint?: string;
+    result?: (value: T) => T;
     validate?: (value: T) => true | ErrorMessage;
   }
 
@@ -34,6 +36,11 @@ declare module 'enquirer' {
     initial?: boolean;
   }
 
+  export interface ChoicePromptOptions<T> extends BasePromptOptions<T> {
+    choices: Array<PromptChoice<T> | T | string>;
+    initial?: T;
+  }
+
   export interface MultiChoicePromptOptions<T> extends BasePromptOptions<T> {
     choices: Array<PromptChoice<T> | T>;
     initial: Array<T>;
@@ -42,12 +49,14 @@ declare module 'enquirer' {
   export interface QuizPromptOptions<T> extends BasePromptOptions<T> {
     choices: Array<string> | Readonly<Array<string>>;
     correctChoice: number;
+    initial?: number;
   }
 
   export interface Prompts {
     autocomplete<T>(options: AutocompletePromptOptions<T>): Promise<T>;
-    input<T>(options: InputPromptOptions<T>): Promise<T>;
+    input<T = string>(options: InputPromptOptions<T>): Promise<T>;
     toggle(options: TogglePromptOptions): Promise<boolean>;
+    select<T>(options: ChoicePromptOptions<T>): Promise<T>;
     multiselect<T>(options: MultiChoicePromptOptions<T>): Promise<Array<T>>;
     quiz<T>(options: QuizPromptOptions<T>): Promise<{
       selectedAnswer: string;

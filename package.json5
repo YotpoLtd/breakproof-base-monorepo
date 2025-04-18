@@ -259,6 +259,11 @@
           '@pnpm/types': '*',
         },
       },
+      'zx': {
+        peerDependencies: {
+          '@types/fs-extra': '*',
+        },
+      },
     },
     patchedDependencies: {
       /**

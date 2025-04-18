@@ -7,7 +7,7 @@ settings:
 overrides:
   cosmiconfig: ^9
 
-packageExtensionsChecksum: c4650b585e3189a488fe946bf0747cf3
+packageExtensionsChecksum: 852ed3613a0273b452da6e6bc53ef759
 
 pnpmfileChecksum: upbw266wf3pmcxi2nbgf4xz44e
 
@@ -779,12 +779,18 @@ importers:
       '@repo/pnpm-helpers':
         specifier: workspace:^
         version: link:../pnpm-helpers
+      boxen:
+        specifier: ^8.0.1
+        version: 8.0.1
       chalk:
         specifier: ^5.4.1
         version: 5.4.1
       enquirer:
         specifier: ^2.4.1
         version: 2.4.1
+      eta:
+        specifier: ^3.5.0
+        version: 3.5.0
       execa:
         specifier: 5.1.1
         version: 5.1.1
@@ -806,6 +812,9 @@ importers:
       yargs-unparser:
         specifier: ^2.0.0
         version: 2.0.0
+      zx:
+        specifier: ^8.5.3
+        version: 8.5.3(@types/fs-extra@11.0.4)
     devDependencies:
       '@repo/cypress-base-isolated':
         specifier: workspace:^
@@ -831,6 +840,9 @@ importers:
       '@repo/webpack-base-isolated':
         specifier: workspace:^
         version: link:../../build/webpack-base-isolated
+      '@types/fs-extra':
+        specifier: 11.0.4
+        version: 11.0.4
       '@types/yargs-unparser':
         specifier: ^2.0.3
         version: 2.0.3
@@ -3514,6 +3526,9 @@ packages:
   '@types/find-root@1.1.4':
     resolution: {integrity: sha512-2EXK/+gVhVgtt4JqThbEncORvpYJKzi9tQGmI3EkU2jTgMzQsrPm/hbd5xe5uPdeFzIW5gh2PRvvPjaUsI8vpg==}
 
+  '@types/fs-extra@11.0.4':
+    resolution: {integrity: sha512-yTbItCNreRooED33qjunPthRcSjERP1r4MqCZc7wv0u2sUkzTFp45tgUfS5+r7FrZPdmCCNflLhVSP/o+SemsQ==}
+
   '@types/graceful-fs@4.1.9':
     resolution: {integrity: sha512-olP3sd1qOEe5dXTSaFvQG+02VdRXcdytWLAZsAq1PecU8uqQAhkrnbli7DagjtXKW/Bl7YJbUsa8MPcuc8LHEQ==}
 
@@ -3541,6 +3556,9 @@ packages:
 
   '@types/json5@0.0.29':
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
+
+  '@types/jsonfile@6.1.4':
+    resolution: {integrity: sha512-D5qGUYwjvnNNextdU59/+fI+spnwtTFmyQP0h+PfIOSkNfpU6AOICUOkm4i0OnSk+NyjdPJrxCDro0sJsWlRpQ==}
 
   '@types/linkify-it@5.0.0':
     resolution: {integrity: sha512-sVDA58zAw4eWAffKOaQH5/5j3XeayukzDk+ewSsnv3p4yJEZHCCzMDiZM8e0OUrRvmpGZ85jf4yDHkHsgBNr9Q==}
@@ -4124,6 +4142,10 @@ packages:
   boxen@7.1.1:
     resolution: {integrity: sha512-2hCgjEmP8YLWQ130n2FerGv7rYpfBmnmp9Uy2Le1vge6X3gZIfSmEzP5QTDElFxcvVcXlEn8Aq6MU/PZygIOog==}
     engines: {node: '>=14.16'}
+
+  boxen@8.0.1:
+    resolution: {integrity: sha512-F3PH5k5juxom4xktynS7MoFY+NUWH5LC4CnH11YB8NPew+HLpmBLCybSAEyb2F+4pRXhuhWqFesoQd6DAyc2hw==}
+    engines: {node: '>=18'}
 
   brace-expansion@1.1.11:
     resolution: {integrity: sha512-iCuPHDFgrHX7H2vEI/5xpz07zSHB00TpugqhmYtVmMO6518mCuRMoOYFldEBl0g187ufozdaHgWKcYFb61qGiA==}
@@ -5223,6 +5245,10 @@ packages:
   esutils@2.0.3:
     resolution: {integrity: sha512-kVscqXk4OCp68SZ0dkgEKVi6/8ij300KBWTJq32P/dYeWTSwK41WyTxalN1eRmA5Z9UU/LX9D7FWSmV9SAYx6g==}
     engines: {node: '>=0.10.0'}
+
+  eta@3.5.0:
+    resolution: {integrity: sha512-e3x3FBvGzeCIHhF+zhK8FZA2vC5uFn6b4HJjegUbIWrDb4mJ7JjTGMJY9VGIbRVpmSwHopNiaJibhjIr+HfLug==}
+    engines: {node: '>=6.0.0'}
 
   eventemitter2@6.4.7:
     resolution: {integrity: sha512-tYUSVOGeQPKt/eC1ABfhHy5Xd96N3oIijJvN3O9+TsC28T5V9yX9oEfEK5faP0EFSNVOG97qtAS68GBrQB2hDg==}
@@ -8742,6 +8768,10 @@ packages:
     resolution: {integrity: sha512-o0cyEG0e8GPzT4iGHphIOh0cJOV8fivsXxddQasHPHfoZf1ZexrfeA21w2NaEN1RHE+fXlfISmOE8R9N3u3Qig==}
     engines: {node: '>=12'}
 
+  widest-line@5.0.0:
+    resolution: {integrity: sha512-c9bZp7b5YtRj2wOe6dlj32MK+Bx/M/d+9VB2SHM1OtsUHR0aV0tdP6DWh/iMt0kWi1t5g1Iudu6hQRNd1A4PVA==}
+    engines: {node: '>=18'}
+
   wildcard-match@5.1.3:
     resolution: {integrity: sha512-a95hPUk+BNzSGLntNXYxsjz2Hooi5oL7xOfJR6CKwSsSALh7vUNuTlzsrZowtYy38JNduYFRVhFv19ocqNOZlg==}
 
@@ -8896,6 +8926,13 @@ packages:
 
   zone.js@0.14.10:
     resolution: {integrity: sha512-YGAhaO7J5ywOXW6InXNlLmfU194F8lVgu7bRntUF3TiG8Y3nBK0x1UJJuHUP/e8IyihkjCYqhCScpSwnlaSRkQ==}
+
+  zx@8.5.3:
+    resolution: {integrity: sha512-TsGLAt8Ngr4wDXLZmN9BT+6FWVLFbqdQ0qpXkV3tIfH7F+MgN/WUeSY7W4nNqAntjWunmnRaznpyxtJRPhCbUQ==}
+    engines: {node: '>= 12.17.0'}
+    hasBin: true
+    peerDependencies:
+      '@types/fs-extra': '*'
 
 snapshots:
 
@@ -11811,6 +11848,11 @@ snapshots:
 
   '@types/find-root@1.1.4': {}
 
+  '@types/fs-extra@11.0.4':
+    dependencies:
+      '@types/jsonfile': 6.1.4
+      '@types/node': 20.14.6
+
   '@types/graceful-fs@4.1.9':
     dependencies:
       '@types/node': 20.14.6
@@ -11840,6 +11882,10 @@ snapshots:
       json-stable-stringify: 1.2.1
 
   '@types/json5@0.0.29': {}
+
+  '@types/jsonfile@6.1.4':
+    dependencies:
+      '@types/node': 20.14.6
 
   '@types/linkify-it@5.0.0': {}
 
@@ -12619,6 +12665,17 @@ snapshots:
       type-fest: 2.19.0
       widest-line: 4.0.1
       wrap-ansi: 8.1.0
+
+  boxen@8.0.1:
+    dependencies:
+      ansi-align: 3.0.1
+      camelcase: 8.0.0
+      chalk: 5.4.1
+      cli-boxes: 3.0.0
+      string-width: 7.2.0
+      type-fest: 4.30.2
+      widest-line: 5.0.0
+      wrap-ansi: 9.0.0
 
   brace-expansion@1.1.11:
     dependencies:
@@ -14044,6 +14101,8 @@ snapshots:
   estree-walker@2.0.2: {}
 
   esutils@2.0.3: {}
+
+  eta@3.5.0: {}
 
   eventemitter2@6.4.7: {}
 
@@ -18485,6 +18544,10 @@ snapshots:
     dependencies:
       string-width: 5.1.2
 
+  widest-line@5.0.0:
+    dependencies:
+      string-width: 7.2.0
+
   wildcard-match@5.1.3: {}
 
   windows-release@5.1.1:
@@ -18622,3 +18685,7 @@ snapshots:
       - typescript
 
   zone.js@0.14.10: {}
+
+  zx@8.5.3(@types/fs-extra@11.0.4):
+    dependencies:
+      '@types/fs-extra': 11.0.4

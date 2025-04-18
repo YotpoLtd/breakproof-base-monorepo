@@ -168,7 +168,7 @@ export const params = async ({
 
   `);
 
-  const repoRootDir = getRepoRootDir();
+  const repoRootDir = await getRepoRootDir();
 
   const { packageJson, packageJsonFilePath, packageDir } =
     await getValidPackageInfo(repoRootDir, cliArgs.packageDir);

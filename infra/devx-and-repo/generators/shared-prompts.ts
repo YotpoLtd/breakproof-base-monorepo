@@ -78,7 +78,7 @@ export const COMMON_DEVELOPER_QUIZ_OPTIONS = {
   correctChoice: number;
 };
 
-export const createQuizStepHeader = (stepNumber: number, header: string) => `
+export const createQuizStepHeader = (stepNumber: number, header = '') => `
 
 ------------------
  ${chalk.blueBright(`# Step ${stepNumber}`)}

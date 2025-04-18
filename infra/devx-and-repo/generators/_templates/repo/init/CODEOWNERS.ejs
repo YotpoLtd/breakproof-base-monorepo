@@ -1,0 +1,13 @@
+<% if (isSingleTeam) { %>
+* @<%= currentTeamName %>
+<% } else { %>
+# Repo infra
+/infra @<%= currentTeamName %>
+/.githooks @<%= currentTeamName %>
+/.github @<%= currentTeamName %>
+/.vscode @<%= currentTeamName %>
+/.idea @<%= currentTeamName %>
+
+# Repo-wide top level files
+/{*.mjs,*.js,*.cjs,*.json,*.md,catalog-info.yaml,pnpm-workspace.yaml,.npmrc,.gitignore} @<%= currentTeamName %>
+<% } %>

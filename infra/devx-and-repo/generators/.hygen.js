@@ -7,6 +7,7 @@ const execa = require('execa');
 
 const extraVars = require('./extra-template-vars');
 const helpers = require('./helpers');
+const { $runBash } = require('#zx');
 
 /**
  * @see defaults: https://github.com/jondot/hygen/blob/v6.2.11/src/bin.ts#L7-L17
@@ -14,7 +15,7 @@ const helpers = require('./helpers');
  * @type {import('hygen').RunnerConfig}
  */
 module.exports = {
-  cwd: helpers.getRepoRootDir(),
+  cwd: $runBash({ sync: true })`pnpm --workspace-root exec pwd`.stdout.trim(),
   templates: path.join(__dirname, '_templates'),
   helpers,
   logger: new DefaultHygenLogger((text) => {
