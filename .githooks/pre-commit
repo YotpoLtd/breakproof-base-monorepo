@@ -1,4 +1,11 @@
 #!/usr/bin/env bash
+set -x
+
+# @see https://askubuntu.com/questions/443560/how-do-i-reset-the-colors-of-my-terminal
+# without this "reset", IntelliJ git console outputs everything in red color
+tput setaf 7
+tput setab 0
+export FORCE_COLOR=1
 
 # Used in the validation script to figure out what are the changed files
 # and what package-specific checks to run
