@@ -1,6 +1,7 @@
-import { NODE_VERSIONS } from '@repo/environment';
+import { Project as PnpmProject } from '@pnpm/types';
 
-import pnpmHelpers from '../repo-shell-scripts/pnpmfile-helper.cjs';
+import { NODE_VERSIONS } from '@repo/environment';
+import { getAllPackages } from '@repo/pnpm-helpers/list';
 
 /**
  *
@@ -52,12 +53,6 @@ export const REPO_DIR_BY_PKG_TYPE = {
   },
 } as const;
 
-interface PnpmPackageInfo {
-  name: string;
-  version: string;
-  path: string;
-}
-
 export const getScriptsInfo = (
   type: PackageType,
   supportingForProject?: boolean | string,
@@ -95,14 +90,15 @@ export const HELP_ACTION_TEXT =
 export const HELP_ACTION_PROMISE_TEXT = `I will ${HELP_ACTION_TEXT}`;
 
 // eslint-disable-next-line @typescript-eslint/naming-convention -- Mimicking a constant on purpose
-let PACKAGES: Array<PnpmPackageInfo> = [];
-export const refreshPackages = () => {
-  PACKAGES = pnpmHelpers.getPnpmPackages();
+let PACKAGES: Array<PnpmProject> = [];
+export const refreshPackages = async () => {
+  PACKAGES = Object.values(await getAllPackages());
 };
-export const getPackages = () => {
+export const getPackagesCached = () => PACKAGES;
+export const getPackages = async () => {
   if (!PACKAGES.length) {
-    refreshPackages();
+    await refreshPackages();
   }
-  return PACKAGES;
+  return getPackagesCached();
 };
 export const NODE_VERSION_LATEST = [...NODE_VERSIONS].sort().reverse()[0]!;

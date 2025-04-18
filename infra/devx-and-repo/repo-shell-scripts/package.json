@@ -15,14 +15,6 @@
     "lint:fix": "prettier --write \"**/*.{sh,md,json}\""
   },
   "dependencies": {
-    "@pnpm/filter-workspace-packages": "latest",
-    "@pnpm/find-workspace-dir": "latest",
-    "@pnpm/logger": "latest",
-    "@pnpm/nopt": "latest",
-    "@pnpm/worker": "latest",
-    "@pnpm/workspace.find-packages": "latest",
-    "@pnpm/workspace.pkgs-graph": "latest",
-    "camelcase": "latest",
     "cli-highlight": "^2.1.11"
   },
   "devDependencies": {

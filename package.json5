@@ -97,6 +97,9 @@
     'repo:import-from-other-repo': './infra/devx-and-repo/repo-shell-scripts/import-from-other-repo.sh',
     // output whatever is exported from <repo root>/.source-breakproof-repo.cjs
     'repo:get-breakproof-source-repo': 'node -p "require(\'./.source-breakproof-repo.cjs\')"',
+    // when provided with --filter='<smth that selects multiple packages>' arguments,
+    // it outputs multiple --filter='<smth that selects A SINGLE package>', one for each original match
+    'repo:pnpm:expand-filters': 'pnpm --filter="@repo/pnpm-helpers" run expand-filters',
 
     /**
      * SHORTCUTS FOR RELEASING PACKAGES
@@ -249,6 +252,11 @@
       '@angular-builders/common': {
         peerDependencies: {
           'mini-css-extract-plugin': '*',
+        },
+      },
+      '@pnpm/filter-workspace-packages': {
+        peerDependencies: {
+          '@pnpm/types': '*',
         },
       },
     },

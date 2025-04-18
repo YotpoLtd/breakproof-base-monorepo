@@ -26,7 +26,7 @@ export const getMergedHooks = (
 
 export const getBuildAffectingPaths = (packageName: string) =>
   execSync(
-    `pnpm --filter-prod='${packageName}...' list --depth -1 --parseable`,
+    `pnpm $(pnpm --silent --workspace-root run repo:pnpm:expand-filters --ignore-devtools --filter='${packageName}...') list --depth -1 --parseable`,
     {
       shell: 'bash',
     },

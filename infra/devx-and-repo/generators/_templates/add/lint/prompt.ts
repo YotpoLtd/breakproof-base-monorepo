@@ -16,7 +16,7 @@ export const params = async ({
     (cliArgs.name && String(cliArgs.name)) ||
     (await prompts.autocomplete({
       message: 'Which package you want to add release to?',
-      choices: getPackages().map((pkg) => pkg.name),
+      choices: (await getPackages()).map((pkg) => pkg.manifest.name),
     }));
 
   const type = await sharedPrompts.getType(cliArgs);

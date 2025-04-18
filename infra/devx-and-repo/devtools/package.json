@@ -35,6 +35,7 @@
     "@repo/eslint-problem-snapshotter": "workspace:^",
     "@repo/generators": "workspace:^",
     "@repo/lint-staged-base-isolated": "workspace:^",
+    "@repo/pnpm-helpers": "workspace:^",
     "@repo/release-it-base-isolated": "workspace:^",
     "@repo/shell-scripts": "workspace:^",
     "@repo/syncpack-base-isolated": "workspace:^",

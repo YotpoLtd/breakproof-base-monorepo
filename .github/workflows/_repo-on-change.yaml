@@ -126,6 +126,7 @@ jobs:
         if: steps.setup-pnpm.outputs.pnpm-store-cache-hit != 'true'
         run: |
           pnpm \
+            --filter="@repo/citools..." \
             --filter="...[${{ needs.basics.outputs.git-diff-base }}]..." \
             install --frozen-lockfile --prefer-offline
 
@@ -151,26 +152,63 @@ jobs:
 
       - uses: ./.github/actions/npm-login
 
-      - name: Install changed packages & their dependencies
+      - name:
+          Check if any packages under <repo root>/infra/code-checks are affected
+          by the changes
+        id: affected-code-checks
         run: |
-          pnpm --filter="[${{ needs.basics.outputs.git-diff-base }}]..." \
-               --filter="@repo/citools..." \
+          ARE_CODE_CHECKS_AFFECTED_BY_CHANGES=$(
+            pnpm --filter='...[${{ needs.basics.outputs.git-diff-base }}]' \
+                 list --parseable --depth=-1 \
+                   | grep -q "/infra/code-checks/" && echo -n 1 || true
+          )
+          echo 'Are packages under <repo root>/infra/code-checks affected?:' "${ARE_CODE_CHECKS_AFFECTED_BY_CHANGES}" >> $GITHUB_STEP_SUMMARY
+          echo "is-any-affected=${ARE_CODE_CHECKS_AFFECTED_BY_CHANGES}" >> $GITHUB_OUTPUT
+
+      - name:
+          Install changed packages, their dependencies and any other that
+          directly or indirectly use them
+        run: |
+          pnpm --filter="@repo/citools..." install --frozen-lockfile --prefer-offline
+          pnpm --filter='...[${{ needs.basics.outputs.git-diff-base }}]...' \
+               ${{ steps.affected-code-checks.outputs.is-any-affected && '$(pnpm --silent --workspace-root run repo:pnpm:expand-filters --filter=''... < {infra/code-checks/**}...'')' || '' }} \
+               ${{ steps.affected-code-checks.outputs.is-any-affected && '$(pnpm --silent --workspace-root run repo:pnpm:expand-filters --filter=''... < @repo/circular-dependency-workaround...'')' || '' }} \
                install --frozen-lockfile --prefer-offline
 
-      - name: Build changed packages & their dependencies
+      - name:
+          Build changed packages, their dependencies and any other that directly
+          or indirectly use them
         run: |
-          pnpm --filter="[${{ needs.basics.outputs.git-diff-base }}]..."\
+          pnpm --filter='...[${{ needs.basics.outputs.git-diff-base }}]...'\
                --filter="@repo/citools..." \
+               ${{ steps.affected-code-checks.outputs.is-any-affected && '$(pnpm --silent --workspace-root run repo:pnpm:expand-filters --filter=''... < {infra/code-checks/**}...'')' || '' }} \
+               ${{ steps.affected-code-checks.outputs.is-any-affected && '$(pnpm --silent --workspace-root run repo:pnpm:expand-filters --filter=''... < @repo/circular-dependency-workaround...'')' || '' }} \
                run build
 
-      - name: Lint changed files for changed packages
+      - name:
+          Lint changed files for changed packages and any other packages that
+          directly or indirectly use them
         env:
           ESLINT_PLUGIN_DIFF_COMMIT: ${{ needs.basics.outputs.git-diff-base }}
         run: |
           export GIT_DIFF_BASE='${{ needs.basics.outputs.git-diff-base }}'
-          pnpm --filter="[${{ needs.basics.outputs.git-diff-base }}]" \
+
+          # changed packages
+          pnpm --filter='[${{ needs.basics.outputs.git-diff-base }}]' \
+               --filter='!@repo/citools' \
                --parallel --workspace-concurrency="$(nproc)" --aggregate-output \
-               run lint:github-pr
+               run 'lint:github-pr'
+
+          # 1. check if any other packages that directly or indirectly use them pass linting
+          # 2. when anything under `<repo root>/infra/code-checks` changed -> check all packages that directly depend on `<repo root>/infra/code-checks/**`
+          # 3. when anything under `<repo root>/infra/code-checks` changed -> check all packages that directly consume `@repo/circular-dependency-workaround`
+          #    (since there is no way to figure out which of them is affected)
+          pnpm --filter='...^[${{ needs.basics.outputs.git-diff-base }}]' \
+               ${{ steps.affected-code-checks.outputs.is-any-affected && '$(pnpm --silent --workspace-root run repo:pnpm:expand-filters --filter=''... < {infra/code-checks/**}'')' || '' }} \
+               ${{ steps.affected-code-checks.outputs.is-any-affected && '$(pnpm --silent --workspace-root run repo:pnpm:expand-filters --filter=''... < @repo/circular-dependency-workaround'')' || '' }} \
+               --filter='!@repo/citools' \
+               --parallel --workspace-concurrency="$(nproc)" --aggregate-output \
+               run lint:everything
 
   reset-releases-comment:
     needs: [basics]
@@ -285,6 +323,11 @@ jobs:
 
       - uses: ./.github/actions/npm-login
 
+      - name: Install pnpm helpers for better targetting of packages
+        run: |
+          pnpm --filter="@repo/pnpm-helpers..." \
+               install --frozen-lockfile --prefer-offline
+
       - name:
           List all packages potentially affected by changes since the main
           branch
@@ -346,13 +389,17 @@ jobs:
           Install changed packages, their dependencies and any other that
           directly or indirectly use them
         run: |
-          pnpm --filter="...[${{ needs.basics.outputs.git-diff-base }}]..." install --frozen-lockfile --prefer-offline
+          pnpm --filter='...[${{ needs.basics.outputs.git-diff-base }}]...' \
+               --filter="@repo/citools..." \
+               install --frozen-lockfile --prefer-offline
 
       - name:
           Build changed packages, their dependencies and any other that directly
           or indirectly use them
         run: |
-          pnpm --filter="...[${{ needs.basics.outputs.git-diff-base }}]..." run build
+          pnpm --filter='[${{ needs.basics.outputs.git-diff-base }}]...'\
+               --filter="@repo/citools..." \
+               run build
 
       - name:
           Run unit tests for changed packages and anything that directly or

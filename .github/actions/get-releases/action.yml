@@ -39,6 +39,7 @@ runs:
       shell: bash
       run: |
         pnpm \
+          --filter="@repo/citools..." \
           --filter="@repo/release-it-base-isolated..." \
           --filter="...${{ inputs.package-filter }}..." \
           install --frozen-lockfile --prefer-offline

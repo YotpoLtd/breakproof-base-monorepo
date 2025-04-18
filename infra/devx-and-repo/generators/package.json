@@ -24,8 +24,10 @@
     "test:github-pr:sequential": "./tests/new-library.sh"
   },
   "dependencies": {
+    "@pnpm/types": "*",
     "@repo/.github": "workspace:^",
     "@repo/environment": "workspace:^",
+    "@repo/pnpm-helpers": "workspace:^",
     "chalk": "^5.4.1",
     "enquirer": "^2.4.1",
     "execa": "5.1.1",

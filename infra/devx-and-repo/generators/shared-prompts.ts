@@ -53,9 +53,9 @@ export const getSupportingForProject = async (
                 { title: '<Application Outside the Repository>', value: false },
               ] as const)
             : []),
-          ...getPackages().map((pkg) => ({
-            title: pkg.name,
-            value: pkg.name,
+          ...(await getPackages()).map((pkg) => ({
+            title: pkg.manifest.name!,
+            value: pkg.manifest.name!,
           })),
         ],
       })

@@ -23,6 +23,7 @@
     "@repo/eslint-base-isolated": "workspace:^",
     "@repo/eslint-problem-snapshotter": "workspace:^",
     "@repo/lint-staged-base-isolated": "workspace:^",
+    "@repo/pnpm-helpers": "workspace:^",
     "@repo/syncpack-base-isolated": "workspace:^"
   },
   "devDependencies": {
@@ -32,7 +33,6 @@
     "typescript": "^5.3.3"
   },
   "devtoolsDependencies": [
-    "@repo/eslint-base-isolated",
     "@repo/typescript-base-isolated"
   ]
 }

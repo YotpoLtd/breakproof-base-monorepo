@@ -6,7 +6,7 @@ import yargsUnparse from 'yargs-unparser';
 
 import {
   CONTACT_HELP_URL,
-  getPackages,
+  getPackagesCached,
   InfraToolSubtype,
   PackageType,
   REPO_DIR_BY_PKG_TYPE,
@@ -42,7 +42,7 @@ export const getDestinationByType = ({
 };
 
 export const getPackageDir = (pkgName: string) =>
-  getPackages().find((pkg) => pkg.name === pkgName)?.path;
+  getPackagesCached().find((pkg) => pkg.manifest.name === pkgName)?.rootDir;
 
 export const stringifyArguments = (parsedArgs: Record<string, unknown>) => {
   // @ts-expect-error -- Wrong types in yargs-unparser
