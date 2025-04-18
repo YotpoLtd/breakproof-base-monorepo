@@ -6,7 +6,7 @@
   },
   "pnpm": {
     "executionEnv": {
-      "nodeVersion": "14.21.3"
+      "nodeVersion": "22.6.0"
     }
   },
   "packageManager": "pnpm@9.15.9",

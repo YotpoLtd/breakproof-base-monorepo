@@ -11,6 +11,7 @@ const moduleAlias = require('module-alias');
  *
  * Of course not ourselves, we are using a npm package that does that: 'module-alias'
  *
+ * @see https://github.com/nodejs/node/blob/v22.6.0/lib/internal/modules/cjs/loader.js#L1162
  * @see https://github.com/nodejs/node/blob/v14.21.3/lib/internal/modules/cjs/loader.js#L845
  */
 moduleAlias.addAlias(

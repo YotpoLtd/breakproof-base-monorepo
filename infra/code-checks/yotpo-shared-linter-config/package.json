@@ -4,7 +4,7 @@
   "version": "0.3.1",
   "pnpm": {
     "executionEnv": {
-      "nodeVersion": "14.21.3"
+      "nodeVersion": "22.6.0"
     }
   },
   "packageManager": "pnpm@9.15.9",
@@ -60,7 +60,6 @@
     "@types/lint-staged": "^13.3.0",
     "eslint": "^8.57.1",
     "prettier": "^3.4.2",
-    "tsx": "^4.19.1",
     "typescript": "*"
   },
   "devtoolsDependencies": [
