@@ -7,7 +7,7 @@
       "nodeVersion": "22.6.0"
     }
   },
-  "packageManager": "pnpm@9.15.3",
+  "packageManager": "pnpm@9.15.9",
   "scripts": {
     "lint:precommit": "pnpm run lint",
     "lint:everything": "pnpm run lint",
@@ -17,7 +17,7 @@
   "dependencies": {
     "cli-highlight": "^2.1.11"
   },
-  "devtoolsDependencies": {
+  "devDependencies": {
     "prettier": "^3.4.2",
     "prettier-plugin-sh": "^0.14.0",
     "shellcheck": "^3.0.0"

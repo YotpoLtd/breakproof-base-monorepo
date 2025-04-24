@@ -1,6 +1,6 @@
 <div align="center">
 
-<picture><img alt="Breakproof Base Repo BETA VERSION" src="./docs/logo-big.svg" heigth=200px /></picture>
+<picture><img alt="Breakproof Base Repo BETA VERSION" src="./docs/logo-big.svg" height=175px /></picture>
 
 ![Linux is supported](https://img.shields.io/badge/Linux-Supported-pass)
 ![macOS is supported](https://img.shields.io/badge/macOS-Supported-pass)
@@ -28,24 +28,37 @@
 
 </div>
 
-# The Breakproof monorepo base: **TLDR**
+# **TLDR** (_what is The Breakproof base monorepo_)
 
-The breakproof base monorepo offers **a new home 🏠** for **your frontend
-projects** (_for both enterprise or pet projects_). It's designed to let you
-focus entirely on them, to make upgrading them easier and to ensure all
-processes around them are always up to date, optimized & following best
-practices, all of that **without breaking your code or _breaking-the-bank_**.
+This is a **template repository**, and it's **meant to be forked**. Your fork 🔀
+becomes a **_breakproof home_** 🏠 where you can develop **your frontend
+projects** without 💥 **breaking your code** or 💰 **_breaking-the-bank_**.
 
-Forking 🔀 the breakproof base monorepo creates **your new breakproof home** 🏠,
-where you **import your existing** projects or **create new** ones. ⚡
+You start by **importing your existing** projects or **generating new** ones. ⚡
 **_Immediately_** those projects get a ton of **working** processes like
 **optimized** CI/CD, **meticulous** code checks, **automatic** `npm` releases,
-**precise** code-editor integration, etc. **_Because_** you forked the repo, you
-keep receiving updates for those processes simply via `git pull`.
+**precise** code-editor integration, etc. **_And because_** you forked the repo,
+you keep receiving updates for those processes simply via `git pull`.
 
-All of that 🔼 is implemented by making **industry-standard tools 🏆** work
-together, **_NOT_** introducing "_yet-another-abstraction_" and **_NOT_**
-requiring specific project tech stack.
+**You get:**
+
+1. 🚀️ _laser-focus_ on **_your projects_** — _not on the tooling around them_
+
+2. 🔄 _easier upgrades_ of **_your projects_** — _due to full isolation between
+   tools & projects (even different
+   <img src="https://custom-icon-badges.demolab.com/badge/node.js-E0DDCE?logo=nodedotjs&logoColor=323330&labelColor=F0DB4F&style=flat-square" alt="node.js" valign="middle" />
+   versions)_
+
+3. 🧹 **_low-to-none_** repository **_maintenance_** — _the breakproof repo will
+   update **tooling & processes** around your projects, keep them **optimized**
+   & following **best practices**, without you having to change your code_
+
+> [!NOTE]
+>
+> All of that 🔼 is implemented by making
+> [**industry-standard tools 🏆**](#tools-list) work together, **_NOT_**
+> introducing "_yet-another-abstraction_" and **_NOT_** requiring specific
+> project tech stack.
 
 <a name="the-problems-it-solves"></a>
 
@@ -127,17 +140,20 @@ individual tools without having to redo the entire system 🤔
   its own individual package. This allows us to leverage an ability of `pnpm` to
   specify a different `node.js` for each package. Essentially you get an
   isolated pair of `<tool> + <node.js>`, e.g. `eslint + node22` which lets you
-  execute `eslint` using `node22` from any place in the repo with command
-  similar to:
-  `pnpm --filter=<PACKAGE NAME THAT INSTALLS TOOL IN IT> run <TOOL NAME>`
+  execute `eslint` using `node22` from any place in the repo with a `pnpm`
+  command similar to:
+  `pnpm --filter=<PACKAGE NAME THAT INSTALLS TOOL IN IT> run <TOOL NAME>`. For
+  example: `pnpm --filter="@repo/eslint-isolated-base" run eslint`
 
 - The breakproof repo comes with several tool packages already in it, each
-  installs one industry-standard tool like `eslint` or `TypeScript` or `rollup`
-  or `jest`, …[_( full list below ⬇️ )_](#tools-list). Additionally, each of
-  those packages include **detailed base configuration** for the specific tool
-  that your projects can extend. 🔄 Each individual tool can be swapped with
-  another as long as it does it's job.
-  _([role of each tool is listed below ⬇️](#tools-list)_
+  installs one industry-standard tool like `eslint`, or `TypeScript`, or
+  `rollup`, or `jest`, …[_( full list below ⬇️ )_](#tools-list). Additionally,
+  each of those packages include **detailed & strict base configuration** for
+  the specific tool that your projects can extend. This means **your projects
+  are in full control** of the final tool configuration. If one package needs a
+  tool, it calls a script from another package that installs that tool. That's
+  it. 🔄 Each individual tool can be swapped with another as long as it does
+  it's job. _([role of each tool is listed below ⬇️](#tools-list)_
 
 - On many occasions the base configuration is tweaked so it accounts for
   limitation of another tool, thus making them behave well together. Not all
@@ -159,18 +175,19 @@ individual tools without having to redo the entire system 🤔
 
 - The CI/CD process is implemented as GitHub actions/workflows. Because it knows
   the repo uses `pnpm`, we can target only a subset of the packages inside it
-  when running tasks. For example, if a PR changes only your project the CI/CD
-  will run test & linting checks **only for your project**. It will also run
-  them in parallel, and install only the dependencies that your project needs
-  which are cached, so subsequent runs with the same dependencies don't waste
-  time re-downloading them.
+  when running tasks. For example, if a PR only changes your project, then the
+  CI/CD will run test & linting checks **only for your project**. It will also
+  run them in parallel and install only the dependencies that your project
+  needs, which are cached, so subsequent runs with the same dependencies don't
+  waste time re-downloading them.
 
 - The only requirement from your projects to participate in the CI/CD is to
   define properties in the `"scripts"` section of their `package.json` with
-  specific names. You can run whatever command you like there, but probably you
-  will run some of the isolated tools as shown above. For example, if you want
-  your project tested in GitHub PRs, the project must define a `lint:github-pr`
-  script with value of `pnpm --filter='@repo/jest-base-isolated' run jest` where
+  specific names (_a convention_). You can run whatever command you like there,
+  but probably you will run some of the isolated tools as shown above. For
+  example, if you want your project tested in GitHub PRs, the project must
+  define a `lint:github-pr` script with value of
+  `pnpm --filter='@repo/jest-base-isolated' run jest` where
   `@repo/jest-base-isolated` is just the name of the package that isolates
   `jest`. The convention for the names of those scripts is as straightforward as
   possible, so you need `build` for building, `release` for `npm` releases, etc.
@@ -217,62 +234,14 @@ individual tools without having to redo the entire system 🤔
 
 1. 🔀 **Fork this repo.**
 
-2. 🎛️ Initialize your fork with your preferences:
+2. 🎛️ Initialize your fork with your preferences & automatically configure your
+   code editor:
 
    ```shell
    pnpm --workspace-root generate repo init
    ```
 
-3. 🚀 Onboard yourself and your code editor:
-
-   ```shell
-   pnpm --workspace-root generate repo onboard
-   ```
-
-4. 🎛️ Tweak the tools in the repo to fit the needs/preferences of your projects:
-
-   - The structure & files of your new projects:
-     - [`./.nodejs-versions-whitelist.cjs`](./.nodejs-versions-whitelist.cjs) —
-       Define an array of allowed `node.js`
-     - [`./.npm-scopes-whitelist.cjs`](./.npm-scopes-whitelist.cjs) — Define an
-       array of allowed npm scopes
-     - [`./infra/build/environment/src/index.ts`](./infra/build/environment/src/index.ts)
-       — Define your target browsers here (_as browserlist queries_)
-     - [ `./infra/devx-and-repo/generators/_templates/package/new`](./infra/devx-and-repo/generators/_templates/package/new)
-       — the templates that `hygen` uses to generate the files of your new
-       projects. versions for your projects, used during code generation & code
-       checks (`@scope/<project name>`) for your projects to be used when
-       publishing to the npm registry
-     - [ `./infra/devx-and-repo/generators/extra-template-vars.ts`](./infra/devx-and-repo/generators/extra-template-vars.ts)
-       — some constants that are used during code generation or CLI guides like
-       the text or contact channel you want to output for help
-   - The base configurations of tools that your project files extend:
-     - [`eslint` base configs](./docs/tools-details.md#eslint-config)
-       - take a look at the import-order rule where you should define your own
-         packages' scopes
-     - [`release-it` base config](./docs/tools-details.md#release-it-config) &
-       the
-       [`conventional-changelog` used by it](./docs/tools-details.md#conventional-changelog-config)
-     - [`jest` base config](./docs/tools-details.md#jest-config)
-     - [`cypress` base config](./docs/tools-details.md#cypress-config)
-     - [`rollup` base config](./docs/tools-details.md#rollup-config)
-     - [`babel` base config](./docs/tools-details.md#babel-config)
-     - [`webpack` base config](./docs/tools-details.md#webpack-config)
-     - [`typescript` base configs](./docs/tools-details.md#typescript-config)
-       - special shout out to the `customConditions` in `tsconfig.base.json`,
-         where you can define yours or leave
-     - _[...all other secondary tools](#tools-list)_
-
-5. 🙋 Edit `<repo root>/.github/CODEOWNERS` and add your team as owners to the
-   existing paths there. Or add `/** @<github user or team>` if there is going
-   to be only one owner.
-
-6. 📚 Move `<repo root>/README.md` to
-   `<repo root>/docs/breakproof-repo-base.README.md` (or similar) & create your
-   own `<repo root>/README.md`. You move or copy the
-   `<repo root>/docs/after-fork-setup/README.md` as your main one.
-
-7. [Generate new](./docs/pnpm-intro.md#creating-a-new-package-in-the-repo) or
+3. 🚀 [Generate new](./docs/pnpm-intro.md#creating-a-new-package-in-the-repo) or
    [import your existing](./infra/devx-and-repo/repo-shell-scripts/README.md#using-import-from-other-repo)
    projects.
 
@@ -532,10 +501,10 @@ configuration with projects outside our breakproof repo, while
    `<repo root>/package.json`. It's intentionally a symlink to a non-existent
    path
 
-2. To work around a limitation in `pnpm` filtering, we introduce a new section
-   of dependencies in `package.json` called `devtoolsDependencies`. It's
-   intended for packages that do not affect the runtime or the build. So things
-   like lint, tests, or local development helpers.
+2. To work around a limitation in `pnpm` filtering, we introduce a new array
+   section in `package.json` called `devtoolsDependencies`. It should include
+   names of `devDependencies` which do not affect the runtime or the build. So
+   things like lint, tests, or local development helpers.
 
 3. In order to be strict and avoid packages accessing `<repo root>/node_modules`
    but still let code-editors find installations of tools (_e.g._ `prettier`) we

@@ -7,7 +7,7 @@
       "nodeVersion": "22.6.0"
     }
   },
-  "packageManager": "pnpm@9.15.3",
+  "packageManager": "pnpm@9.15.9",
   "sideEffects": [
     "**/*.css"
   ],
@@ -35,14 +35,18 @@
     "@repo/eslint-problem-snapshotter": "workspace:^",
     "@repo/generators": "workspace:^",
     "@repo/lint-staged-base-isolated": "workspace:^",
+    "@repo/pnpm-helpers": "workspace:^",
     "@repo/release-it-base-isolated": "workspace:^",
     "@repo/shell-scripts": "workspace:^",
     "@repo/syncpack-base-isolated": "workspace:^",
     "webpack-bundle-analyzer": "^4.10.1"
   },
-  "devtoolsDependencies": {
+  "devDependencies": {
     "@repo/typescript-base-isolated": "workspace:^",
     "prettier": "^3.4.2",
     "typescript": "^5.3.3"
-  }
+  },
+  "devtoolsDependencies": [
+    "@repo/typescript-base-isolated"
+  ]
 }

@@ -4,7 +4,7 @@
 import prompts from 'enquirer';
 
 // if wondering about the `#...` import see: https://nodejs.org/api/packages.html#subpath-imports
-import { getPackages } from '#extra-template-vars';
+import { getPackages, refreshPackages } from '#extra-template-vars';
 import * as sharedPrompts from '#shared-prompts';
 
 /**
@@ -15,11 +15,12 @@ export const params = async ({
 }: {
   args: Record<string, string | boolean>;
 }) => {
+  await refreshPackages();
   const name =
     (cliArgs.name && String(cliArgs.name)) ||
     (await prompts.autocomplete({
       message: 'Which package you want to add release to?',
-      choices: getPackages().map((pkg) => pkg.name),
+      choices: (await getPackages()).map((pkg) => pkg.manifest.name),
     }));
 
   const type = await sharedPrompts.getType(cliArgs);

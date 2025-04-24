@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# We intentionally don't put quotes around some subshells $()
+# shellcheck disable=SC2086,SC2046
 
 #;
 # Make sure this file is sourced only once
@@ -29,12 +31,19 @@ pnpm_affected_build_filter() {
     echo "Please set the GIT_DIFF_BASE environment variable before running this function"
     exit 1
   fi
+
+  PNPM_FILTER_ARGS=$(
+    pnpm --silent --workspace-root run repo:pnpm:expand-filters --ignore-devtools --filter="...[$GIT_DIFF_BASE]" \
+      --changed-files-ignore-pattern="$NON_TEST_FILES_GLOB" \
+      --changed-files-ignore-pattern="$NON_BUILD_FILES_GLOB"
+  )
+  if [ -z "$PNPM_FILTER_ARGS" ]; then
+    return
+  fi
   pnpm \
     --aggregate-output \
-    --filter-prod="...[$GIT_DIFF_BASE]" \
-    --filter-prod="!@repo/root" \
-    --changed-files-ignore-pattern="$NON_TEST_FILES_GLOB" \
-    --changed-files-ignore-pattern="$NON_BUILD_FILES_GLOB" \
+    $PNPM_FILTER_ARGS \
+    --filter='!@repo/root' \
     "$@"
 }
 
@@ -49,13 +58,29 @@ pnpm_affected_test_filter() {
     echo "Please set the GIT_DIFF_BASE environment variable before running this function"
     exit 1
   fi
+
+  PNPM_FILTER_ARGS=$(
+    pnpm --silent --workspace-root run repo:pnpm:expand-filters --ignore-devtools --filter="...[$GIT_DIFF_BASE]" \
+      --changed-files-ignore-pattern="$NON_TEST_FILES_GLOB"
+  )
+  if [ -z "$PNPM_FILTER_ARGS" ]; then
+    return
+  fi
+
   pnpm \
     --aggregate-output \
-    --filter-prod="...[$GIT_DIFF_BASE]" \
-    --filter-prod="!@repo/root" \
-    --changed-files-ignore-pattern="$NON_TEST_FILES_GLOB" \
+    $PNPM_FILTER_ARGS \
+    --filter='!@repo/root' \
     "$@"
 }
+
+pnpm \
+  --aggregate-output \
+  $(
+    pnpm --silent --workspace-root run repo:pnpm:expand-filters --ignore-devtools --filter="...devtools"
+  ) \
+  --filter="!@repo/root" \
+  exec pwd
 
 #;
 # Shortcut to pnpm command targeting packages which include
@@ -73,18 +98,4 @@ pnpm_changed_filter() {
     --filter="[$GIT_DIFF_BASE]" \
     --filter="!@repo/root" \
     "$@"
-}
-
-#;
-# Check if the build of the package provided as argument is affected by
-# any changed files since $GIT_DIFF_BASE
-#
-# @param package_name: the target package name
-# @return boolean indicating if the package build is affected
-#"
-pnpm_is_package_build_affected() {
-  # get list of all affected
-  pnpm_affected_build_filter list --depth -1 \
-    `# check if provided argument exists in the list` \
-    | grep -q "$1@"
 }

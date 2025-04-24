@@ -17,11 +17,6 @@ const config = {
       path: 'optionalDependencies',
       strategy: 'versionsByName',
     },
-    // Our custom section of dependencies, @see .pnpmfile.cjs for more
-    devtools: {
-      path: 'devtoolsDependencies',
-      strategy: 'versionsByName',
-    },
     packageManager: {
       path: 'packageManager',
       strategy: 'name@version',
@@ -83,7 +78,6 @@ const config = {
     'dev',
     'peer',
     'optional',
-    'devtools',
     'overrides',
     'pnpmOverrides',
     'resolutions',

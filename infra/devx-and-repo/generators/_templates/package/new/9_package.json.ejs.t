@@ -32,9 +32,6 @@ sh: |
       --skipCodeownersCheck \
       --supportingForProject="<%- nameWithScope %>"
   <% } %>
-  <% if (techStack === TechStack.ANGULAR13) {%>
-    pnpm --filter="generator-angular13-deps" run ng new --routing --skip-install --style="css" --directory="<%- h.getDestinationByType(type, name) %>" <%- name %>
-  <% } %>
 
   pnpm --workspace-root generate add lint <%- h.stringifyArguments(lintArgs) %>
 
@@ -70,7 +67,7 @@ to: <%- h.getDestinationByType({ type, subtype, name }) %>/package.json
   },
 
 
-  "packageManager": "pnpm@9.15.3",
+  "packageManager": "pnpm@9.15.9",
 
 
   "scripts": {
@@ -157,6 +154,8 @@ to: <%- h.getDestinationByType({ type, subtype, name }) %>/package.json
       <% if (type !== PackageType.APP && techStack === TechStack.REACT) { %>
         "react": "^16",
         "react-dom": "^16",
+        "@types/react": "^16",
+        "@types/react-dom":  "^16",
       <% } %>
 
       <% if (type === PackageType.LIB || hasRelease) { %>
@@ -165,34 +164,22 @@ to: <%- h.getDestinationByType({ type, subtype, name }) %>/package.json
 
     <% } %>
 
-    <% if (type === PackageType.INFRA_TOOL || type === PackageType.E2E_APP) { %>
-      "typescript": "^5.3.3",
+    <% if (!supportingForProject) { %>
+      "@repo/jest-base-isolated": "workspace:^",
     <% } %>
+
+    "typescript": "^5.3.3",
     <% if (type === PackageType.LIB) { %>
       "tslib": "*",
     <% } %>
   },
 
 
-  "devtoolsDependencies": {
-
+  "devtoolsDependencies": [
     <% if (!supportingForProject) { %>
-      "@repo/jest-base-isolated": "workspace:^",
+      "@repo/jest-base-isolated",
     <% } %>
-
-    <% if (!supportingForProject && type !== PackageType.INFRA_TOOL) { %>
-      "typescript": "^5.3.3",
-    <% } %>
-
-    <% if (techStack === TechStack.REACT) { %>
-      "@types/react": "^16",
-      "@types/react-dom":  "^16",
-    <% } %>
-
-    <% if (type === PackageType.INFRA_TOOL) { %>
-      "sucrase": "^3.35.0",
-    <% } %>
-  },
+  ],
 
 
   peerDependencies: {
@@ -200,6 +187,8 @@ to: <%- h.getDestinationByType({ type, subtype, name }) %>/package.json
     <% if (type !== PackageType.APP && techStack === TechStack.REACT) { %>
       "react": "^16",
       "react-dom": "^16",
+      "@types/react": "^16",
+      "@types/react-dom":  "^16",
     <% } %>
 
     <% if (type === PackageType.LIB) { %>

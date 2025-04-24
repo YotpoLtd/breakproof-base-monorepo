@@ -10,10 +10,10 @@
   private: true,
   name: '@repo/root',
   engines: {
-    pnpm: '9.15.3',
+    pnpm: '9.15.9',
     node: '22.6.0',
   },
-  packageManager: 'pnpm@9.15.3',
+  packageManager: 'pnpm@9.15.9',
   /**
    * Scripts staring with `shared:` or `fix:shared` can only be executed in 3 ways:
    *
@@ -97,6 +97,9 @@
     'repo:import-from-other-repo': './infra/devx-and-repo/repo-shell-scripts/import-from-other-repo.sh',
     // output whatever is exported from <repo root>/.source-breakproof-repo.cjs
     'repo:get-breakproof-source-repo': 'node -p "require(\'./.source-breakproof-repo.cjs\')"',
+    // when provided with --filter='<smth that selects multiple packages>' arguments,
+    // it outputs multiple --filter='<smth that selects A SINGLE package>', one for each original match
+    'repo:pnpm:expand-filters': 'pnpm --filter="@repo/pnpm-helpers" run expand-filters',
 
     /**
      * SHORTCUTS FOR RELEASING PACKAGES
@@ -251,6 +254,16 @@
           'mini-css-extract-plugin': '*',
         },
       },
+      '@pnpm/filter-workspace-packages': {
+        peerDependencies: {
+          '@pnpm/types': '*',
+        },
+      },
+      'zx': {
+        peerDependencies: {
+          '@types/fs-extra': '*',
+        },
+      },
     },
     patchedDependencies: {
       /**
@@ -272,6 +285,10 @@
        * With this patch, we make sure `depcheck` recognizes the `package` option even when run as CLI
        */
       'depcheck': 'infra/code-checks/depcheck-base-isolated/patches/depcheck.patch',
+      /**
+       * Allow `filterPackages` to accept a new option called `createPkgGraph` to customize the graph
+       */
+      '@pnpm/filter-workspace-packages': 'infra/devx-and-repo/repo-shell-scripts/patches/@pnpm__filter-workspace-packages.patch',
     },
   },
 }

@@ -4,10 +4,10 @@
   "version": "0.3.1",
   "pnpm": {
     "executionEnv": {
-      "nodeVersion": "14.21.3"
+      "nodeVersion": "22.6.0"
     }
   },
-  "packageManager": "pnpm@9.15.3",
+  "packageManager": "pnpm@9.15.9",
   "bin": {
     "yotpo-eslint-problem-snapshotter": "./dist/eslint-problem-snapshotter-cli.js"
   },
@@ -40,19 +40,23 @@
     "@repo/code-problem-snapshotter": "workspace:^"
   },
   "devDependencies": {
+    "@repo/depcheck-base-isolated": "workspace:^",
+    "@repo/eslint-base-isolated": "workspace:^",
+    "@repo/jest-base-isolated": "workspace:^",
+    "@repo/lint-staged-base-isolated": "workspace:^",
     "@repo/release-it-base-isolated": "workspace:^",
     "@repo/typescript-base-isolated": "workspace:^",
     "prettier": "^3.4.2",
     "tsx": "^4.19.1",
     "typescript": "^5.3.3"
   },
+  "devtoolsDependencies": [
+    "@repo/depcheck-base-isolated",
+    "@repo/eslint-base-isolated",
+    "@repo/jest-base-isolated",
+    "@repo/lint-staged-base-isolated"
+  ],
   "peerDependencies": {
     "prettier": "*"
-  },
-  "devtoolsDependencies": {
-    "@repo/depcheck-base-isolated": "workspace:^",
-    "@repo/eslint-base-isolated": "workspace:^",
-    "@repo/jest-base-isolated": "workspace:^",
-    "@repo/lint-staged-base-isolated": "workspace:^"
   }
 }

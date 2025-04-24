@@ -8,7 +8,7 @@
       "nodeVersion": "22.6.0"
     }
   },
-  "packageManager": "pnpm@9.15.3",
+  "packageManager": "pnpm@9.15.9",
   "main": "./circular-dependency-workaround.cjs",
   "types": "./circular-dependency-workaround.d.ts",
   "scripts": {

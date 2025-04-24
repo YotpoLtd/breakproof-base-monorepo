@@ -7,7 +7,7 @@
       "nodeVersion": "22.6.0"
     }
   },
-  "packageManager": "pnpm@9.15.3",
+  "packageManager": "pnpm@9.15.9",
   "sideEffects": [
     "**/*.css"
   ],
@@ -37,14 +37,18 @@
     "zone.js": "~0.14.10"
   },
   "devDependencies": {
-    "typescript": "~5.4.5"
-  },
-  "devtoolsDependencies": {
     "@repo/depcheck-base-isolated": "workspace:^",
     "@repo/eslint-base-isolated": "workspace:^",
     "@repo/lint-staged-base-isolated": "workspace:^",
     "@repo/typescript-base-isolated": "workspace:^",
     "prettier": "3.2.4",
-    "sucrase": "^3.35.0"
-  }
+    "sucrase": "^3.35.0",
+    "typescript": "~5.4.5"
+  },
+  "devtoolsDependencies": [
+    "@repo/depcheck-base-isolated",
+    "@repo/eslint-base-isolated",
+    "@repo/lint-staged-base-isolated",
+    "@repo/typescript-base-isolated"
+  ]
 }

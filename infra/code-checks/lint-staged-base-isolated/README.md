@@ -34,3 +34,21 @@ This package does 3 things:
 
 You can find [info about `lint-staged`](../../../docs/tools-details.md) about
 the role, config & alternatives of each tool.
+
+## Caveats
+
+1. Since all packages by default depend on `@repo/lint-staged-base-isolated`, it
+   cannot install other packages without a cyclic/circular dependency. Instead,
+   during CI/CD we rely on `@repo/citools` to install the needed dependencies
+   and during local development we rely on `@repo/devtools` to do that. Circular
+   dependencies inside the repository are forbidden, because this practices
+   allows bad code composition.
+2. Due to the limitation above 👆️, we also use
+   `@repo/circular-dependency-workaround` to actually import
+   `<repo root>/infra/code-checks` packages and run checks here. Those
+   code-checks are again installed via `@repo/citools`/`@repo/devtools`.
+3. Because of the same limitation 👆️, on CI/CD we can't detect if a package is
+   affected by a change of a specific package in
+   `<repo root>/infra/code-checks`. So if anything in
+   `<repo root>/infra/code-checks` is changed -> CI/CD will run checks for all
+   packages that directly or indirectly depend on `infra/code-checks/**`

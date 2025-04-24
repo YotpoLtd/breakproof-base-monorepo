@@ -8,7 +8,7 @@
       "nodeVersion": "22.6.0"
     }
   },
-  "packageManager": "pnpm@9.15.3",
+  "packageManager": "pnpm@9.15.9",
   "exports": {
     "./package.json": "./package.json",
     "./base": {
@@ -44,17 +44,19 @@
     "typescript": "^5.3.3"
   },
   "devDependencies": {
-    "@repo/typescript-base-isolated": "workspace:^",
-    "@types/micromatch": "^4.0.9",
-    "tslib": "^2.7.0"
-  },
-  "peerDependencies": {
-    "tslib": "^2.7.0"
-  },
-  "devtoolsDependencies": {
     "@repo/circular-dependency-workaround": "workspace:^",
     "@repo/eslint-base-isolated": "workspace:^",
+    "@repo/typescript-base-isolated": "workspace:^",
+    "@types/micromatch": "^4.0.9",
     "eslint": "^8.57.1",
-    "prettier": "^3.4.2"
+    "prettier": "^3.4.2",
+    "tslib": "^2.7.0"
+  },
+  "devtoolsDependencies": [
+    "@repo/circular-dependency-workaround",
+    "@repo/eslint-base-isolated"
+  ],
+  "peerDependencies": {
+    "tslib": "^2.7.0"
   }
 }

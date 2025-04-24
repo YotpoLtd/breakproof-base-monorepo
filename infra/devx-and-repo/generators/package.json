@@ -8,11 +8,12 @@
       "nodeVersion": "22.6.0"
     }
   },
-  "packageManager": "pnpm@9.15.3",
+  "packageManager": "pnpm@9.15.9",
   "imports": {
     "#extra-template-vars": "./extra-template-vars.ts",
     "#shared-prompts": "./shared-prompts.ts",
-    "#helpers": "./helpers.ts"
+    "#helpers": "./helpers.ts",
+    "#zx": "./zx.ts"
   },
   "scripts": {
     "preinstall": "[ -n \"$(pwd | grep '/node_modules/')\" ] || echo $npm_config_user_agent | grep -q 'pnpm/' || (echo 'PLEASE USE PNPM, not NPM' && exit 1)",
@@ -24,17 +25,22 @@
     "test:github-pr:sequential": "./tests/new-library.sh"
   },
   "dependencies": {
+    "@pnpm/types": "*",
     "@repo/.github": "workspace:^",
     "@repo/environment": "workspace:^",
+    "@repo/pnpm-helpers": "workspace:^",
+    "boxen": "^8.0.1",
     "chalk": "^5.4.1",
     "enquirer": "^2.4.1",
+    "eta": "^3.5.0",
     "execa": "5.1.1",
     "fast-xml-parser": "5.0.9",
     "hygen": "^6.2.11",
     "json5": "2.2.3",
     "terminal-link": "3.0.0",
     "tsx": "^4.19.1",
-    "yargs-unparser": "^2.0.0"
+    "yargs-unparser": "^2.0.0",
+    "zx": "^8.5.3"
   },
   "devDependencies": {
     "@repo/cypress-base-isolated": "workspace:^",
@@ -44,15 +50,16 @@
     "@repo/lint-staged-base-isolated": "workspace:^",
     "@repo/rollup-base-isolated": "workspace:^",
     "@repo/typescript-base-isolated": "workspace:^",
-    "@repo/webpack-base-isolated": "workspace:^"
-  },
-  "devtoolsDependencies": {
-    "@repo/depcheck-base-isolated": "workspace:^",
-    "@repo/eslint-base-isolated": "workspace:^",
-    "@repo/lint-staged-base-isolated": "workspace:^",
-    "@repo/typescript-base-isolated": "workspace:^",
+    "@repo/webpack-base-isolated": "workspace:^",
+    "@types/fs-extra": "11.0.4",
     "@types/yargs-unparser": "^2.0.3",
     "prettier": "^3.4.2",
     "typescript": "^5.4.5"
-  }
+  },
+  "devtoolsDependencies": [
+    "@repo/depcheck-base-isolated",
+    "@repo/eslint-base-isolated",
+    "@repo/lint-staged-base-isolated",
+    "@repo/typescript-base-isolated"
+  ]
 }

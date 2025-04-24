@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -x
 
 if [ -z "$TEST_SCRIPT_NAME" ]; then
   echo "Please set the TEST_SCRIPT_NAME environment variable before running this script"

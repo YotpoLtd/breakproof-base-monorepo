@@ -26,5 +26,9 @@ export default {
       package: '@repo/webpack-base-isolated',
       reason: 'Used in templates but not in this package',
     }),
+    defineIgnoredPackage({
+      package: '@types/fs-extra',
+      reason: 'Peer dep of `zx`',
+    }),
   ],
 };

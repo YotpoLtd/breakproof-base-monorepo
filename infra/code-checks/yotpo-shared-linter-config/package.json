@@ -4,10 +4,10 @@
   "version": "0.3.1",
   "pnpm": {
     "executionEnv": {
-      "nodeVersion": "14.21.3"
+      "nodeVersion": "22.6.0"
     }
   },
-  "packageManager": "pnpm@9.15.3",
+  "packageManager": "pnpm@9.15.9",
   "exports": {
     ".": {
       "default": "./lib/index.js"
@@ -52,6 +52,7 @@
     "tslib": "*"
   },
   "devDependencies": {
+    "@repo/circular-dependency-workaround": "workspace:^",
     "@repo/typescript-base-isolated": "workspace:^",
     "@types/eslint": "^8.56.10",
     "@types/eslint__eslintrc": "^2.1.2",
@@ -59,17 +60,16 @@
     "@types/lint-staged": "^13.3.0",
     "eslint": "^8.57.1",
     "prettier": "^3.4.2",
-    "tsx": "^4.19.1",
     "typescript": "*"
   },
+  "devtoolsDependencies": [
+    "@repo/circular-dependency-workaround"
+  ],
   "peerDependencies": {
     "eslint": "^8.57.1",
     "lint-staged": "^13.2.0",
     "prettier": "3.*",
     "tslib": "*",
     "typescript": "*"
-  },
-  "devtoolsDependencies": {
-    "@repo/circular-dependency-workaround": "workspace:^"
   }
 }

@@ -54,10 +54,10 @@ const config: EslintConfig = [
             'files',
             'scripts',
             'dependencies',
-            'devDependencies',
-            'peerDependencies',
             'optionalDependencies',
+            'devDependencies',
             'devtoolsDependencies',
+            'peerDependencies',
           ],
         },
         {

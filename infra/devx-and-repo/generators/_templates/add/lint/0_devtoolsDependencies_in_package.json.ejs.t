@@ -5,6 +5,6 @@ skip_if: devtoolsDependencies
 to: <%- h.getPackageDir(name) %>/package.json
 ---
 
-"devtoolsDependencies": {
+"devtoolsDependencies": [
 
-},
+],

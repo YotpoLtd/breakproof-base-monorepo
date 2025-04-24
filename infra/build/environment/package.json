@@ -7,7 +7,7 @@
       "nodeVersion": "22.6.0"
     }
   },
-  "packageManager": "pnpm@9.15.3",
+  "packageManager": "pnpm@9.15.9",
   "main": "./dist/index.js",
   "sideEffects": [
     "**/*.css"
@@ -27,13 +27,16 @@
     "__SEE_SHARED__": "echo \"You can run any script starting with 'shared:' defined in <repo-root>/package.json by executing `pnpm -w <name of script>` from your package directory\""
   },
   "devDependencies": {
-    "@repo/typescript-base-isolated": "workspace:^",
-    "typescript": "^5.3.3"
-  },
-  "devtoolsDependencies": {
     "@repo/depcheck-base-isolated": "workspace:^",
     "@repo/eslint-base-isolated": "workspace:^",
     "@repo/lint-staged-base-isolated": "workspace:^",
-    "prettier": "^3.4.2"
-  }
+    "@repo/typescript-base-isolated": "workspace:^",
+    "prettier": "^3.4.2",
+    "typescript": "^5.3.3"
+  },
+  "devtoolsDependencies": [
+    "@repo/depcheck-base-isolated",
+    "@repo/eslint-base-isolated",
+    "@repo/lint-staged-base-isolated"
+  ]
 }

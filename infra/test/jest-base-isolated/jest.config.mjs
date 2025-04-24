@@ -3,7 +3,7 @@ import * as path from 'node:path';
 import process from 'node:process';
 import { fileURLToPath } from 'node:url';
 
-import baseJestConfig from './dist/jest.config.base.react';
+import baseJestConfig from './dist/jest.config.base.react.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectSpecificJestSetup = path.join(process.cwd(), 'jest.setup.ts');

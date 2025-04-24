@@ -1,0 +1,9 @@
+{
+  "extends": "@repo/typescript-base-isolated/tsconfig.node-transpiled.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist"
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["src/*.spec.ts"]
+}
