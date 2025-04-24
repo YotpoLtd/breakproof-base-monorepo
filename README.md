@@ -1,6 +1,6 @@
 <div align="center">
 
-<picture><img alt="Breakproof Base Repo BETA VERSION" src="./docs/logo-big.svg" heigth=200px /></picture>
+<picture><img alt="Breakproof Base Repo BETA VERSION" src="./docs/logo-big.svg" height=175px /></picture>
 
 ![Linux is supported](https://img.shields.io/badge/Linux-Supported-pass)
 ![macOS is supported](https://img.shields.io/badge/macOS-Supported-pass)
