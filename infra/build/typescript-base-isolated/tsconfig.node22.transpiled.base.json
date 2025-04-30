@@ -1,6 +1,6 @@
 {
   "extends": [
-    "@tsconfig/node20/tsconfig",
+    "@tsconfig/node22/tsconfig",
     "./tsconfig.lib.base.json",
     "./partials/tsconfig.node-types"
   ]
