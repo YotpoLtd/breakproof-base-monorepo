@@ -1,5 +1,5 @@
 ---
-to: <%- h.getDestinationByType({ type, subtype, name }) %>/depcheck.config.ts
+to: "<%- h.getPackageDir(name) %>/depcheck.config.ts"
 ---
 import baseDepsCheckConfig <% if (type !== PackageType.LIB) { %>, { defineIgnoredPackage } <% } %> from '@repo/depcheck-base-isolated/base';
 

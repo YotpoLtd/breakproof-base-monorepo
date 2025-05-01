@@ -383,9 +383,6 @@ importers:
       eslint:
         specifier: ^8.57.1
         version: 8.57.1
-      eslint-plugin-diff:
-        specifier: ^2.0.3
-        version: 2.0.3(eslint@8.57.1)
       eslint-plugin-json-schema-validator:
         specifier: ^5.3.1
         version: 5.3.1(patch_hash=ht7pfsojfsfytzkec62phd4mgq)(ajv-errors@3.0.0(ajv@8.17.1))(ajv@8.17.1)(eslint@8.57.1)(typescript@5.6.2)
@@ -611,9 +608,6 @@ importers:
       eslint-import-resolver-typescript:
         specifier: ^3.6.0
         version: 3.6.1(@typescript-eslint/parser@5.62.0(eslint@8.57.1)(typescript@5.6.2))(eslint-plugin-import@2.29.1)(eslint@8.57.1)
-      eslint-plugin-diff:
-        specifier: ^2.0.3
-        version: 2.0.3(eslint@8.57.1)
       eslint-plugin-eslint-comments:
         specifier: ^3.2.0
         version: 3.2.0(eslint@8.57.1)
@@ -5094,12 +5088,6 @@ packages:
         optional: true
       eslint-import-resolver-webpack:
         optional: true
-
-  eslint-plugin-diff@2.0.3:
-    resolution: {integrity: sha512-pkSwOTjPxqtplq+Ea+9i75QMdmJrItu6oxIG6EWY8bJ5veBNMUrp6Oti+5L6SW20FfjX+CmlZz+fyiWGG1POaQ==}
-    engines: {node: '>=14.0.0'}
-    peerDependencies:
-      eslint: '>=6.7.0'
 
   eslint-plugin-eslint-comments@3.2.0:
     resolution: {integrity: sha512-0jkOl0hfojIHHmEHgmNdqv4fmh7300NdpA9FFpF7zaoLvB/QeXOGNLIo86oAveJFrfB1p05kC8hpEMHM8DwWVQ==}
@@ -13878,10 +13866,6 @@ snapshots:
       eslint-import-resolver-typescript: 3.6.1(@typescript-eslint/parser@5.62.0(eslint@8.57.1)(typescript@5.6.2))(eslint-plugin-import@2.29.1)(eslint@8.57.1)
     transitivePeerDependencies:
       - supports-color
-
-  eslint-plugin-diff@2.0.3(eslint@8.57.1):
-    dependencies:
-      eslint: 8.57.1
 
   eslint-plugin-eslint-comments@3.2.0(eslint@8.57.1):
     dependencies:

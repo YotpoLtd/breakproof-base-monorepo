@@ -1,6 +1,6 @@
 # The breakproof base monorepo
 
-[↬ Repository goals and how it works. ](./docs/breakproof-repo-base.README.md)
+[↬ Repository goals and how it works. ](./docs/after-fork-setup/MAIN_BREAKPROOF_README.md)
 
 ## Quick start
 

@@ -24,10 +24,6 @@ export default {
       reason: 'This plugin is still using the old eslint config',
     }),
     defineIgnoredPackage({
-      package: 'eslint-plugin-diff',
-      reason: 'This plugin is still using the old eslint config',
-    }),
-    defineIgnoredPackage({
       package: 'eslint-plugin-eslint-comments',
       reason: 'This plugin is still using the old eslint config',
     }),
