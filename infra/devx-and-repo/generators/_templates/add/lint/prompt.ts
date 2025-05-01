@@ -15,7 +15,7 @@ export const params = async ({
   const name =
     (cliArgs.name && String(cliArgs.name)) ||
     (await prompts.autocomplete({
-      message: 'Which package you want to add release to?',
+      message: 'Which package you want to add code checks to?',
       choices: (await getPackages()).map((pkg) => pkg.manifest.name),
     }));
 

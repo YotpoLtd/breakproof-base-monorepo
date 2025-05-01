@@ -37,7 +37,6 @@
     "ajv": "^8.17.1",
     "ajv-errors": "^3.0.0",
     "eslint": "^8.57.1",
-    "eslint-plugin-diff": "^2.0.3",
     "eslint-plugin-json-schema-validator": "^5.3.1",
     "eslint-plugin-jsonc": "^2.16.0",
     "prettier": "^3.4.2"
