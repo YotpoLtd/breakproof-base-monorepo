@@ -4,7 +4,7 @@
    * the package is intended to be consumed via `release-it.config.ts` config file
    * which itself gets transpiled via `tsx`
    */
-  "extends": "@repo/typescript-base-isolated/tsconfig.node-transpiled.base.json",
+  "extends": "@repo/typescript-base-isolated/tsconfig.node22.transpiled.base.json",
   "compilerOptions": {
     "outDir": "lib",
     "declaration": true,

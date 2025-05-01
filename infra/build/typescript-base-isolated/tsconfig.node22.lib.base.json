@@ -1,5 +1,5 @@
 {
-  "extends": ["./tsconfig.node.base.json"],
+  "extends": ["./tsconfig.node22.base.json"],
   "compilerOptions": {
     "incremental": true,
     "declaration": true

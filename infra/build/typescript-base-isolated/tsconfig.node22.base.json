@@ -1,0 +1,7 @@
+{
+  "extends": [
+    "@tsconfig/node22/tsconfig",
+    "./tsconfig.base",
+    "./partials/tsconfig.node-types"
+  ]
+}

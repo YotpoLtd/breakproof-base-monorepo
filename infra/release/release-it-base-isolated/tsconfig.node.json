@@ -1,4 +1,4 @@
 {
-  "extends": "@repo/typescript-base-isolated/tsconfig.node-transpiled.base.json",
+  "extends": "@repo/typescript-base-isolated/tsconfig.node22.transpiled.base.json",
   "include": ["./depcheck.config.ts"]
 }
