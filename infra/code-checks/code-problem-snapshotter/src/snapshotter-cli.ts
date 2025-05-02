@@ -51,7 +51,7 @@ export const runSnapshotterCli = (
           });
         } else {
           // eslint-disable-next-line no-console -- logging is on purpose
-          console.log('No problems found!');
+          console.log('No new problems found!');
         }
 
         break;
