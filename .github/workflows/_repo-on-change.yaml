@@ -78,6 +78,8 @@ jobs:
       }}
     runs-on: ubuntu-latest
     outputs:
+      is-autorelease-enabled:
+        ${{ steps.get-basics.outputs.is-autorelease-enabled }}
       is-bot-push: ${{ steps.get-basics.outputs.is-bot-push }}
       git-diff-base: ${{ steps.get-basics.outputs.git-diff-base }}
       git-diff-base-depth: ${{ steps.get-basics.outputs.git-diff-base-depth }}
@@ -255,6 +257,7 @@ jobs:
       pull-requests: write
     steps:
       - name: Check out code
+        if: ${{ needs.basics.outputs.is-autorelease-enabled }}
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -262,14 +265,17 @@ jobs:
           token: ${{ secrets.AUTORELEASE_BOT_TOKEN }}
 
       - uses: ./.github/actions/setup-pnpm
+        if: ${{ needs.basics.outputs.is-autorelease-enabled }}
         with:
           store-and-tasks-cache-package-filter:
             '...[${{ needs.basics.outputs.git-diff-base }}]...'
           task-cache-name: upcoming-release
 
       - uses: ./.github/actions/npm-login
+        if: ${{ needs.basics.outputs.is-autorelease-enabled }}
 
       - uses: ./.github/actions/get-releases
+        if: ${{ needs.basics.outputs.is-autorelease-enabled }}
         id: releases
         with:
           package-filter: '[${{ needs.basics.outputs.git-diff-base }}]'
@@ -349,7 +355,7 @@ jobs:
           echo '#### Packages with directly or indirectly _potentially_ affected build/release' >> "$GITHUB_STEP_SUMMARY"
           echo -n 'The list below is calculated by explicitly ignoring some changed files & packages'  >> "$GITHUB_STEP_SUMMARY"
           echo -n 'that we consider not related to the build. The definition of what is ignored lives in' >> "$GITHUB_STEP_SUMMARY"
-          echo ' [`<repo root>/infra/devx-and-repo/repo-shell-scripts/repo_context_vars.sh`](${{ github.server_url }}/${{ github.repository }}/${{ github.event.repository.default_branch }}/tree/infra/devx-and-repo/repo-shell-scripts/repo_context_vars.sh)' >> "$GITHUB_STEP_SUMMARY"
+          echo ' [`<repo root>/infra/devx-and-repo/repo-shell-scripts/repo_context_vars.sh`](${{ github.server_url }}/${{ github.repository }}/tree/${{ github.event.repository.default_branch }}/infra/devx-and-repo/repo-shell-scripts/repo_context_vars.sh)' >> "$GITHUB_STEP_SUMMARY"
 
           AFFECTED_PACKAGES_LIST_JSON=$(pnpm_affected_build_filter list --depth -1 --json)
           if [ -z "$AFFECTED_PACKAGES_LIST_JSON" ]; then

@@ -1,6 +1,9 @@
 import { parse as parseTsc } from '@aivenio/tsc-output-parser';
 
-import { runSnapshotterCli } from '@repo/code-problem-snapshotter/snapshotter-cli';
+import {
+  getSnapshotFilename,
+  runSnapshotterCli,
+} from '@repo/code-problem-snapshotter/snapshotter-cli';
 import {
   CodeCheckerCliOutputParser,
   Filename,
@@ -46,5 +49,7 @@ const parseTscToCodeProblems: CodeCheckerCliOutputParser = (tscOutput) => {
   }));
 };
 
-const SNAPSHOT_FILENAME = '.tsc-problems-snapshot.json';
-runSnapshotterCli(parseTscToCodeProblems, SNAPSHOT_FILENAME);
+runSnapshotterCli(
+  parseTscToCodeProblems,
+  getSnapshotFilename('.tsc-problems-snapshot.json'),
+);

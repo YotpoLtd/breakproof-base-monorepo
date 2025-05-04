@@ -74,9 +74,11 @@
 
     /**
      * SHORTCUTS FOR COMMANDS THAT WILL TRY TO FIX FOUND PROBLEMS AUTOMATICALLY (IF POSSIBLE)
+     * & COMMANDS to REMEMBER CODE PROBLEMS
      */
     'shared:fix:lint:common': 'PACKAGE_DIR=$INIT_CWD pnpm --filter=@repo/lint-staged-base-isolated run fix:lint-staged-but-for-all-package-files',
     'shared:fix:lint:package.json': 'PACKAGE_DIR=$INIT_CWD pnpm --filter=@repo/eslint-base-isolated run fix:package.json:validate',
+    'shared:DANGEROUSLY_SNAPSHOT_ALL_PROBLEMS:lint:common': 'LINT_SHOULD_SNAPSHOT=1 PACKAGE_DIR=$INIT_CWD pnpm --filter=@repo/lint-staged-base-isolated run lint-staged-but-for-all-package-files',
     // different naming from the other fixing commands so that it's not executed when you do pnpm --workspace-root run '/^shared:fix:.+/'
     'shared:repo:fix:lint:package.json:dependencies': 'pnpm --filter=@repo/syncpack-base-isolated run fix:syncpack',
     // different naming from the other fixing commands so that it's not executed when you do pnpm --workspace-root run '/^shared:fix:.+/'

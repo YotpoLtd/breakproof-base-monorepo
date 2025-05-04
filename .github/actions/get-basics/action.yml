@@ -8,6 +8,10 @@ inputs:
     required: true
 
 outputs:
+  is-autorelease-enabled:
+    description:
+      Whether we have the needed settings to trigger autorelease mechanism
+    value: ${{ steps.get-basics.outputs.is-autorelease-enabled }}
   is-bot-push:
     description: Whether the last push was done by the configured bot account
     value: ${{ steps.get-basics.outputs.is-bot-push }}
@@ -57,8 +61,9 @@ runs:
         }}'
         LAST_COMMIT_BY=$(git show -s --format=%ae)
         LAST_COMMIT_HASH=$(git show -s --format=%H)
+        AUTORELEASE_BOT_EMAIL="${{ inputs.autorelease-bot-email }}"
 
-        IS_BOT_PUSH=$([ "$LAST_COMMIT_BY" = "${{ inputs.autorelease-bot-email }}" ] && echo "1" || echo "")
+        IS_BOT_PUSH=$([ "$LAST_COMMIT_BY" = "$AUTORELEASE_BOT_EMAIL" ] && echo "1" || echo "")
         CPU_CORES="$(nproc)"
 
         echo '### 📊 Workflow basics 📊️' >> $GITHUB_STEP_SUMMARY
@@ -75,7 +80,13 @@ runs:
 
         echo "Target base branch: **$BASE_BRANCH**" >> $GITHUB_STEP_SUMMARY
         echo "Workflow triggered due to: **${{ github.event_name }}**" >> $GITHUB_STEP_SUMMARY
-        echo "Is it triggered by '${{ inputs.autorelease-bot-email }}': **$([ "$IS_BOT_PUSH" = "1" ] && echo "YES" || echo "NO")**" >> $GITHUB_STEP_SUMMARY
+
+        if [ -z "$AUTORELEASE_BOT_EMAIL" ]; then
+          echo 'No automatic releases will be done: GitHub repo configuration is needed, see README' >> $GITHUB_STEP_SUMMARY
+        else
+          IS_AUTORELEASE_ENABLED=1
+          echo "Is it triggered by '$AUTORELEASE_BOT_EMAIL': **$([ "$IS_BOT_PUSH" = "1" ] && echo "YES" || echo "NO")**" >> $GITHUB_STEP_SUMMARY
+        fi
         echo "Concurrency group name: **$CONCURRENCY_GROUP**" >> $GITHUB_STEP_SUMMARY
 
         GIT_DIFF_BASE=${{ github.ref_name == github.event.repository.default_branch && github.event.before || '$(git merge-base $BASE_BRANCH_FULL HEAD)' }}
@@ -93,6 +104,7 @@ runs:
         #echo '```' >> $GITHUB_STEP_SUMMARY
 
         echo "is-code-import=${IS_CODE_IMPORT}" >> $GITHUB_OUTPUT
+        echo "is-autorelease-enabled=${IS_AUTORELEASE_ENABLED}" >> $GITHUB_OUTPUT
         echo "is-bot-push=${IS_BOT_PUSH}" >> $GITHUB_OUTPUT
         echo "git-diff-base=${GIT_DIFF_BASE}" >> $GITHUB_OUTPUT
         echo "git-diff-base-depth=${GIT_DIFF_BASE_DEPTH}" >> $GITHUB_OUTPUT

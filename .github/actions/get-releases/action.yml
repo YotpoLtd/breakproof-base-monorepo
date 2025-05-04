@@ -38,10 +38,11 @@ runs:
         or indirectly use them
       shell: bash
       run: |
+        PACKAGE_FILTER_ONLY_NAME="$(echo '${{ inputs.package-filter }}'| sed -E 's/^[\.\^]+//' | sed -E 's/[\.\^]+$//')"
         pnpm \
           --filter="@repo/citools..." \
           --filter="@repo/release-it-base-isolated..." \
-          --filter="...${{ inputs.package-filter }}..." \
+          --filter="...${PACKAGE_FILTER_ONLY_NAME}..." \
           install --frozen-lockfile --prefer-offline
         # can't use --no-optional here since pnpm needs all `workspace:` packages installed to know what to replace their version with
         # @see https://github.com/pnpm/pnpm/issues/5094

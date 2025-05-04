@@ -1,5 +1,7 @@
 import * as process from 'node:process';
 
+import nopt from '@pnpm/nopt';
+
 import {
   getKnownProblemsSnapshot,
   getOnlyNewProblemsSnapshot,
@@ -8,6 +10,15 @@ import {
   writeSnapshot,
 } from './snapshot';
 import { CodeCheckerCliOutputParser } from './types';
+
+const CLI_OPTIONS_CONFIG = {
+  ['snapshot-filename']: String,
+};
+
+const cliOptions = nopt(CLI_OPTIONS_CONFIG);
+
+export const getSnapshotFilename = (snapshotSnapshotFilename: string): string =>
+  (cliOptions['snapshot-filename'] as string) || snapshotSnapshotFilename;
 
 /**
  * The main job of this package is to provide reusable CLI functionality to others.
@@ -51,7 +62,7 @@ export const runSnapshotterCli = (
           });
         } else {
           // eslint-disable-next-line no-console -- logging is on purpose
-          console.log('No problems found!');
+          console.log('No new problems found!');
         }
 
         break;
