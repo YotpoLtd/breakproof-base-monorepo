@@ -278,6 +278,10 @@ importers:
         version: 5.96.1
 
   infra/code-checks/code-problem-snapshotter:
+    dependencies:
+      '@pnpm/nopt':
+        specifier: ^0.2.1
+        version: 0.2.1
     devDependencies:
       '@repo/depcheck-base-isolated':
         specifier: workspace:^
