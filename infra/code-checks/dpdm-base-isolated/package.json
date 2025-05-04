@@ -15,7 +15,7 @@
     "lint:everything:fix-autofixable": "pnpm --workspace-root run --sequential '/^shared:fix:/'",
     "lint:precommit": "pnpm --workspace-root run shared:staged:lint:common",
     "lint:precommit:fix-autofixable": "pnpm --workspace-root run --sequential '/^shared:staged:fix:/'",
-    "dpdm": "cd $PACKAGE_DIR && dpdm --no-warning --no-tree --exit-code circular:1 \"./**\""
+    "dpdm": "cd $PACKAGE_DIR && dpdm --no-warning --no-tree --exit-code circular:1 --exclude='(\\/node_modules\\/|\\/dist\\/)' \"./**\""
   },
   "dependencies": {
     "dpdm": "^3.14.0"
