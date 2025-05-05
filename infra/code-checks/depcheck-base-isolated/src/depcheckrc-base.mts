@@ -70,6 +70,16 @@ const config = {
       package: 'ts-node',
       reason: 'Used internally by many tools like `jest` to execute `ts` file',
     }),
+    defineIgnoredPackage({
+      package: '@repo/eslint-problem-snapshotter',
+      reason:
+        'Used by lint-staged under the hood. We add it as dependency to make sure the linting is re-triggered when @repo/eslint-problem-snapshotter changes',
+    }),
+    defineIgnoredPackage({
+      package: '@repo/tsc-problem-snapshotter',
+      reason:
+        'Used by lint-staged under the hood. We add it as dependency to make sure the linting is re-triggered when @repo/tsc-problem-snapshotter changes',
+    }),
   ],
 };
 

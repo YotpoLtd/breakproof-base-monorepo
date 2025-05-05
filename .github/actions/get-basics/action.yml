@@ -91,7 +91,9 @@ runs:
 
         GIT_DIFF_BASE=${{ github.ref_name == github.event.repository.default_branch && github.event.before || '$(git merge-base $BASE_BRANCH_FULL HEAD)' }}
         GIT_DIFF_BASE_DEPTH="$(git rev-list --count $GIT_DIFF_BASE^..HEAD)"
-        IS_CODE_IMPORT=$(git log --format=%B "$GIT_DIFF_BASE".. | grep -q 'chore: import code from another repo' && echo 1 || echo -n '')
+        GIT_COMMIT_MSGS_SINCE_BASE="$(git log --format=%B $GIT_DIFF_BASE..)"
+        # do not use `git log` directly here, because it will "break" the piping and exit with code 141
+        IS_CODE_IMPORT=$(echo "$GIT_COMMIT_MSGS_SINCE_BASE" | grep -q 'chore: import code from another repo' && echo 1 || echo -n '')
         echo "Is it importing code from another repo: **$([ "$IS_CODE_IMPORT" = "1" ] && echo "YES" || echo "NO")**" >> $GITHUB_STEP_SUMMARY
 
         echo "Looking for affected packages between: **[${{ github.ref_name == github.event.repository.default_branch && '${GIT_DIFF_BASE}' || '${BASE_BRANCH_FULL}' }}](${{ github.server_url }}/${{ github.repository }}/tree/${GIT_DIFF_BASE})..[${THIS_BRANCH}](${{ github.server_url }}/${{ github.repository }}/tree/${LAST_COMMIT_HASH})**" >> $GITHUB_STEP_SUMMARY

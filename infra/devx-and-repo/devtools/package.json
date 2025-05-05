@@ -39,6 +39,7 @@
     "@repo/release-it-base-isolated": "workspace:^",
     "@repo/shell-scripts": "workspace:^",
     "@repo/syncpack-base-isolated": "workspace:^",
+    "@repo/tsc-problem-snapshotter": "workspace:^",
     "webpack-bundle-analyzer": "^4.10.1"
   },
   "devDependencies": {
