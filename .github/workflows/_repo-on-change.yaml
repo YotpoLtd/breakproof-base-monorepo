@@ -610,6 +610,9 @@ jobs:
   dispatch-project-specific-on-push:
     needs: [upcoming-releases, packages-with-potentially-affected-build]
     if: ${{ github.event_name == 'push' }}
+    permissions:
+      # dispatching a workflow via 3rd party reusable action counts as write to actions
+      actions: write
     runs-on: ubuntu-latest
     steps:
       - name: Invoke project-specific actions
