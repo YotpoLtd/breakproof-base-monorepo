@@ -187,9 +187,15 @@ importers:
       '@repo/eslint-base-isolated':
         specifier: workspace:^
         version: link:../../code-checks/eslint-base-isolated
+      '@repo/eslint-problem-snapshotter':
+        specifier: workspace:^
+        version: link:../../code-checks/eslint-problem-snapshotter
       '@repo/lint-staged-base-isolated':
         specifier: workspace:^
         version: link:../../code-checks/lint-staged-base-isolated
+      '@repo/tsc-problem-snapshotter':
+        specifier: workspace:^
+        version: link:../../code-checks/tsc-problem-snapshotter
       '@repo/typescript-base-isolated':
         specifier: workspace:^
         version: link:../typescript-base-isolated
@@ -261,9 +267,15 @@ importers:
       '@repo/eslint-base-isolated':
         specifier: workspace:^
         version: link:../../code-checks/eslint-base-isolated
+      '@repo/eslint-problem-snapshotter':
+        specifier: workspace:^
+        version: link:../../code-checks/eslint-problem-snapshotter
       '@repo/lint-staged-base-isolated':
         specifier: workspace:^
         version: link:../../code-checks/lint-staged-base-isolated
+      '@repo/tsc-problem-snapshotter':
+        specifier: workspace:^
+        version: link:../../code-checks/tsc-problem-snapshotter
       '@repo/typescript-base-isolated':
         specifier: workspace:^
         version: link:../typescript-base-isolated
@@ -697,6 +709,9 @@ importers:
       '@repo/syncpack-base-isolated':
         specifier: workspace:^
         version: link:../../code-checks/syncpack-base-isolated
+      '@repo/tsc-problem-snapshotter':
+        specifier: workspace:^
+        version: link:../../code-checks/tsc-problem-snapshotter
     devDependencies:
       '@repo/typescript-base-isolated':
         specifier: workspace:^
@@ -746,6 +761,9 @@ importers:
       '@repo/syncpack-base-isolated':
         specifier: workspace:^
         version: link:../../code-checks/syncpack-base-isolated
+      '@repo/tsc-problem-snapshotter':
+        specifier: workspace:^
+        version: link:../../code-checks/tsc-problem-snapshotter
       webpack-bundle-analyzer:
         specifier: ^4.10.1
         version: 4.10.2
@@ -820,6 +838,9 @@ importers:
       '@repo/eslint-base-isolated':
         specifier: workspace:^
         version: link:../../code-checks/eslint-base-isolated
+      '@repo/eslint-problem-snapshotter':
+        specifier: workspace:^
+        version: link:../../code-checks/eslint-problem-snapshotter
       '@repo/jest-base-isolated':
         specifier: workspace:^
         version: link:../../test/jest-base-isolated
@@ -829,6 +850,9 @@ importers:
       '@repo/rollup-base-isolated':
         specifier: workspace:^
         version: link:../../build/rollup-base-isolated
+      '@repo/tsc-problem-snapshotter':
+        specifier: workspace:^
+        version: link:../../code-checks/tsc-problem-snapshotter
       '@repo/typescript-base-isolated':
         specifier: workspace:^
         version: link:../../build/typescript-base-isolated
@@ -1008,12 +1032,18 @@ importers:
       '@repo/eslint-base-isolated':
         specifier: workspace:^
         version: link:../../code-checks/eslint-base-isolated
+      '@repo/eslint-problem-snapshotter':
+        specifier: workspace:^
+        version: link:../../code-checks/eslint-problem-snapshotter
       '@repo/jest-base-isolated':
         specifier: workspace:^
         version: link:../jest-base-isolated
       '@repo/lint-staged-base-isolated':
         specifier: workspace:^
         version: link:../../code-checks/lint-staged-base-isolated
+      '@repo/tsc-problem-snapshotter':
+        specifier: workspace:^
+        version: link:../../code-checks/tsc-problem-snapshotter
       '@repo/typescript-base-isolated':
         specifier: workspace:^
         version: link:../../build/typescript-base-isolated

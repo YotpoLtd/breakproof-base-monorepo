@@ -42,11 +42,6 @@ export default {
         'Only exists as dependency because one of the goals for the devtools is to be installation shortcut for several other packages',
     }),
     defineIgnoredPackage({
-      package: '@repo/eslint-problem-snapshotter',
-      reason:
-        'Only exists as dependency because one of the goals for the devtools is to be installation shortcut for several other packages',
-    }),
-    defineIgnoredPackage({
       package: '@repo/pnpm-helpers',
       reason:
         'Only exists as dependency because one of the goals for the citools is to be installation shortcut for several other packages',

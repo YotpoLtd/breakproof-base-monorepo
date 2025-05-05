@@ -46,9 +46,11 @@
     "@repo/cypress-base-isolated": "workspace:^",
     "@repo/depcheck-base-isolated": "workspace:^",
     "@repo/eslint-base-isolated": "workspace:^",
+    "@repo/eslint-problem-snapshotter": "workspace:^",
     "@repo/jest-base-isolated": "workspace:^",
     "@repo/lint-staged-base-isolated": "workspace:^",
     "@repo/rollup-base-isolated": "workspace:^",
+    "@repo/tsc-problem-snapshotter": "workspace:^",
     "@repo/typescript-base-isolated": "workspace:^",
     "@repo/webpack-base-isolated": "workspace:^",
     "@types/fs-extra": "11.0.4",
@@ -60,6 +62,8 @@
     "@repo/depcheck-base-isolated",
     "@repo/eslint-base-isolated",
     "@repo/lint-staged-base-isolated",
-    "@repo/typescript-base-isolated"
+    "@repo/typescript-base-isolated",
+    "@repo/eslint-problem-snapshotter",
+    "@repo/tsc-problem-snapshotter"
   ]
 }

@@ -46,8 +46,10 @@
   "devDependencies": {
     "@repo/depcheck-base-isolated": "workspace:^",
     "@repo/eslint-base-isolated": "workspace:^",
+    "@repo/eslint-problem-snapshotter": "workspace:^",
     "@repo/jest-base-isolated": "workspace:^",
     "@repo/lint-staged-base-isolated": "workspace:^",
+    "@repo/tsc-problem-snapshotter": "workspace:^",
     "@repo/typescript-base-isolated": "workspace:^",
     "prettier": "^3.4.2",
     "ts-node": "^10.9.2",
@@ -57,6 +59,8 @@
     "@repo/depcheck-base-isolated",
     "@repo/eslint-base-isolated",
     "@repo/jest-base-isolated",
-    "@repo/lint-staged-base-isolated"
+    "@repo/lint-staged-base-isolated",
+    "@repo/eslint-problem-snapshotter",
+    "@repo/tsc-problem-snapshotter"
   ]
 }
