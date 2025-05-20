@@ -2,6 +2,8 @@
 
 # fail if any command fails
 set -e
+# print executed commands
+set -x
 
 FIRST_NODE_VERSION=$(pnpm --workspace-root node -p 'require("./.nodejs-versions-whitelist.cjs")[0]')
 FIRST_NPM_SCOPE=$(pnpm --workspace-root node -p 'require("./.npm-scopes-whitelist.cjs")[0]')
