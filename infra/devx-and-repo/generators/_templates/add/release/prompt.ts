@@ -15,6 +15,10 @@ export const params = async ({
 }: {
   args: Record<string, string | boolean>;
 }) => {
+  /**
+   * Calling refreshPackages explicitly since this generator can be invoked with all
+   * arguments already provided so `getPackages` will never be called and calculated
+   */
   await refreshPackages();
   const name =
     (cliArgs.name && String(cliArgs.name)) ||

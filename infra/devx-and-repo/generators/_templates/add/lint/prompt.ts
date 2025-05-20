@@ -1,7 +1,11 @@
 import prompts from 'enquirer';
 
 // if wondering about the `#...` import see: https://nodejs.org/api/packages.html#subpath-imports
-import { getPackages, PackageType } from '#extra-template-vars';
+import {
+  getPackages,
+  PackageType,
+  refreshPackages,
+} from '#extra-template-vars';
 import * as sharedPrompts from '#shared-prompts';
 
 export interface AddLintParams {
@@ -22,6 +26,11 @@ export const params = async ({
 }: {
   args: AddLintParams;
 }): Promise<AddLintParams> => {
+  /**
+   * Calling refreshPackages explicitly since this generator can be invoked with all
+   * arguments already provided so `getPackages` will never be called and calculated
+   */
+  await refreshPackages();
   const name =
     (cliArgs.name && String(cliArgs.name)) ||
     (await prompts.autocomplete({
