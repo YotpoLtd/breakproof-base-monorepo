@@ -35,31 +35,40 @@ export const getIsSandbox = async (
         })
       : false;
 
-export const getSupportingForProject = async (
+export const getSupportingForProject = async <
+  T extends Record<string, string | boolean>,
+>(
   type: PackageType,
-  cliArgs?: Record<string, string | boolean>,
+  cliArgs?: T,
   isSandbox?: boolean,
-): Promise<boolean | string> =>
-  cliArgs?.supportingForProject ||
-  (isSandbox || type === PackageType.E2E_APP
-    ? await prompts.autocomplete<string | false>({
-        message:
-          type === PackageType.E2E_APP
-            ? 'For what application are you doing e2e tests for?'
-            : 'Which package you want this application for?',
-        choices: [
-          ...(type === PackageType.E2E_APP
-            ? ([
-                { title: '<Application Outside the Repository>', value: false },
-              ] as const)
-            : []),
-          ...(await getPackages()).map((pkg) => ({
-            title: pkg.manifest.name!,
-            value: pkg.manifest.name!,
-          })),
-        ],
-      })
-    : false);
+): Promise<false | string> => {
+  if (cliArgs?.supportingForProject) {
+    return String(cliArgs.supportingForProject);
+  } else {
+    return isSandbox || type === PackageType.E2E_APP
+      ? await prompts.autocomplete<string | false>({
+          message:
+            type === PackageType.E2E_APP
+              ? 'For what application are you doing e2e tests for?'
+              : 'Which package you want this application for?',
+          choices: [
+            ...(type === PackageType.E2E_APP
+              ? ([
+                  {
+                    title: '<Application Outside the Repository>',
+                    value: false,
+                  },
+                ] as const)
+              : []),
+            ...(await getPackages()).map((pkg) => ({
+              title: pkg.manifest.name,
+              value: pkg.manifest.name,
+            })),
+          ],
+        })
+      : false;
+  }
+};
 
 export const createDeveloperQuizOptions = ({
   yes = 'Ok, done',

@@ -26,5 +26,32 @@ pnpm --workspace-root generate package new \
   --releaseFiles=README.md
 
 cd "$WORKSPACE_ROOT_DIR/libs/${LIBRARY_NAME}"
+pnpm run lint:everything
 cd "$WORKSPACE_ROOT_DIR/apps/sandbox-${LIBRARY_NAME}"
+pnpm run lint:everything
 cd "$WORKSPACE_ROOT_DIR/apps/sandbox-${LIBRARY_NAME}-e2e"
+pnpm run lint:everything
+
+#
+#
+# TESTING THE GENERATION OF A NEW REACT LIBRARY
+#
+#
+LIBRARY_NAME='example-react-test-library'
+pnpm --workspace-root generate package new \
+  --type='Library' \
+  --name="$LIBRARY_NAME" \
+  --techStack='react' \
+  --nodeVersion="$FIRST_NODE_VERSION" \
+  --npmScope="$FIRST_NPM_SCOPE" \
+  --skipCodeownersCheck \
+  --hasRelease \
+  --releaseFiles=dist \
+  --releaseFiles=README.md
+
+cd "$WORKSPACE_ROOT_DIR/libs/${LIBRARY_NAME}"
+pnpm run lint:everything
+cd "$WORKSPACE_ROOT_DIR/apps/sandbox-${LIBRARY_NAME}"
+pnpm run lint:everything
+cd "$WORKSPACE_ROOT_DIR/apps/sandbox-${LIBRARY_NAME}-e2e"
+pnpm run lint:everything
