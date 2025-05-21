@@ -66,5 +66,5 @@ jobs:
           autorelease-bot-email: ${{ vars.AUTORELEASE_BOT_EMAIL }}
           package-filter: '${{ inputs.package-filter }}'
           snapshot:
-            ${{ inputs.ref == github.event.repository.default_branch && '' ||
-            'true' }}
+            ${{ inputs.ref != github.event.repository.default_branch && 'true'
+            || '' }}
