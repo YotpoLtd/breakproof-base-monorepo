@@ -129,6 +129,7 @@ jobs:
         run: |
           pnpm \
             --filter="@repo/citools..." \
+            --filter="!devtools" \
             --filter="...[${{ needs.basics.outputs.git-diff-base }}]..." \
             install --frozen-lockfile --prefer-offline
 
@@ -160,7 +161,7 @@ jobs:
         id: affected-code-checks
         run: |
           ARE_CODE_CHECKS_AFFECTED_BY_CHANGES=$(
-            pnpm --filter='...[${{ needs.basics.outputs.git-diff-base }}]' \
+            pnpm --filter="!devtools" --filter='...[${{ needs.basics.outputs.git-diff-base }}]' \
                  list --parseable --depth=-1 \
                    | grep -q "/infra/code-checks/" && echo -n 1 || true
           )
@@ -172,7 +173,7 @@ jobs:
           directly or indirectly use them
         run: |
           pnpm --filter="@repo/citools..." install --frozen-lockfile --prefer-offline
-          pnpm --filter='...[${{ needs.basics.outputs.git-diff-base }}]...' \
+          pnpm --filter="!devtools" --filter='...[${{ needs.basics.outputs.git-diff-base }}]...' \
                ${{ steps.affected-code-checks.outputs.is-any-affected && '$(pnpm --silent --workspace-root run repo:pnpm:expand-filters --filter=''... < {infra/code-checks/**}...'')' || '' }} \
                ${{ steps.affected-code-checks.outputs.is-any-affected && '$(pnpm --silent --workspace-root run repo:pnpm:expand-filters --filter=''... < @repo/circular-dependency-workaround...'')' || '' }} \
                install --frozen-lockfile --prefer-offline
@@ -182,7 +183,6 @@ jobs:
           or indirectly use them
         run: |
           pnpm --filter='...[${{ needs.basics.outputs.git-diff-base }}]...'\
-               --filter="@repo/citools..." \
                ${{ steps.affected-code-checks.outputs.is-any-affected && '$(pnpm --silent --workspace-root run repo:pnpm:expand-filters --filter=''... < {infra/code-checks/**}...'')' || '' }} \
                ${{ steps.affected-code-checks.outputs.is-any-affected && '$(pnpm --silent --workspace-root run repo:pnpm:expand-filters --filter=''... < @repo/circular-dependency-workaround...'')' || '' }} \
                run build
@@ -198,6 +198,7 @@ jobs:
           # changed packages
           pnpm --filter='[${{ needs.basics.outputs.git-diff-base }}]' \
                --filter='!@repo/citools' \
+               --filter='!devtools' \
                --parallel --workspace-concurrency="$(nproc)" --aggregate-output \
                run 'lint:github-pr'
 
@@ -209,6 +210,7 @@ jobs:
                ${{ steps.affected-code-checks.outputs.is-any-affected && '$(pnpm --silent --workspace-root run repo:pnpm:expand-filters --filter=''... < {infra/code-checks/**}'')' || '' }} \
                ${{ steps.affected-code-checks.outputs.is-any-affected && '$(pnpm --silent --workspace-root run repo:pnpm:expand-filters --filter=''... < @repo/circular-dependency-workaround'')' || '' }} \
                --filter='!@repo/citools' \
+               --filter='!devtools' \
                --parallel --workspace-concurrency="$(nproc)" --aggregate-output \
                run lint:everything
 
@@ -329,7 +331,7 @@ jobs:
 
       - uses: ./.github/actions/npm-login
 
-      - name: Install pnpm helpers for better targetting of packages
+      - name: Install pnpm helpers for better targeting of packages
         run: |
           pnpm --filter="@repo/pnpm-helpers..." \
                install --frozen-lockfile --prefer-offline
@@ -397,15 +399,14 @@ jobs:
         run: |
           pnpm --filter='...[${{ needs.basics.outputs.git-diff-base }}]...' \
                --filter="@repo/citools..." \
+               --filter="!devtools" \
                install --frozen-lockfile --prefer-offline
 
       - name:
           Build changed packages, their dependencies and any other that directly
           or indirectly use them
         run: |
-          pnpm --filter='[${{ needs.basics.outputs.git-diff-base }}]...'\
-               --filter="@repo/citools..." \
-               run build
+          pnpm --filter='[${{ needs.basics.outputs.git-diff-base }}]...' run build
 
       - name:
           Run unit tests for changed packages and anything that directly or
@@ -555,13 +556,12 @@ jobs:
         run: |
           pnpm --filter="[${{ needs.basics.outputs.git-diff-base }}]..." \
                --filter="@repo/citools..." \
+               --filter="!devtools" \
                install --frozen-lockfile --prefer-offline
 
       - name: Build changed packages & their dependencies
         run: |
-          pnpm --filter="[${{ needs.basics.outputs.git-diff-base }}]..." \
-               --filter="@repo/citools..." \
-               run build
+          pnpm --filter="[${{ needs.basics.outputs.git-diff-base }}]..." run build
 
       - name: Check repo conventions
         run: |
