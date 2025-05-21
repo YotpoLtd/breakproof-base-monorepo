@@ -66,7 +66,9 @@ runs:
 
         # try to release affected packages
         # start from deepest dependencies to -> top level ones, bumping each version, releasing & pushing to git, unless it's a snapshot version
-        ${{ inputs.snapshot && 'DEFAULT_RELEASE_IT_VERSIONING_STRATEGY=SNAPSHOT' }} pnpm $PNPM_RELEASE_FILTER_ARGS --workspace-concurrency=1 run release --ci -VV
+        # also add CI='false' to work around https://github.com/pnpm/pnpm/issues/9563
+        # @see https://github.com/watson/ci-info/blob/54b034388e65347a87db396f44d5a95c79be0e0e/index.js#L36
+        CI='false' ${{ inputs.snapshot && 'DEFAULT_RELEASE_IT_VERSIONING_STRATEGY=SNAPSHOT' }} pnpm $PNPM_RELEASE_FILTER_ARGS --workspace-concurrency=1 run release --ci -VV
 
     - name: Check if new commits were added
       shell: bash
