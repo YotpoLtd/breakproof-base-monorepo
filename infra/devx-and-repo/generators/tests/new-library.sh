@@ -27,6 +27,12 @@ pnpm --workspace-root generate package new \
   --releaseFiles=dist \
   --releaseFiles=README.md
 
+cd $WORKSPACE_ROOT_DIR
+
+echo "/libs/${LIBRARY_NAME} @yotpotestteam" >> .github/CODEOWNERS
+echo "/apps/sandbox-${LIBRARY_NAME} @yotpotestteam" >> .github/CODEOWNERS
+echo "/apps/sandbox-${LIBRARY_NAME}-e2e @yotpotestteam" >> .github/CODEOWNERS
+
 cd "$WORKSPACE_ROOT_DIR/libs/${LIBRARY_NAME}"
 pnpm run lint:everything
 cd "$WORKSPACE_ROOT_DIR/apps/sandbox-${LIBRARY_NAME}"
@@ -50,6 +56,12 @@ pnpm --workspace-root generate package new \
   --hasRelease \
   --releaseFiles=dist \
   --releaseFiles=README.md
+
+cd $WORKSPACE_ROOT_DIR
+
+echo "/libs/${LIBRARY_NAME} @yotpotestteam" >> .github/CODEOWNERS
+echo "/apps/sandbox-${LIBRARY_NAME} @yotpotestteam" >> .github/CODEOWNERS
+echo "/apps/sandbox-${LIBRARY_NAME}-e2e @yotpotestteam" >> .github/CODEOWNERS
 
 cd "$WORKSPACE_ROOT_DIR/libs/${LIBRARY_NAME}"
 pnpm run lint:everything

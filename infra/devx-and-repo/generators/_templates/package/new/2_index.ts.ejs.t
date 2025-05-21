@@ -5,7 +5,7 @@ to: "<%- type === PackageType.INFRA_TOOL || type === PackageType.E2E_APP ? null 
   <% if (techStack === TechStack.REACT) { %>
     import * as React from 'react';
 
-    export const ExportedComponent: React.FC = () => 'Hello from <%- name %>!';
+    export const ExportedComponent: React.FC = () => <div>Hello from <%- name %>!</div>;
   <% } else {%>
     export const ExportedMessage = 'Hello from <%- name %>!';
   <% } %>

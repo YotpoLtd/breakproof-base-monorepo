@@ -263,7 +263,7 @@ const makeDevtoolsAwareGraphCreator = ({
       });
     }
     const graph = createPkgGraph(finalPackageList, createPkgGraphOptions);
-    // graphCachePerUniqueOptions.set(graphOptionsKey, graph);
+    graphCachePerUniqueOptions.set(graphOptionsKey, graph);
     return graph;
   };
 };

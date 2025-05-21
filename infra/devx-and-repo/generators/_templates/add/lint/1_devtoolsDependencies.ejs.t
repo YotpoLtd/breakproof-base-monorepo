@@ -8,6 +8,5 @@ to: <%- h.getPackageDir(name) %>/package.json
   "@repo/depcheck-base-isolated",
   "@repo/lint-staged-base-isolated",
   <% if (hasTypescript && type !== PackageType.INFRA_TOOL) { %>
-    "@repo/typescript-base-isolated",
     "@repo/tsc-problem-snapshotter",
   <% } %>

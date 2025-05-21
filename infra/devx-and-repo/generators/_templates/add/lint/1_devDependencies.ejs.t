@@ -10,5 +10,4 @@ to: <%- h.getPackageDir(name) %>/package.json
   "prettier": "3.2.4",
   <% if (hasTypescript && type !== PackageType.INFRA_TOOL) { %>
     "@repo/tsc-problem-snapshotter": "workspace:^",
-    "@repo/typescript-base-isolated": "workspace:^",
   <% } %>

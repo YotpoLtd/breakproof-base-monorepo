@@ -8,7 +8,10 @@ sh: |
   cp -r <%- actionfolder %>/base-files/. <%- h.getPackageDir(name) %>
   pnpm --filter='<%- name %>...' --no-frozen-lockfile install
   pnpm --filter "<%- name %>^..." run build
-  pnpm --filter='<%- name %>' --parallel --no-reporter-hide-prefix exec pnpm --workspace-root run --sequential '/^shared:fix:/' || true
+  # ends with '|| true' because we want to ignore errors when trying to auto-fix lint issues
+  pnpm --filter='<%- name %>' --workspace-concurrency=1 \
+    exec \
+      pnpm --workspace-root run --sequential '/^shared:fix:/' || true
 to: <%- h.getPackageDir(name) %>/package.json
 ---
   "lint:everything": "pnpm --workspace-root run '/^shared:lint:.*/'",
