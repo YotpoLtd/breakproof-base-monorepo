@@ -7,7 +7,7 @@ to: "<%- type === PackageType.INFRA_TOOL || type === PackageType.E2E_APP ? null 
 
     export const ExportedComponent: React.FC = () => <div>Hello from <%- name %>!</div>;
   <% } else {%>
-    export const ExportedMessage = 'Hello from <%- name %>!';
+    export const EXPORTED_MESSAGE = 'Hello from <%- name %>!';
   <% } %>
 <% } %>
 
@@ -31,8 +31,8 @@ to: "<%- type === PackageType.INFRA_TOOL || type === PackageType.E2E_APP ? null 
     );
   <% } else {%>
     <% if (isSandbox) { %>
-      import { ExportedMessage } from '<%- supportingForProject %>';
-      alert(`The used package import: ${ExportedMessage}`);
+      import { EXPORTED_MESSAGE } from '<%- supportingForProject %>';
+      alert(`The used package import: ${EXPORTED_MESSAGE}`);
     <% } else { %>
       alert('Hello from <%- name %>!');
     <% } %>
