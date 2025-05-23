@@ -688,6 +688,9 @@ importers:
 
   infra/devx-and-repo/citools:
     dependencies:
+      '@repo/.github':
+        specifier: workspace:^
+        version: link:../../../.github
       '@repo/depcheck-base-isolated':
         specifier: workspace:^
         version: link:../../code-checks/depcheck-base-isolated

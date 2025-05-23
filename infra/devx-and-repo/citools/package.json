@@ -18,6 +18,7 @@
     "lint:github-pr": "pnpm --workspace-root run '/^shared:(github-pr:lint:.*|lint:dependencies:misused)/'"
   },
   "dependencies": {
+    "@repo/.github": "workspace:^",
     "@repo/depcheck-base-isolated": "workspace:^",
     "@repo/dpdm-base-isolated": "workspace:^",
     "@repo/eslint-base-isolated": "workspace:^",
