@@ -16,7 +16,7 @@
 ⚙️ [Tools & Configuration](#tools-list) — ⚖️
 [Conventions](#conventions-and-core-principles) — 📋️ [What's next](#whats-next)
 
-<sub>[How can tools use different node.js?](#but-how-multiple-nodejs)</sub>
+<sub>[How can tools use different node.js?](#how-separate-nodejs)</sub>
 
 </div>
 
@@ -48,7 +48,7 @@ CI/CD!
 
 Your clone 🔀 becomes a **_breakproof home_** 🏠 where you can develop **your
 frontend projects** without 💥 **breaking your code** or
-💰**_breaking-the-bank_**.
+💰**breaking-the-bank**.
 
 You start by **importing your existing** projects or **generating new** ones. ⚡
 **_Immediately_** those projects get a ton of **working** processes like
@@ -78,7 +78,7 @@ you keep receiving updates for those processes simply via `git pull`.
 
 <a name="the-problems-it-solves"></a>
 
-# 🎯 What problems does `Breakproof Base Repo` fork solve?
+# 🎯 What problems does your `Breakproof Base Repo` clone solve?
 
 <picture><img alt="project-vs-tools-problem" src="./docs/project-vs-tools.svg" /></picture>
 
@@ -249,7 +249,7 @@ individual tools without having to redo the entire system 🤔
 
 # 🚀 Get started with _your_ `breakproof` repo
 
-1. 🔀 **Fork this repo.**
+1. 🔀 **Clone this repo.** (_and then push it to your own blank repo_)
 
 2. 🎛️ Initialize your fork with your preferences & automatically configure your
    code editor:
