@@ -8,8 +8,8 @@
 
 <a name="breakproof-nav"></a>
 
-🎯 [What problems does it solve?](#the-problems-it-solves) — 💡
-[How is it done?](#how-it-works) — 🚀
+🎯 [The problems it solves](#the-problems-it-solves) — 💡
+[How it works](#how-it-works) — 🚀
 [Getting started](#getting-started-with-your-breakproof-repo) — 🏆
 [List of Best Practices](#best-practices-list)
 
@@ -28,11 +28,27 @@
 
 </div>
 
-# **TLDR** (_what is The Breakproof base monorepo_)
+# TLDR;
 
-This is a **template repository**, and it's **meant to be forked**. Your fork 🔀
-becomes a **_breakproof home_** 🏠 where you can develop **your frontend
-projects** without 💥 **breaking your code** or 💰 **_breaking-the-bank_**.
+### What is The Breakproof base monorepo?
+
+📄 A pnpm monorepo template **meant to be cloned** and used for your projects.
+
+The breakproof monorepo template comes with
+[ready to be used tools](#tools-list) already in it, where each tool lives in
+**[its own package](#how-separate-nodejs)**, runs
+**[its own version of Node.js](#how-separate-nodejs)** and provides **strict
+default config** to be consumed by your projects and the **built-in optimized
+CI/CD**
+
+🔀 **Clone** to create your own monorepo! — 🔄 **Pull** to update the tools &
+CI/CD!
+
+### The immediate value of developing inside breakproof monorepo
+
+Your clone 🔀 becomes a **_breakproof home_** 🏠 where you can develop **your
+frontend projects** without 💥 **breaking your code** or
+💰**_breaking-the-bank_**.
 
 You start by **importing your existing** projects or **generating new** ones. ⚡
 **_Immediately_** those projects get a ton of **working** processes like
@@ -134,14 +150,15 @@ individual tools without having to redo the entire system 🤔
   project from another by making each a separate package. The breakproof repo
   goes **_a step further_**.
 
-- When using the breakproof repo, your projects are isolated from the tools they
-  use. This is achieved by installing the tools in a separate package instead of
-  the same package as your project. In fact each different tool is installed in
-  its own individual package. This allows us to leverage an ability of `pnpm` to
-  specify a different `node.js` for each package. Essentially you get an
-  isolated pair of `<tool> + <node.js>`, e.g. `eslint + node22` which lets you
-  execute `eslint` using `node22` from any place in the repo with a `pnpm`
-  command similar to:
+- <a name="how-separate-nodejs"></a> When using the breakproof repo, your
+  projects are isolated from the tools they use. This is achieved by installing
+  the tools in a separate package instead of the same package as your project.
+  In fact each different tool is installed in its own individual package. This
+  allows us to leverage an ability of `pnpm` to specify a different `node.js`
+  for each package. Essentially you get an isolated pair of
+  `<tool> + <node.js>`, e.g. `eslint + node22` and this lets you run
+  `eslint`(_using `node22`_) from any place in the repo with a `pnpm` command
+  similar to:
   `pnpm --filter=<PACKAGE NAME THAT INSTALLS TOOL IN IT> run <TOOL NAME>`. For
   example: `pnpm --filter="@repo/eslint-isolated-base" run eslint`
 
@@ -245,7 +262,10 @@ individual tools without having to redo the entire system 🤔
    [import your existing](./infra/devx-and-repo/repo-shell-scripts/README.md#using-import-from-other-repo)
    projects.
 
-## If you want to automatically release projects as `npm` packages
+### If you want to automatically release projects as `npm` packages
+
+<details>
+<summary>Expand to see steps for setting up automatic publishing</summary>
 
 You need to add some GitHub configuration for your repository:
 
@@ -256,59 +276,59 @@ You need to add some GitHub configuration for your repository:
 
 2. Set up GitHub repository `variable`s:
 
-   - `AUTORELEASE_BOT_NAME` – the name to be used as commit author of the
-     automatic version changes to your main branch
-   - `AUTORELEASE_BOT_EMAIL` – the email associated bot account you've created;
-     to be used as commit author of the automatic version changes to your main
-     branch
+- `AUTORELEASE_BOT_NAME` – the name to be used as commit author of the automatic
+  version changes to your main branch
+- `AUTORELEASE_BOT_EMAIL` – the email associated bot account you've created; to
+  be used as commit author of the automatic version changes to your main branch
 
 3. Set up GitHub repository `secret`s:
 
-   - `AUTORELEASE_BOT_TOKEN`: a
-     [GitHub token with rights to push to repository](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#personal-access-tokens-classic)
-     to be used by the bot doing automatic releases
-   - `NPM_REGISTRY_USER`: your npm registry user
-   - _\[Optional\]_ `NPM_REGISTRY_AUTH_TOKEN`: your npm registry auth token, if
-     you don't use a password instead
-   - _\[Optional\]_ `NPM_REGISTRY_PASSWORD`: your npm registry password if you
-     use this instead of auth token
+- `AUTORELEASE_BOT_TOKEN`: a
+  [GitHub token with rights to push to repository](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#personal-access-tokens-classic)
+  to be used by the bot doing automatic releases
+- `NPM_REGISTRY_USER`: your npm registry user
+- _\[Optional\]_ `NPM_REGISTRY_AUTH_TOKEN`: your npm registry auth token, if you
+  don't use a password instead
+- _\[Optional\]_ `NPM_REGISTRY_PASSWORD`: your npm registry password if you use
+  this instead of auth token
 
 4. Set up GitHub Merge Queue:
 
-   - Head to
-     `<your github repo> -> Settings -> Rules -> Rulesets -> New ruleset -> Import a ruleset`
-   - And upload `<repo root>/.github/branch-rulesets/Default Branch.json`. This
-     will:
+- Head to
+  `<your github repo> -> Settings -> Rules -> Rulesets -> New ruleset -> Import a ruleset`
+- And upload `<repo root>/.github/branch-rulesets/Default Branch.json`. This
+  will:
 
-     - Require a `Merge Queue` for your default branch.
-     - Require `basics` job from the main GitHub workflow to pass before PRs can
-       be merged
+  - Require a `Merge Queue` for your default branch.
+  - Require `basics` job from the main GitHub workflow to pass before PRs can be
+    merged
 
-     The above is used to make sure that no PR is merged while the CI for
-     automatic releases of `npm` packages is running. This CI job can push
-     version bumps & changelogs to your default branch. Without the merge queue
-     there is a risk of a race condition.
+  The above is used to make sure that no PR is merged while the CI for automatic
+  releases of `npm` packages is running. This CI job can push version bumps &
+  changelogs to your default branch. Without the merge queue there is a risk of
+  a race condition.
 
 5. Write the steps in `<repo root>/.github/actions/npm-login` that will
    authenticate you in the `npm` registry.
 
-   - This action is empty by default and gets called on all places where
-     packages are installed
-   - To authenticate you would need to configure some repository secrets,
-     depending on your auth approach. All the secrets will be accessible as
-     environment variables, and not through the GitHub `${{ secrets }}`. This is
-     done to overcome a limitation in GitHub reusable actions: they can't
-     inherit secrets but do inherit environment variables.
-     - `SECRET_NPM_REGISTRY_AUTH_TOKEN` – for this to have a value you must
-       create a secret in your repository settings called
-       `NPM_REGISTRY_AUTH_TOKEN`
-     - `SECRET_NPM_REGISTRY_USER` – for this to have a value you must create a
-       secret in your repository settings called `NPM_REGISTRY_USER`
-     - `SECRET_NPM_REGISTRY_PASSWORD` – for this to have a value you must create
-       a secret in your repository settings called `NPM_REGISTRY_PASSWORD`
+- This action is empty by default and gets called on all places where packages
+  are installed
+- To authenticate you would need to configure some repository secrets, depending
+  on your auth approach. All the secrets will be accessible as environment
+  variables, and not through the GitHub `${{ secrets }}`. This is done to
+  overcome a limitation in GitHub reusable actions: they can't inherit secrets
+  but do inherit environment variables.
+  - `SECRET_NPM_REGISTRY_AUTH_TOKEN` – for this to have a value you must create
+    a secret in your repository settings called `NPM_REGISTRY_AUTH_TOKEN`
+  - `SECRET_NPM_REGISTRY_USER` – for this to have a value you must create a
+    secret in your repository settings called `NPM_REGISTRY_USER`
+  - `SECRET_NPM_REGISTRY_PASSWORD` – for this to have a value you must create a
+    secret in your repository settings called `NPM_REGISTRY_PASSWORD`
 
 6. If you are publishing to a private registry set this at the top of the
    [`<repo root>/.npmrc`](./.npmrc).
+
+</details>
 
 <p> </p>
 
