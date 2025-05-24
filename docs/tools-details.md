@@ -202,7 +202,7 @@ Nothing considered.
 - to make onboarding and code reuse easier with its type suggestions
 - to have better customer experience by preventing bugs with its type checking
 - to make configuring tools easier, since
-  [it's a convention to use `.ts` config files whenever possible](#conventions-and-core-principles)
+  [it's a convention to use `.ts` config files whenever possible](../README.md#conventions-and-core-principles)
   which would again provide type suggestions
 
 <a name="typescript-config"></a>
@@ -906,4 +906,4 @@ Nothing considered.
 <p> </p>
 
 [⬅️️ Back to the list of tools 🧰](../README.md#tools-list) —
-[⬆️ Back to top nav ⬆️](#breakproof-nav)
+[⬆️ Back to top nav ⬆️](../README.md#breakproof-nav)
