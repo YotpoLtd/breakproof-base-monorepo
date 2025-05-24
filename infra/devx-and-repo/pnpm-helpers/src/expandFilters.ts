@@ -7,7 +7,8 @@ import {
 } from './filterPackagesExtended';
 
 /**
- * CLI script that accepts pnpm --filter='' arguments and return an "expanded" version of them.
+ * CLI script that accepts --filter='' arguments like `pnpm` and returns
+ * an "expanded" version of them.
  *
  * @example Given a repo with 3 packages: a,b,c:
  *

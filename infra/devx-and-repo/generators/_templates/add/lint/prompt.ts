@@ -1,8 +1,22 @@
 import prompts from 'enquirer';
 
 // if wondering about the `#...` import see: https://nodejs.org/api/packages.html#subpath-imports
-import { getPackages } from '#extra-template-vars';
+import {
+  getPackages,
+  PackageType,
+  refreshPackages,
+} from '#extra-template-vars';
 import * as sharedPrompts from '#shared-prompts';
+
+export interface AddLintParams {
+  name?: string;
+  type?: PackageType;
+  hasTypescript?: boolean;
+  hasTsConfigNode?: boolean;
+  isSandbox?: boolean;
+  supportingForProject?: string | false;
+  [otherCliArg: string]: string | boolean;
+}
 
 /**
  * @see For list of built-in types: https://github.com/enquirer/enquirer/tree/master/lib/prompts
@@ -10,8 +24,13 @@ import * as sharedPrompts from '#shared-prompts';
 export const params = async ({
   args: cliArgs,
 }: {
-  args: Record<string, string | boolean>;
-}) => {
+  args: AddLintParams;
+}): Promise<AddLintParams> => {
+  /**
+   * Calling refreshPackages explicitly since this generator can be invoked with all
+   * arguments already provided so `getPackages` will never be called and calculated
+   */
+  await refreshPackages();
   const name =
     (cliArgs.name && String(cliArgs.name)) ||
     (await prompts.autocomplete({
@@ -42,5 +61,19 @@ export const params = async ({
           initial: false,
         }));
 
-  return { name, type, hasTypescript, hasTsConfigNode };
+  const isSandbox = await sharedPrompts.getIsSandbox(type, cliArgs);
+  const supportingForProject = await sharedPrompts.getSupportingForProject(
+    type,
+    cliArgs,
+    isSandbox,
+  );
+
+  return {
+    name,
+    type,
+    hasTypescript,
+    hasTsConfigNode,
+    isSandbox,
+    supportingForProject,
+  };
 };

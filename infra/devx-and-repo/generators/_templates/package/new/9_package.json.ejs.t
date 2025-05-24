@@ -34,15 +34,13 @@ sh: |
   <% } %>
 
   pnpm --workspace-root generate add lint <%- h.stringifyArguments(lintArgs) %>
-
-  # ends with '|| true' because we want to ignore errors when trying to auto-fix lint issues
-  pnpm --filter='<%- nameWithScope %>' --parallel --no-reporter-hide-prefix \
-    exec \
-      pnpm --workspace-root run --sequential '/^shared:fix:/' || true
-
   <% if (hasRelease) {%>
     pnpm --workspace-root generate add release <%- h.stringifyArguments(releaseArgs) %>
   <% } %>
+
+  pnpm --filter='<%- name %>' --workspace-concurrency=1 \
+    exec \
+      pnpm --workspace-root run --sequential '/^shared:fix:/' || true
 to: <%- h.getDestinationByType({ type, subtype, name }) %>/package.json
 ---
 {
@@ -149,6 +147,10 @@ to: <%- h.getDestinationByType({ type, subtype, name }) %>/package.json
         "webpack-cli": "^5.1.1",
         "sucrase": "^3.35.0",
         "webpack-dev-server": "^5.1.0",
+        <% if (techStack === TechStack.REACT) { %>
+          "@types/react": "^16",
+          "@types/react-dom":  "^16",
+        <% } %>
       <% } %>
 
       <% if (type !== PackageType.APP && techStack === TechStack.REACT) { %>

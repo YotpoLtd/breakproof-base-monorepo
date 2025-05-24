@@ -688,6 +688,9 @@ importers:
 
   infra/devx-and-repo/citools:
     dependencies:
+      '@repo/.github':
+        specifier: workspace:^
+        version: link:../../../.github
       '@repo/depcheck-base-isolated':
         specifier: workspace:^
         version: link:../../code-checks/depcheck-base-isolated
@@ -895,6 +898,9 @@ importers:
       '@pnpm/workspace.pkgs-graph':
         specifier: latest
         version: 1000.0.12(@pnpm/logger@1000.0.0)
+      '@pnpm/workspace.read-manifest':
+        specifier: latest
+        version: 1000.1.5
       camelcase:
         specifier: latest
         version: 8.0.0
@@ -3113,6 +3119,10 @@ packages:
     resolution: {integrity: sha512-IXskbr6vqER6zJnGMVjezD+rA+B1Og11klVqJ7MKuuixflipKnuPJpbaIRrUUMcWoDYeBfWcoLp9B1jJo1o3Tg==}
     engines: {node: '>=18.12'}
 
+  '@pnpm/types@1000.6.0':
+    resolution: {integrity: sha512-6PsMNe98VKPGcg6LnXSW/LE3YfJ77nj+bPKiRjYRWAQLZ+xXjEQRaR0dAuyjCmchlv4wR/hpnMVRS21/fCod5w==}
+    engines: {node: '>=18.12'}
+
   '@pnpm/util.lex-comparator@3.0.1':
     resolution: {integrity: sha512-jUR0XFKlYcwexqNl+Qbkw8XqQw3+wjwKz72uREqVf4OiV9Hi67IoVu8q1gz0LvHgZmqruisiar+873HcJW9dHw==}
     engines: {node: '>=18.12'}
@@ -3144,6 +3154,10 @@ packages:
 
   '@pnpm/workspace.read-manifest@1000.1.3':
     resolution: {integrity: sha512-z+9keB8hZln8a+LVVf5U4DOhM0G3kXKXIt+qthOpXl91flnVNEtZPgcZID6TwFC4mtbbUX8HOLKhR2QO83mSsg==}
+    engines: {node: '>=18.12'}
+
+  '@pnpm/workspace.read-manifest@1000.1.5':
+    resolution: {integrity: sha512-2oSdHnL1n9SCAsGySFFbQeLSydv5KA87781ifS17/uY7c9eEd8vMIpjcXG4Mws1ri+B+1rSCy/1T3gfdLGgOsQ==}
     engines: {node: '>=18.12'}
 
   '@pnpm/workspace.spec-parser@1000.0.0':
@@ -11478,6 +11492,8 @@ snapshots:
 
   '@pnpm/types@1000.4.0': {}
 
+  '@pnpm/types@1000.6.0': {}
+
   '@pnpm/util.lex-comparator@3.0.1': {}
 
   '@pnpm/which@3.0.1':
@@ -11541,6 +11557,13 @@ snapshots:
       '@pnpm/constants': 1001.1.0
       '@pnpm/error': 1000.0.2
       '@pnpm/types': 1000.4.0
+      read-yaml-file: 2.1.0
+
+  '@pnpm/workspace.read-manifest@1000.1.5':
+    dependencies:
+      '@pnpm/constants': 1001.1.0
+      '@pnpm/error': 1000.0.2
+      '@pnpm/types': 1000.6.0
       read-yaml-file: 2.1.0
 
   '@pnpm/workspace.spec-parser@1000.0.0': {}

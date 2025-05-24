@@ -13,6 +13,7 @@ import {
   type Project,
 } from '@pnpm/workspace.find-packages';
 import { createPkgGraph, type PackageNode } from '@pnpm/workspace.pkgs-graph';
+import { readWorkspaceManifest } from '@pnpm/workspace.read-manifest';
 
 interface ParseFilterOptions {
   filterArgs: Array<string>;
@@ -263,7 +264,7 @@ const makeDevtoolsAwareGraphCreator = ({
       });
     }
     const graph = createPkgGraph(finalPackageList, createPkgGraphOptions);
-    // graphCachePerUniqueOptions.set(graphOptionsKey, graph);
+    graphCachePerUniqueOptions.set(graphOptionsKey, graph);
     return graph;
   };
 };
@@ -287,7 +288,9 @@ export async function filterPackagesExtended({
   Record<string, PackageNode<Project>>
 > {
   const workspaceDir = String(await findWorkspaceDir(process.cwd()));
-  const allPackages = await findWorkspacePackagesNoCheck(workspaceDir);
+  const allPackages = await findWorkspacePackagesNoCheck(workspaceDir, {
+    patterns: (await readWorkspaceManifest(workspaceDir))!.packages,
+  });
 
   const packageSelectors = parsePnpmFilterArgs({
     filterArgs: filter,

@@ -29,13 +29,16 @@ export default (
   env: { production?: unknown },
   webpackArgs: { mode: "none" | "development" | "production" },
 ): Configuration => {
+  // eslint-disable-next-line @typescript-eslint/naming-convention -- Mimicking a constant on purpose
   const PRODUCTION = Boolean(
     env.production ||
     webpackArgs.mode === NodeEnv.PROD ||
     process.env.NODE_ENV === NodeEnv.PROD,
   );
   const mode = PRODUCTION ? NodeEnv.PROD : NodeEnv.DEV;
+  // eslint-disable-next-line @typescript-eslint/naming-convention -- Mimicking a constant on purpose
   const SRC_DIR = path.resolve(__dirname, "src");
+  // eslint-disable-next-line @typescript-eslint/naming-convention -- Mimicking a constant on purpose
   const IS_ANALYZING_BUNDLE = Boolean(process.env.ANALYZE_BUNDLE);
   
   return {

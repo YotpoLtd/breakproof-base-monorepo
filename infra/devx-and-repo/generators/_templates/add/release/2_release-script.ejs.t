@@ -6,7 +6,16 @@ sh: |
   cd <%- cwd %>
   cp -r <%- actionfolder %>/base-files/. <%- h.getPackageDir(name) %>
   pnpm --filter='<%- name %>...' --no-frozen-lockfile install
-  pnpm --filter='<%- name %>' --parallel --no-reporter-hide-prefix exec pnpm --workspace-root run --sequential '/^shared:fix:/' || true
+  # ends with '|| true' because we want to ignore errors when trying to auto-fix lint issues
+  pnpm --filter='<%- name %>' --workspace-concurrency=1 \
+    exec \
+      pnpm --workspace-root run --sequential '/^shared:fix:/' || true
+
+  # we run the same fix command again because, some of the eslint plugin autofixing have buggy
+  # logic that cannot fix everything in 1 pass, e.g. the jsonc/sort-keys from eslint-plugin-jsonc
+  pnpm --filter='<%- name %>' --workspace-concurrency=1 \
+    exec \
+      pnpm --workspace-root run --sequential '/^shared:fix:/' || true
   <% if (hasTsConfigNode) {%>
     echo
     echo "--------------------------------------------------------------------------------"

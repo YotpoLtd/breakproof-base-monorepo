@@ -21,6 +21,18 @@ export const getSnapshotFilename = (snapshotSnapshotFilename: string): string =>
   (cliOptions['snapshot-filename'] as string) || snapshotSnapshotFilename;
 
 /**
+ * Works around: https://github.com/pnpm/pnpm/issues/9563
+ */
+const cleanInput = (inputString: string) =>
+  inputString
+    .split('\n')
+    .filter(
+      (line) =>
+        !line.startsWith('::group::') && !line.startsWith('::endgroup::'),
+    )
+    .join('\n');
+
+/**
  * The main job of this package is to provide reusable CLI functionality to others.
  *
  * This is the function that does that.
@@ -41,7 +53,9 @@ export const runSnapshotterCli = (
 
   process.stdin.on('end', () => {
     // eslint-disable-next-line @typescript-eslint/naming-convention -- This is almost module-level
-    const CURRENT_CODE_PROBLEMS = codeCheckerCliOutputParser(pipedInput);
+    const CURRENT_CODE_PROBLEMS = codeCheckerCliOutputParser(
+      cleanInput(pipedInput),
+    );
 
     switch (FIRST_USER_CLI_ARGUMENT) {
       case 'check-new-problems': {

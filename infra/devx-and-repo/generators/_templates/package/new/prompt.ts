@@ -56,7 +56,7 @@ const ensureCodeowners = async (
 `)}`,
     message: `Can you add:
 ${chalk.green(`
-${projectDirs.map((projectDir) => `${projectDir.replace(repoRootDir, '')} <YOUR TEAM NAME IN GITHUB>`).join('\n')}}
+${projectDirs.map((projectDir) => `${projectDir.replace(repoRootDir, '')} <YOUR TEAM NAME IN GITHUB>`).join('\n')}
 `)}
 to ${terminalLink(
       chalk.green(`<repo root>/.github/CODEOWNERS`),
@@ -187,22 +187,24 @@ export const params = async ({
       })
     : false;
 
-  const lintArgs = await lintParams({
-    args: {
-      ...cliArgs,
-      type,
-      name: nameWithScope,
-      hasTsConfigNode: true,
-      hasTypescript: true,
-    },
-  });
-
   const isSandbox = await sharedPrompts.getIsSandbox(type, cliArgs);
   const supportingForProject = await sharedPrompts.getSupportingForProject(
     type,
     cliArgs,
     isSandbox,
   );
+
+  const lintArgs = await lintParams({
+    args: {
+      ...cliArgs,
+      name: nameWithScope,
+      type,
+      hasTypescript: true,
+      hasTsConfigNode: true,
+      isSandbox,
+      supportingForProject,
+    },
+  });
 
   return {
     type,

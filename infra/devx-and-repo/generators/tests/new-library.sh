@@ -2,6 +2,8 @@
 
 # fail if any command fails
 set -e
+# print executed commands
+set -x
 
 FIRST_NODE_VERSION=$(pnpm --workspace-root node -p 'require("./.nodejs-versions-whitelist.cjs")[0]')
 FIRST_NPM_SCOPE=$(pnpm --workspace-root node -p 'require("./.npm-scopes-whitelist.cjs")[0]')
@@ -25,6 +27,45 @@ pnpm --workspace-root generate package new \
   --releaseFiles=dist \
   --releaseFiles=README.md
 
+cd $WORKSPACE_ROOT_DIR
+
+echo "/libs/${LIBRARY_NAME} @yotpotestteam" >> .github/CODEOWNERS
+echo "/apps/sandbox-${LIBRARY_NAME} @yotpotestteam" >> .github/CODEOWNERS
+echo "/apps/sandbox-${LIBRARY_NAME}-e2e @yotpotestteam" >> .github/CODEOWNERS
+
 cd "$WORKSPACE_ROOT_DIR/libs/${LIBRARY_NAME}"
+pnpm run lint:everything
 cd "$WORKSPACE_ROOT_DIR/apps/sandbox-${LIBRARY_NAME}"
+pnpm run lint:everything
 cd "$WORKSPACE_ROOT_DIR/apps/sandbox-${LIBRARY_NAME}-e2e"
+pnpm run lint:everything
+
+#
+#
+# TESTING THE GENERATION OF A NEW REACT LIBRARY
+#
+#
+LIBRARY_NAME='example-react-test-library'
+pnpm --workspace-root generate package new \
+  --type='Library' \
+  --name="$LIBRARY_NAME" \
+  --techStack='react' \
+  --nodeVersion="$FIRST_NODE_VERSION" \
+  --npmScope="$FIRST_NPM_SCOPE" \
+  --skipCodeownersCheck \
+  --hasRelease \
+  --releaseFiles=dist \
+  --releaseFiles=README.md
+
+cd $WORKSPACE_ROOT_DIR
+
+echo "/libs/${LIBRARY_NAME} @yotpotestteam" >> .github/CODEOWNERS
+echo "/apps/sandbox-${LIBRARY_NAME} @yotpotestteam" >> .github/CODEOWNERS
+echo "/apps/sandbox-${LIBRARY_NAME}-e2e @yotpotestteam" >> .github/CODEOWNERS
+
+cd "$WORKSPACE_ROOT_DIR/libs/${LIBRARY_NAME}"
+pnpm run lint:everything
+cd "$WORKSPACE_ROOT_DIR/apps/sandbox-${LIBRARY_NAME}"
+pnpm run lint:everything
+cd "$WORKSPACE_ROOT_DIR/apps/sandbox-${LIBRARY_NAME}-e2e"
+pnpm run lint:everything

@@ -41,6 +41,7 @@ runs:
         PACKAGE_FILTER_ONLY_NAME="$(echo '${{ inputs.package-filter }}'| sed -E 's/^[\.\^]+//' | sed -E 's/[\.\^]+$//')"
         pnpm \
           --filter="@repo/citools..." \
+          --filter="!devtools" \
           --filter="@repo/release-it-base-isolated..." \
           --filter="...${PACKAGE_FILTER_ONLY_NAME}..." \
           install --frozen-lockfile --prefer-offline

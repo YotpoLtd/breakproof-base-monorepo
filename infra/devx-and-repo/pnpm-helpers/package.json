@@ -41,6 +41,7 @@
     "@pnpm/worker": "latest",
     "@pnpm/workspace.find-packages": "latest",
     "@pnpm/workspace.pkgs-graph": "latest",
+    "@pnpm/workspace.read-manifest": "latest",
     "camelcase": "latest"
   },
   "devDependencies": {

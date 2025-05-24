@@ -89,10 +89,18 @@ export const HELP_ACTION_TEXT =
   'search or create an issue at https://github.com/YotpoLtd/breakproof-base-monorepo';
 export const HELP_ACTION_PROMISE_TEXT = `I will ${HELP_ACTION_TEXT}`;
 
+interface PnpmProjectWithName extends Omit<PnpmProject, 'manifest'> {
+  manifest: Omit<PnpmProject['manifest'], 'name'> & {
+    name: string;
+  };
+}
+
 // eslint-disable-next-line @typescript-eslint/naming-convention -- Mimicking a constant on purpose
-let PACKAGES: Array<PnpmProject> = [];
+let PACKAGES: Array<PnpmProjectWithName> = [];
 export const refreshPackages = async () => {
-  PACKAGES = Object.values(await getAllPackages());
+  PACKAGES = Object.values(
+    (await getAllPackages()) as Array<PnpmProjectWithName>,
+  );
 };
 export const getPackagesCached = () => PACKAGES;
 export const getPackages = async () => {

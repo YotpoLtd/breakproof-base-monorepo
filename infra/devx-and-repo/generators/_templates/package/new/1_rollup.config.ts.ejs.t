@@ -15,7 +15,7 @@ const IS_PRODUCTION = process.env.ROLLUP_WATCH !== 'true';
 const NODE_ENV = IS_PRODUCTION ? NodeEnv.PROD : NodeEnv.DEV;
 
 const config: RollupOptions = {
-  input: './src/index.ts',
+  input: './src/index.<%- techStack === TechStack.REACT ? 'tsx': 'ts' %>',
   output: getDefaultOutputOptions(),
   external: externalizeNonSource,
   plugins: [
