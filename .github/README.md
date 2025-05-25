@@ -20,13 +20,13 @@
 
 </div>
 
-<div align="center">
-
-[![ForkButton.png](../docs/ForkButton.svg)](https://github.com/YotpoLtd/breakproof-base-monorepo/fork)
-[![Open
-`breakproof base repo` in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/YotpoLtd/breakproof-base-monorepo)
-
-</div>
+```bash
+# first, <create your empty github repo>
+git clone <YOUR REPO URL>
+git remote add breakproof git@github.com:YotpoLtd/breakproof-base-monorepo.git
+git pull breakproof main
+pnpm --workspace-root generate repo init
+```
 
 # TLDR;
 
