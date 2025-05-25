@@ -34,12 +34,12 @@ pnpm --workspace-root generate repo init
 
 📄 A pnpm monorepo template **meant to be cloned** and used for your projects.
 
-The breakproof monorepo template comes with
-[ready to be used tools](#tools-list) already in it, where each tool lives in
+The breakproof monorepo template comes with ready to be used
+[tools already in it](#tools-list), where each tool lives in
 **[its own package](#how-separate-nodejs)**, runs
-**[its own version of Node.js](#how-separate-nodejs)** and provides **strict
-default config** to be consumed by your projects and the **built-in optimized
-CI/CD**
+**[its own version of Node.js](#how-separate-nodejs)** and provides
+[**strict default config**](#tools-list) to be consumed by your projects and the
+**built-in optimized CI/CD**
 
 🔀 **Clone** to create your own monorepo! — 🔄 **Pull** to update the tools &
 CI/CD!
@@ -47,8 +47,8 @@ CI/CD!
 ### The immediate value of developing inside breakproof monorepo
 
 Your clone 🔀 becomes a **_breakproof home_** 🏠 where you can develop **your
-frontend projects** without 💥 **breaking your code** or
-💰**breaking-the-bank**.
+frontend projects** without 💥 _**breaking your code**_ or 💰
+_**breaking**-**the**-**bank**_.
 
 You start by **importing your existing** projects or **generating new** ones. ⚡
 **_Immediately_** those projects get a ton of **working** processes like
