@@ -109,21 +109,21 @@ export const params = async () => {
   await $`git reset`;
 
   await $spinner('first commit, only moving existing files', async () => {
-    await $`git mv README.md ./docs/after-fork-setup/MAIN_BREAKPROOF_README.md`;
-    await $`mkdir -p ./.github/after-fork-setup`;
-    await $`git mv ./.github/CODEOWNERS ./.github/after-fork-setup/`;
+    await $`git mv ./.github/README.md ./docs/after-init-setup/MAIN_BREAKPROOF_README.md`;
+    await $`mkdir -p ./.github/after-init-setup`;
+    await $`git mv ./.github/CODEOWNERS ./.github/after-init-setup/`;
     await $`git status --short --untracked-files=no`;
     printToTerminal(
       chalk.italic
         .bold`committing with '--no-verify', otherwise our checks will fail because CODEOWNERS file is missing`,
     );
-    await $`git commit --no-verify -m 'ci: move the repo README to make space for the fork main README'`;
+    await $`git commit --no-verify -m 'ci: move the repo README to make space for the clone main README'`;
   });
 
   await $spinner(
     'second commit, initiate the new files in their place',
     async () => {
-      await $`git mv ./docs/after-fork-setup/README.md .`;
+      await $`git mv ./docs/after-init-setup/README.md .`;
       await fs.writeFile(
         './.github/CODEOWNERS',
         await renderTemplate(`CODEOWNERS.ejs`, {
@@ -132,7 +132,7 @@ export const params = async () => {
         }),
       );
       await $`git add ./.github/CODEOWNERS`;
-      await $`git commit -m 'ci: final moving of files after fork initialization'`;
+      await $`git commit -m 'ci: final moving of files after clone initialization'`;
     },
   );
 

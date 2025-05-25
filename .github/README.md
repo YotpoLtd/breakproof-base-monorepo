@@ -1,6 +1,6 @@
 <div align="center">
 
-<picture><img alt="Breakproof Base Repo BETA VERSION" src="./docs/logo-big.svg" height=175px /></picture>
+<picture><img alt="Breakproof Base Repo BETA VERSION" src="../docs/logo-big.svg" height=175px /></picture>
 
 ![Linux is supported](https://img.shields.io/badge/Linux-Supported-pass)
 ![macOS is supported](https://img.shields.io/badge/macOS-Supported-pass)
@@ -20,13 +20,13 @@
 
 </div>
 
-<div align="center">
-
-[![ForkButton.png](./docs/ForkButton.svg)](https://github.com/YotpoLtd/breakproof-base-monorepo/fork)
-[![Open
-`breakproof base repo` in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/YotpoLtd/breakproof-base-monorepo)
-
-</div>
+```bash
+# first, <create your empty github repo>
+git clone <YOUR REPO URL>
+git remote add breakproof git@github.com:YotpoLtd/breakproof-base-monorepo.git
+git pull breakproof main
+pnpm --workspace-root generate repo init
+```
 
 # TLDR;
 
@@ -34,12 +34,12 @@
 
 📄 A pnpm monorepo template **meant to be cloned** and used for your projects.
 
-The breakproof monorepo template comes with
-[ready to be used tools](#tools-list) already in it, where each tool lives in
+The breakproof monorepo template comes with ready to be used
+[tools already in it](#tools-list), where each tool lives in
 **[its own package](#how-separate-nodejs)**, runs
-**[its own version of Node.js](#how-separate-nodejs)** and provides **strict
-default config** to be consumed by your projects and the **built-in optimized
-CI/CD**
+**[its own version of Node.js](#how-separate-nodejs)** and provides
+[**strict default config**](#tools-list) to be consumed by your projects and the
+**built-in optimized CI/CD**
 
 🔀 **Clone** to create your own monorepo! — 🔄 **Pull** to update the tools &
 CI/CD!
@@ -47,13 +47,13 @@ CI/CD!
 ### The immediate value of developing inside breakproof monorepo
 
 Your clone 🔀 becomes a **_breakproof home_** 🏠 where you can develop **your
-frontend projects** without 💥 **breaking your code** or
-💰**breaking-the-bank**.
+frontend projects** without 💥 _**breaking your code**_ or 💰
+_**breaking**-**the**-**bank**_.
 
 You start by **importing your existing** projects or **generating new** ones. ⚡
 **_Immediately_** those projects get a ton of **working** processes like
 **optimized** CI/CD, **meticulous** code checks, **automatic** `npm` releases,
-**precise** code-editor integration, etc. **_And because_** you forked the repo,
+**precise** code-editor integration, etc. **_And because_** you cloned the repo,
 you keep receiving updates for those processes simply via `git pull`.
 
 **You get:**
@@ -80,7 +80,7 @@ you keep receiving updates for those processes simply via `git pull`.
 
 # 🎯 What problems does your `Breakproof Base Repo` clone solve?
 
-<picture><img alt="project-vs-tools-problem" src="./docs/project-vs-tools.svg" /></picture>
+<picture><img alt="project-vs-tools-problem" src="/docs/project-vs-tools.svg" /></picture>
 
 🛠️ You want to **focus building your project**, not waste time in upgrading the
 tooling around it or making different tools for code checks, testing, build &
@@ -90,7 +90,7 @@ versions of all tools 🤔 ([solution in next section](#how-it-works)).
 
 <p> </p>
 
-<picture><img alt="project-vs-cicd-problem" src="./docs/project-vs-cicd.svg" /></picture>
+<picture><img alt="project-vs-cicd-problem" src="../docs/project-vs-cicd.svg" /></picture>
 
 👨‍🔧 It's hard to create a well-optimized, precise & cost-effective CI/CD that
 doesn't break with scale and informs developers what is going to happen without
@@ -100,7 +100,7 @@ without requiring your projects to have specific tech stack 🤔
 
 <p> </p>
 
-<picture><img alt="project-vs-upgrade-problem" src="./docs/project-vs-upgrade.svg" /></picture>
+<picture><img alt="project-vs-upgrade-problem" src="../docs/project-vs-upgrade.svg" /></picture>
 
 🗄 You **cannot regularly stop** development until you upgrade everything
 everywhere, you want to do it **piece by piece in isolation** 🤔
@@ -108,7 +108,7 @@ everywhere, you want to do it **piece by piece in isolation** 🤔
 
 <p> </p>
 
-<picture><img alt="project-vs-strictness" src="./docs/project-vs-strictness.svg" /></picture>
+<picture><img alt="project-vs-strictness" src="../docs/project-vs-strictness.svg" /></picture>
 
 🕊 You want to improve your codebase but cannot fix all problems at once. You
 need to be **tolerant of existing problems** but **forbid new problematic code**
@@ -116,7 +116,7 @@ need to be **tolerant of existing problems** but **forbid new problematic code**
 
 <p> </p>
 
-<picture><img alt="project-vs-yet-another-config-and-wrapper" src="./docs/project-vs-yet-another-config-and-wrapper.svg" /></picture>
+<picture><img alt="project-vs-yet-another-config-and-wrapper" src="../docs/project-vs-yet-another-config-and-wrapper.svg" /></picture>
 
 🥴 You are **tired of learning new configuration formats** with each new
 repo-management tool that comes out and then **hitting its customization
@@ -126,7 +126,7 @@ limits**. You want to **directly deal with the tools** used but still rely on
 
 <p> </p>
 
-<picture><img alt="project-vs-industry-standard-and-swap" src="./docs/project-vs-industry-standard-and-swap.svg" /></picture>
+<picture><img alt="project-vs-industry-standard-and-swap" src="../docs/project-vs-industry-standard-and-swap.svg" /></picture>
 
 🏆 You want to use industry-standard best practices without having to design the
 entire process from scratch, **_BUT at the same time_** be free to swap
@@ -143,7 +143,7 @@ individual tools without having to redo the entire system 🤔
 
 # 💡 How does `Breakproof Base Repo` solve those problems?
 
-<picture><img alt="Breakproof package isolation" src="./docs/breakproof-isolation.svg" /></picture>
+<picture><img alt="Breakproof package isolation" src="../docs/breakproof-isolation.svg" /></picture>
 
 - The repo is a `pnpm` workspace — _a.k.a._ monorepo managed only using `pnpm`
   without any abstraction on top of it. This, by itself, lets you isolate one
@@ -188,7 +188,7 @@ individual tools without having to redo the entire system 🤔
 
 <p> </p>
 
-<picture><img alt="Breakproof CI/CD setup" src="./docs/breakproof-cicd.svg" /></picture>
+<picture><img alt="Breakproof CI/CD setup" src="../docs/breakproof-cicd.svg" /></picture>
 
 - The CI/CD process is implemented as GitHub actions/workflows. Because it knows
   the repo uses `pnpm`, we can target only a subset of the packages inside it
@@ -225,7 +225,7 @@ individual tools without having to redo the entire system 🤔
   of packages that will be automatically released to `npm`. You can then use
   that information to only trigger logic in certain cases.
 
-<picture><img alt="Tolerance for past problems" src="./docs/breakproof-snapshot-errors.svg" /></picture>
+<picture><img alt="Tolerance for past problems" src="../docs/breakproof-snapshot-errors.svg" /></picture>
 
 - To allow you to work on projects that have some code problems **_BUT at the
   same time_** stop new problems from popping up, the breakproof repo has
@@ -251,14 +251,15 @@ individual tools without having to redo the entire system 🤔
 
 1. 🔀 **Clone this repo.** (_and then push it to your own blank repo_)
 
-2. 🎛️ Initialize your fork with your preferences & automatically configure your
+2. 🎛️ Initialize your clone with your preferences & automatically configure your
    code editor:
 
    ```shell
    pnpm --workspace-root generate repo init
    ```
 
-3. 🚀 [Generate new](./docs/pnpm-intro.md#creating-a-new-package-in-the-repo) or
+3. 🚀 [Generate new](../docs/pnpm-intro.md#creating-a-new-package-in-the-repo)
+   or
    [import your existing](./infra/devx-and-repo/repo-shell-scripts/README.md#using-import-from-other-repo)
    projects.
 
@@ -376,33 +377,33 @@ You need to add some GitHub configuration for your repository:
 Nothing is perfect, so this list will inevitably change
 (_[see ⬇️ "What's next?"](#whats-next)_). Here are the currently used tools:
 
-| Tool                                                                                                                                               | What it's used for                                                       | Provided Configuration                                                              | `node.js` version used                       |
-| :------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------- | :---------------------------------------------------------------------------------- | :------------------------------------------- |
-| [🌐](https://pnpm.io/) `pnpm`                                                                                                                      | [🧩 multiple roles](./docs/tools-details.md#pnpm-role)                   | [⚙️ forkable config in repo](./docs/tools-details.md#pnpm-config)                   | n/a _(does not rely on available `node.js`)_ |
-| [🌐](https://www.gnu.org/software/bash/) `bash` functions & scripts                                                                                | [🧩 multiple roles](./docs/tools-details.md#bash-role)                   | 🕳️ no config applied in repo                                                        | n/a _(does not rely on `node.js`)_           |
-| [🌐](https://www.shellcheck.net/) `shell-check`                                                                                                    | [🧩 multiple roles](./docs/tools-details.md#shell-check-role)            | 🕳️ no config applied in repo                                                        | n/a _(does not rely on `node.js`)_           |
-| [🌐](https://eslint.org/) `eslint` + plugins                                                                                                       | [🧩 multiple roles](./docs/tools-details.md#eslint-role)                 | [⚙️ base config in repo](./docs/tools-details.md#eslint-config)                     | `v22.6.0`                                    |
-| [🌐](https://prettier.io/) `prettier`                                                                                                              | [🧩 multiple roles](./docs/tools-details.md#prettier-role)               | [⚙️ base config in repo](./docs/tools-details.md#prettier-config)                   | `v22.6.0`                                    |
-| [🌐](https://www.typescriptlang.org/) `typescript`                                                                                                 | [🧩 multiple roles](./docs/tools-details.md#typescript-role)             | [⚙️ base config in repo](./docs/tools-details.md#typescript-config)                 | `<same as your package>` or `v22.6.0`        |
-| [🌐](https://sucrase.io/) `sucrase`, [🌐](https://typestrong.org/ts-node/) `ts-node` & [🌐](https://github.com/privatenumber/tsx) `tsx`            | [🧩 multiple roles](./docs/tools-details.md#sucrase-tsnode-tsx-role)     | [⚙️ base config in repo](./docs/tools-details.md#sucrase-tsnode-tsx-config)         | `<same as your package>` or `v22.6.0`        |
-| [🌐](https://rhysd.github.io/actionlint/) `actionlint`                                                                                             | [🧩 multiple roles](./docs/tools-details.md#actionlint-role)             | 🕳️ no config applied in repo                                                        | n/a _(does not rely on `node.js`)_           |
-| [🌐](https://github.com/lint-staged/lint-staged) `lint-staged`                                                                                     | [🧩 multiple roles](./docs/tools-details.md#lint-staged-role)            | [⚙️ base config in repo](./docs/tools-details.md#lint-staged-config)                | `v22.6.0`                                    |
-| [🌐](https://github.com/acrazing/dpdm#readme) `dpdm`                                                                                               | [🧩 multiple roles](./docs/tools-details.md#dpdm-role)                   | [⚙️ base config in repo](./docs/tools-details.md#dpdm-config)                       | `v22.6.0`                                    |
-| [🌐](https://github.com/depcheck/depcheck#readme) `depcheck`                                                                                       | [🧩 multiple roles](./docs/tools-details.md#depcheck-role)               | [⚙️ base config in repo](./docs/tools-details.md#depcheck-config)                   | `v22.6.0`                                    |
-| [🌐](https://github.com/runem/lit-analyzer#readme) `lit-analyzer`                                                                                  | [🧩 multiple roles](./docs/tools-details.md#lit-analyzer-role)           | [⚙️ base config in repo](./docs/tools-details.md#lit-analyzer-config)               | `v22.6.0`                                    |
-| [🌐](https://jamiemason.github.io/syncpack/) `syncpack`                                                                                            | [🧩 multiple roles](./docs/tools-details.md#syncpack-role)               | [⚙️ forkable config in repo](./docs/tools-details.md#syncpack-config)               | `v22.6.0`                                    |
-| [🌐](https://www.cypress.io/) `cypress`                                                                                                            | [🧩 multiple roles](./docs/tools-details.md#cypress-role)                | [⚙️ base config in repo](./docs/tools-details.md#cypress-config)                    | `v22.6.0`                                    |
-| [🌐](https://jestjs.io/) `jest`                                                                                                                    | [🧩 multiple roles](./docs/tools-details.md#jest-role)                   | [⚙️ base config in repo](./docs/tools-details.md#jest-config)                       | `v22.6.0`                                    |
-| [🌐](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog#readme) `conventional-changelog` | [🧩 multiple roles](./docs/tools-details.md#conventional-changelog-role) | [⚙️ base config in repo](./docs/tools-details.md#conventional-changelog-config)     | `v22.6.0`                                    |
-| [🌐](https://github.com/release-it/release-it?tab=readme-ov-file#release-it-) `release-it`                                                         | [🧩 multiple roles](./docs/tools-details.md#release-it-role)             | [⚙️ base config in repo](./docs/tools-details.md#release-it-config)                 | `v22.6.0`                                    |
-| [🌐](https://webpack.js.org/) `webpack`                                                                                                            | [🧩 multiple roles](./docs/tools-details.md#webpack-role)                | [⚙️ base config in repo](./docs/tools-details.md#webpack-config)                    | `<same as your package>` or `v22.6.0`        |
-| [🌐](https://rollupjs.org/) `rollup` + plugins                                                                                                     | [🧩 multiple roles](./docs/tools-details.md#rollup-role)                 | [⚙️ base config in repo](./docs/tools-details.md#rollup-config)                     | `<same as your package>` or `v22.6.0`        |
-| [🌐](https://babel.dev/) `babel` + plugins                                                                                                         | [🧩 multiple roles](./docs/tools-details.md#babel-role)                  | [⚙️ base config in repo](./docs/tools-details.md#babel-config)                      | `<same as your package>` or `v22.6.0`        |
-| [🌐](https://www.hygen.io/) `hygen`                                                                                                                | [🧩 multiple roles](./docs/tools-details.md#hygen-role)                  | [⚙️ forkable config in repo](./docs/tools-details.md#hygen-config)                  | `v22.6.0`                                    |
-| [🌐](https://git-scm.com/) `git` hooks                                                                                                             | [🧩 multiple roles](./docs/tools-details.md#git-hooks-role)              | [⚙️ forkable config in repo](./docs/tools-details.md#git-hooks-config)              | n/a _(does not rely on `node.js`)_           |
-| [🌐](https://github.com/features/actions) `github` CI                                                                                              | [🧩 multiple roles](./docs/tools-details.md#github-ci-role)              | [⚙️ forkable config in repo](./docs/tools-details.md#github-ci-config)              | n/a _(does not rely on `node.js`)_           |
-| [🌐](https://code.visualstudio.com/) `VSCode` calibration                                                                                          | [🧩 multiple roles](./docs/tools-details.md#vscode-calibration-role)     | [⚙️ hint + importable config](./docs/tools-details.md#vscode-calibration-config)    | `v22.6.0` (_editor itself uses that_)        |
-| [🌐](https://www.jetbrains.com/) `JetBrains` calibration                                                                                           | [🧩 multiple roles](./docs/tools-details.md#jetbrains-calibration-role)  | [⚙️ hint + importable config](./docs/tools-details.md#jetbrains-calibration-config) | `v22.6.0` (_editor itself uses that_)        |
+| Tool                                                                                                                                               | What it's used for                                                        | Provided Configuration                                                               | `node.js` version used                       |
+| :------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------ | :----------------------------------------------------------------------------------- | :------------------------------------------- |
+| [🌐](https://pnpm.io/) `pnpm`                                                                                                                      | [🧩 multiple roles](../docs/tools-details.md#pnpm-role)                   | [⚙️ forkable config in repo](../docs/tools-details.md#pnpm-config)                   | n/a _(does not rely on available `node.js`)_ |
+| [🌐](https://www.gnu.org/software/bash/) `bash` functions & scripts                                                                                | [🧩 multiple roles](../docs/tools-details.md#bash-role)                   | 🕳️ no config applied in repo                                                         | n/a _(does not rely on `node.js`)_           |
+| [🌐](https://www.shellcheck.net/) `shell-check`                                                                                                    | [🧩 multiple roles](../docs/tools-details.md#shell-check-role)            | 🕳️ no config applied in repo                                                         | n/a _(does not rely on `node.js`)_           |
+| [🌐](https://eslint.org/) `eslint` + plugins                                                                                                       | [🧩 multiple roles](../docs/tools-details.md#eslint-role)                 | [⚙️ base config in repo](../docs/tools-details.md#eslint-config)                     | `v22.6.0`                                    |
+| [🌐](https://prettier.io/) `prettier`                                                                                                              | [🧩 multiple roles](../docs/tools-details.md#prettier-role)               | [⚙️ base config in repo](../docs/tools-details.md#prettier-config)                   | `v22.6.0`                                    |
+| [🌐](https://www.typescriptlang.org/) `typescript`                                                                                                 | [🧩 multiple roles](../docs/tools-details.md#typescript-role)             | [⚙️ base config in repo](../docs/tools-details.md#typescript-config)                 | `<same as your package>` or `v22.6.0`        |
+| [🌐](https://sucrase.io/) `sucrase`, [🌐](https://typestrong.org/ts-node/) `ts-node` & [🌐](https://github.com/privatenumber/tsx) `tsx`            | [🧩 multiple roles](../docs/tools-details.md#sucrase-tsnode-tsx-role)     | [⚙️ base config in repo](../docs/tools-details.md#sucrase-tsnode-tsx-config)         | `<same as your package>` or `v22.6.0`        |
+| [🌐](https://rhysd.github.io/actionlint/) `actionlint`                                                                                             | [🧩 multiple roles](../docs/tools-details.md#actionlint-role)             | 🕳️ no config applied in repo                                                         | n/a _(does not rely on `node.js`)_           |
+| [🌐](https://github.com/lint-staged/lint-staged) `lint-staged`                                                                                     | [🧩 multiple roles](../docs/tools-details.md#lint-staged-role)            | [⚙️ base config in repo](../docs/tools-details.md#lint-staged-config)                | `v22.6.0`                                    |
+| [🌐](https://github.com/acrazing/dpdm#readme) `dpdm`                                                                                               | [🧩 multiple roles](../docs/tools-details.md#dpdm-role)                   | [⚙️ base config in repo](../docs/tools-details.md#dpdm-config)                       | `v22.6.0`                                    |
+| [🌐](https://github.com/depcheck/depcheck#readme) `depcheck`                                                                                       | [🧩 multiple roles](../docs/tools-details.md#depcheck-role)               | [⚙️ base config in repo](../docs/tools-details.md#depcheck-config)                   | `v22.6.0`                                    |
+| [🌐](https://github.com/runem/lit-analyzer#readme) `lit-analyzer`                                                                                  | [🧩 multiple roles](../docs/tools-details.md#lit-analyzer-role)           | [⚙️ base config in repo](../docs/tools-details.md#lit-analyzer-config)               | `v22.6.0`                                    |
+| [🌐](https://jamiemason.github.io/syncpack/) `syncpack`                                                                                            | [🧩 multiple roles](../docs/tools-details.md#syncpack-role)               | [⚙️ forkable config in repo](../docs/tools-details.md#syncpack-config)               | `v22.6.0`                                    |
+| [🌐](https://www.cypress.io/) `cypress`                                                                                                            | [🧩 multiple roles](../docs/tools-details.md#cypress-role)                | [⚙️ base config in repo](../docs/tools-details.md#cypress-config)                    | `v22.6.0`                                    |
+| [🌐](https://jestjs.io/) `jest`                                                                                                                    | [🧩 multiple roles](../docs/tools-details.md#jest-role)                   | [⚙️ base config in repo](../docs/tools-details.md#jest-config)                       | `v22.6.0`                                    |
+| [🌐](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-changelog#readme) `conventional-changelog` | [🧩 multiple roles](../docs/tools-details.md#conventional-changelog-role) | [⚙️ base config in repo](../docs/tools-details.md#conventional-changelog-config)     | `v22.6.0`                                    |
+| [🌐](https://github.com/release-it/release-it?tab=readme-ov-file#release-it-) `release-it`                                                         | [🧩 multiple roles](../docs/tools-details.md#release-it-role)             | [⚙️ base config in repo](../docs/tools-details.md#release-it-config)                 | `v22.6.0`                                    |
+| [🌐](https://webpack.js.org/) `webpack`                                                                                                            | [🧩 multiple roles](../docs/tools-details.md#webpack-role)                | [⚙️ base config in repo](../docs/tools-details.md#webpack-config)                    | `<same as your package>` or `v22.6.0`        |
+| [🌐](https://rollupjs.org/) `rollup` + plugins                                                                                                     | [🧩 multiple roles](../docs/tools-details.md#rollup-role)                 | [⚙️ base config in repo](../docs/tools-details.md#rollup-config)                     | `<same as your package>` or `v22.6.0`        |
+| [🌐](https://babel.dev/) `babel` + plugins                                                                                                         | [🧩 multiple roles](../docs/tools-details.md#babel-role)                  | [⚙️ base config in repo](../docs/tools-details.md#babel-config)                      | `<same as your package>` or `v22.6.0`        |
+| [🌐](https://www.hygen.io/) `hygen`                                                                                                                | [🧩 multiple roles](../docs/tools-details.md#hygen-role)                  | [⚙️ forkable config in repo](../docs/tools-details.md#hygen-config)                  | `v22.6.0`                                    |
+| [🌐](https://git-scm.com/) `git` hooks                                                                                                             | [🧩 multiple roles](../docs/tools-details.md#git-hooks-role)              | [⚙️ forkable config in repo](../docs/tools-details.md#git-hooks-config)              | n/a _(does not rely on `node.js`)_           |
+| [🌐](https://github.com/features/actions) `github` CI                                                                                              | [🧩 multiple roles](../docs/tools-details.md#github-ci-role)              | [⚙️ forkable config in repo](../docs/tools-details.md#github-ci-config)              | n/a _(does not rely on `node.js`)_           |
+| [🌐](https://code.visualstudio.com/) `VSCode` calibration                                                                                          | [🧩 multiple roles](../docs/tools-details.md#vscode-calibration-role)     | [⚙️ hint + importable config](../docs/tools-details.md#vscode-calibration-config)    | `v22.6.0` (_editor itself uses that_)        |
+| [🌐](https://www.jetbrains.com/) `JetBrains` calibration                                                                                           | [🧩 multiple roles](../docs/tools-details.md#jetbrains-calibration-role)  | [⚙️ hint + importable config](../docs/tools-details.md#jetbrains-calibration-config) | `v22.6.0` (_editor itself uses that_)        |
 
 <p> </p>
 
