@@ -8,7 +8,9 @@ import { LintStagedConfig } from './types.js';
 
 const PACKAGE_DIR = process.cwd();
 
-export const TSC_CONFIG_FILENAMES = await glob('tsconfig*.json');
+export const TSC_CONFIG_FILENAMES = await glob(
+  'tsconfig?(.!(*problems-snapshot*)).json',
+);
 
 type LintStagedConfigKey = string;
 export const ESLINT_PATTERN: LintStagedConfigKey =
