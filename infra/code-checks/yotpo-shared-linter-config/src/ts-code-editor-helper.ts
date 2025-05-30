@@ -10,16 +10,15 @@ export const getCodeEditorTypescriptEslintConfig = (
   tsconfigRootDir: string,
 ): EslintConfig => [
   {
-    files: ['**/*.{ts,tsx,mts}'],
+    files: ['**/*.{ts,mts,cts,tsx}'],
     languageOptions: {
       parserOptions: {
         project: './tsconfig?(.!(*problems-snapshot*)).json',
         tsconfigRootDir,
-        warnOnUnsupportedTypeScriptVersion: false,
       },
-      // not every year / version is present:
-      // https://github.com/eslint/eslint/issues/15580#issuecomment-1030878719
-      ecmaVersion: 2018,
+      // // not every year / version is present:
+      // // https://github.com/eslint/eslint/issues/15580#issuecomment-1030878719
+      // ecmaVersion: 2018,
       sourceType: 'module',
     },
   },

@@ -36,7 +36,7 @@
     "@repo/eslint-base-isolated": "workspace:^",
     "@repo/lint-staged-base-isolated": "workspace:^",
     "@repo/typescript-base-isolated": "workspace:^",
-    "eslint": "^8.57.1",
+    "eslint": "9.27.0",
     "prettier": "^3.4.2",
     "tslib": "^2.7.0",
     "typescript": "^5.3.3"

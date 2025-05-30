@@ -16,5 +16,10 @@ export default {
       reason:
         'We add this as peer dependency to `eslint-plugin-json-schema-validator` as part of our patch',
     }),
+    defineIgnoredPackage({
+      package: 'ajv-errors',
+      reason:
+        'We add this as peer dependency to `eslint-plugin-json-schema-validator` as part of our patch',
+    }),
   ],
 };
