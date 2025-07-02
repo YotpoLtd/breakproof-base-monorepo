@@ -1,5 +1,14 @@
 #!/usr/bin/env bash
+# output detailed info on what is being executed
 set -x
+# fail if any commands fail
+set -e
+
+# Ensures scripts fail in the pipeline if any command in it fails — not just the last one.
+# Example: `false | true` will fail, but previously it would have succeeded.
+# This is necessary due to finding out that the `tee` command in this file
+# was still executing even if the commands before it failed.
+set -o pipefail
 
 if [ -z "$TEST_SCRIPT_NAME" ]; then
   echo "Please set the TEST_SCRIPT_NAME environment variable before running this script"
@@ -23,15 +32,34 @@ imports() {
 imports
 
 # make sure package json files are following the repo conventions
-validate_package_json || exit 1
+validate_package_json
 
 # make sure package files have defined owners
-validate_codeowners || exit 1
+validate_codeowners
 
-# run the scripts called $LINT_SCRIPT_NAME & $TEST_SCRIPT_NAME
-# for affected packages (changed packages and any that depend on them)
-pnpm_affected_test_filter \
-  --parallel \
-  --workspace-concurrency="$(nproc)" \
-  run "/^($TEST_SCRIPT_NAME)|($LINT_SCRIPT_NAME)$/" \
-  || exit 1
+# Should do the same as the test job in .github/workflows/_repo-on-change.yaml
+# BUT with
+pnpm_affected_test_filter --parallel --workspace-concurrency="$(nproc)" --aggregate-output \
+  run "$TEST_SCRIPT_NAME"
+
+# Performance Note: Terminal I/O Management
+#
+# Raw parallel execution of lint tasks can be significantly slower due to:
+# 1. Terminal I/O Contention: Multiple processes writing to stdout simultaneously
+# 2. Process Scheduling: Node.js event loop gets blocked by stdout writes
+# 3. Output Interleaving: Managing concurrent output streams
+#
+# Piping through `tee` solves this by providing buffered I/O and a single writer process,
+# making parallel execution faster than both raw parallel and sequential approaches.
+#
+# In tests with changes across 4 packages, `tee` improved performance by ~90%
+# compared to raw parallel execution. Your results may vary depending on the
+# number of changed files and affected packages.
+
+# Should do the same as the lint job in .github/workflows/_repo-on-change.yaml
+# BUT for a subset of the files
+pnpm --filter="[$GIT_DIFF_BASE]" \
+  --filter='!@repo/citools' \
+  --filter='!devtools' \
+  --parallel --workspace-concurrency="$(nproc)" --aggregate-output \
+  run "$LINT_SCRIPT_NAME" | tee

@@ -13,7 +13,7 @@ export const getCodeEditorTypescriptEslintConfig = (
     files: ['**/*.{ts,tsx,mts}'],
     languageOptions: {
       parserOptions: {
-        project: './tsconfig*(.*).json',
+        project: './tsconfig?(.!(*problems-snapshot*)).json',
         tsconfigRootDir,
         warnOnUnsupportedTypeScriptVersion: false,
       },

@@ -128,9 +128,9 @@ jobs:
         if: steps.setup-pnpm.outputs.pnpm-store-cache-hit != 'true'
         run: |
           pnpm \
-            --filter="@repo/citools..." \
-            --filter="!devtools" \
-            --filter="...[${{ needs.basics.outputs.git-diff-base }}]..." \
+            --filter='@repo/citools...' \
+            --filter='!devtools' \
+            --filter='...[${{ needs.basics.outputs.git-diff-base }}]...' \
             install --frozen-lockfile --prefer-offline
 
   #
@@ -161,7 +161,7 @@ jobs:
         id: affected-code-checks
         run: |
           ARE_CODE_CHECKS_AFFECTED_BY_CHANGES=$(
-            pnpm --filter="!devtools" --filter='...[${{ needs.basics.outputs.git-diff-base }}]' \
+            pnpm --filter='!devtools' --filter='...[${{ needs.basics.outputs.git-diff-base }}]' \
                  list --parseable --depth=-1 \
                    | grep -q "/infra/code-checks/" && echo -n 1 || true
           )
@@ -172,8 +172,9 @@ jobs:
           Install changed packages, their dependencies and any other that
           directly or indirectly use them
         run: |
-          pnpm --filter="@repo/citools..." install --frozen-lockfile --prefer-offline
-          pnpm --filter="!devtools" --filter='...[${{ needs.basics.outputs.git-diff-base }}]...' \
+          # installing @repo/citools first so we can make use of relevant packages in next steps 
+          pnpm --filter='@repo/citools...' install --frozen-lockfile --prefer-offline
+          pnpm --filter='!devtools' --filter='...[${{ needs.basics.outputs.git-diff-base }}]...' \
                ${{ steps.affected-code-checks.outputs.is-any-affected && '$(pnpm --silent --workspace-root run repo:pnpm:expand-filters --filter=''... < {infra/code-checks/**}...'')' || '' }} \
                ${{ steps.affected-code-checks.outputs.is-any-affected && '$(pnpm --silent --workspace-root run repo:pnpm:expand-filters --filter=''... < @repo/circular-dependency-workaround...'')' || '' }} \
                install --frozen-lockfile --prefer-offline
@@ -182,7 +183,7 @@ jobs:
           Build changed packages, their dependencies and any other that directly
           or indirectly use them
         run: |
-          pnpm --filter='...[${{ needs.basics.outputs.git-diff-base }}]...'\
+          pnpm --filter='...[${{ needs.basics.outputs.git-diff-base }}]...' \
                ${{ steps.affected-code-checks.outputs.is-any-affected && '$(pnpm --silent --workspace-root run repo:pnpm:expand-filters --filter=''... < {infra/code-checks/**}...'')' || '' }} \
                ${{ steps.affected-code-checks.outputs.is-any-affected && '$(pnpm --silent --workspace-root run repo:pnpm:expand-filters --filter=''... < @repo/circular-dependency-workaround...'')' || '' }} \
                run build
@@ -333,7 +334,7 @@ jobs:
 
       - name: Install pnpm helpers for better targeting of packages
         run: |
-          pnpm --filter="@repo/pnpm-helpers..." \
+          pnpm --filter='@repo/pnpm-helpers...' \
                install --frozen-lockfile --prefer-offline
 
       - name:
@@ -398,8 +399,8 @@ jobs:
           directly or indirectly use them
         run: |
           pnpm --filter='...[${{ needs.basics.outputs.git-diff-base }}]...' \
-               --filter="@repo/citools..." \
-               --filter="!devtools" \
+               --filter='@repo/citools...' \
+               --filter='!devtools' \
                install --frozen-lockfile --prefer-offline
 
       - name:
@@ -452,7 +453,7 @@ jobs:
           "test:e2e:github-pr:cypress" script in their "package.json"
         run: |
           PACKAGES_WITH_CYPRESS_E2E_TESTS=$(\
-            pnpm --filter="...[${{ needs.basics.outputs.git-diff-base }}]" \
+            pnpm --filter='...[${{ needs.basics.outputs.git-diff-base }}]' \
               exec pnpm node -e \
                 "require('./package.json').scripts['test:e2e:github-pr:cypress'] && console.log(require('./package.json').name)" \
           )
@@ -554,14 +555,14 @@ jobs:
           Install changed packages, their dependencies and any other that
           directly or indirectly use them
         run: |
-          pnpm --filter="[${{ needs.basics.outputs.git-diff-base }}]..." \
-               --filter="@repo/citools..." \
-               --filter="!devtools" \
+          pnpm --filter='[${{ needs.basics.outputs.git-diff-base }}]...' \
+               --filter='@repo/citools...' \
+               --filter='!devtools' \
                install --frozen-lockfile --prefer-offline
 
       - name: Build changed packages & their dependencies
         run: |
-          pnpm --filter="[${{ needs.basics.outputs.git-diff-base }}]..." run build
+          pnpm --filter='[${{ needs.basics.outputs.git-diff-base }}]...' run build
 
       - name: Check repo conventions
         run: |
