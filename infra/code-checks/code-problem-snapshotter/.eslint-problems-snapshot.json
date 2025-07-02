@@ -1,0 +1,23 @@
+{
+  "src/snapshot.ts": [
+    { "count": 2, "issueType": "@typescript-eslint/prefer-nullish-coalescing" },
+    { "count": 2, "issueType": "@typescript-eslint/no-non-null-assertion" },
+    {
+      "count": 1,
+      "issueType": "@typescript-eslint/no-unnecessary-type-assertion"
+    },
+    {
+      "count": 5,
+      "issueType": "@typescript-eslint/restrict-template-expressions"
+    }
+  ],
+  "src/snapshotter-cli.ts": [
+    { "count": 1, "issueType": "@typescript-eslint/restrict-plus-operands" }
+  ],
+  "src/types.ts": [
+    {
+      "count": 1,
+      "issueType": "@typescript-eslint/consistent-indexed-object-style"
+    }
+  ]
+}

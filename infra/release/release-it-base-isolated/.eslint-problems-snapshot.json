@@ -1,0 +1,18 @@
+{
+  "clean-package.ts": [
+    { "count": 2, "issueType": "@typescript-eslint/naming-convention" },
+    { "count": 1, "issueType": "@typescript-eslint/no-unsafe-assignment" }
+  ],
+  "release-it.base.ts": [
+    { "count": 1, "issueType": null },
+    { "count": 1, "issueType": "@typescript-eslint/no-require-imports" },
+    { "count": 1, "issueType": "@typescript-eslint/prefer-nullish-coalescing" },
+    {
+      "count": 1,
+      "issueType": "@typescript-eslint/restrict-template-expressions"
+    }
+  ],
+  "release.config-helpers.ts": [
+    { "count": 3, "issueType": "@typescript-eslint/prefer-nullish-coalescing" }
+  ]
+}

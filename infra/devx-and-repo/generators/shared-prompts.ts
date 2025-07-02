@@ -11,6 +11,7 @@ import {
 export const getType = async (
   cliArgs?: Record<string, string | boolean>,
 ): Promise<PackageType> =>
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- False positive because of the type assertion
   (cliArgs?.type as PackageType) ||
   (await prompts.autocomplete({
     message: 'What type of package is this?',
@@ -35,11 +36,9 @@ export const getIsSandbox = async (
         })
       : false;
 
-export const getSupportingForProject = async <
-  T extends Record<string, string | boolean>,
->(
+export const getSupportingForProject = async (
   type: PackageType,
-  cliArgs?: T,
+  cliArgs?: Record<string, string | boolean>,
   isSandbox?: boolean,
 ): Promise<false | string> => {
   if (cliArgs?.supportingForProject) {
@@ -90,6 +89,6 @@ export const COMMON_DEVELOPER_QUIZ_OPTIONS = {
 export const createQuizStepHeader = (stepNumber: number, header = '') => `
 
 ------------------
- ${chalk.blueBright(`# Step ${stepNumber}`)}
+ ${chalk.blueBright(`# Step ${String(stepNumber)}`)}
  ${header}
 `;

@@ -1,19 +1,20 @@
 import eslintPluginJsonSchemaValidator from 'eslint-plugin-json-schema-validator';
 import eslintJsoncPlugin from 'eslint-plugin-jsonc';
 
-import { EslintConfig } from '@yotpo-common/shared-linter-config/types';
+import {
+  EslintConfig,
+  EslintPlugin,
+} from '@yotpo-common/shared-linter-config/types';
 
 import packageJsonSchema from './schemas/package.json-schema';
 
 const config: EslintConfig = [
-  // @ts-expect-error -- bad types in package
-  ...eslintJsoncPlugin.configs['flat/recommended-with-json5'],
-  // @ts-expect-error -- ?????
+  ...(eslintJsoncPlugin.configs['flat/recommended-with-json5'] as EslintConfig),
   {
     // only top level package.json files
     files: ['package.json'],
     plugins: {
-      'json-schema-validator': eslintPluginJsonSchemaValidator,
+      'json-schema-validator': eslintPluginJsonSchemaValidator as EslintPlugin,
     },
     rules: {
       'json-schema-validator/no-invalid': [

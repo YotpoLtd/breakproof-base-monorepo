@@ -42,6 +42,7 @@ export function typescriptCleanOnError(): Plugin {
       async handler(outputOptions, bundle) {
         if (hasTsErrors) {
           // prevent output
+          // eslint-disable-next-line @typescript-eslint/no-dynamic-delete -- This is how rollup bundle works
           Object.keys(bundle).forEach((fileName) => delete bundle[fileName]);
           // cleanup existing output
           const outputDir = path.resolve(

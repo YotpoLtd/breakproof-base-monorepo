@@ -109,4 +109,6 @@ export const getPackages = async () => {
   }
   return getPackagesCached();
 };
-export const NODE_VERSION_LATEST = [...NODE_VERSIONS].sort().reverse()[0]!;
+export const NODE_VERSION_LATEST = (
+  [...NODE_VERSIONS].sort().reverse() as [string, ...Array<string>]
+)[0];

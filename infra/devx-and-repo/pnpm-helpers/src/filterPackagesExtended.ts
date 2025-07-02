@@ -59,7 +59,7 @@ const parsePnpmFilterArgs = ({
   filterArgs.map((filterStringRaw) => {
     let filterString = filterStringRaw.trim();
 
-    const isExclusion = filterStringRaw[0] === '!';
+    const isExclusion = filterStringRaw.startsWith('!');
     if (isExclusion) {
       filterString = filterString.slice(1);
     }
@@ -234,10 +234,10 @@ const makeDevtoolsAwareGraphCreator = ({
     let finalPackageList = packageList;
     if (ignoreDevtools) {
       finalPackageList = packageList.map((pkg) => {
-        const devDependencies = pkg.manifest.devDependencies || {};
+        const devDependencies = pkg.manifest.devDependencies ?? {};
         const devtoolsDependencies =
-          (pkg.manifest as { devtoolsDependencies: Array<string> })
-            .devtoolsDependencies || [];
+          (pkg.manifest as { devtoolsDependencies?: Array<string> })
+            .devtoolsDependencies ?? [];
 
         return {
           ...pkg,

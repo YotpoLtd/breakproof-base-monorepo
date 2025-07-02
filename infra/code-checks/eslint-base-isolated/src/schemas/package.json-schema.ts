@@ -11,12 +11,13 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 // @ts-expect-error -- no types for the whitelist
-import SUPPORTED_NODEJS_VERSIONS from '../../../../../.nodejs-versions-whitelist.cjs';
+import _SUPPORTED_NODEJS_VERSIONS from '../../../../../.nodejs-versions-whitelist.cjs';
+const SUPPORTED_NODEJS_VERSIONS = _SUPPORTED_NODEJS_VERSIONS as Array<string>;
 
 const PACKAGE_JSON = JSON.parse(
   String(fs.readFileSync(path.join(process.cwd(), 'package.json'))),
 ) as {
-  devDependencies: Record<string, string>;
+  devDependencies?: Record<string, string>;
 };
 
 const NODEJS_VERSION_ERR_MSG = `You need to define ${JSON.stringify({

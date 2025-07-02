@@ -74,7 +74,7 @@ export = (requestedFilePath: string, options: ResolverOptions) => {
        */
       moduleDirectory: [],
     });
-  } catch (e) {
+  } catch (_e) {
     const defaultResolution = defaultResolver(requestedFilePath, options);
     // eslint-disable-next-line no-console -- Logging is on purpose here
     console.warn(

@@ -11,11 +11,11 @@ import { HELP_ACTION_TEXT } from '#extra-template-vars';
 // if wondering about the `#...` import see: https://nodejs.org/api/packages.html#subpath-imports
 import { printCheck, printContactHelp, printError } from '#helpers';
 
-type ParsedComponentElement = {
+interface ParsedComponentElement {
   ['@_name']?: string;
   ['#text']?: string;
   option?: Array<{ ['@_name']?: string }>;
-};
+}
 
 interface WorkspaceXml {
   project: {
@@ -115,9 +115,9 @@ const reconfigureWorkspaceVcsManagerComponent: ReconfigureFn = ({
   xmlStringifier,
 }) => {
   const currentVcsManagerConfigElementParsed =
-    (workspaceXmlParsed.project.component.find(
+    workspaceXmlParsed.project.component.find(
       (componentEl) => componentEl['@_name'] === 'VcsManagerConfiguration',
-    ) as ParsedComponentElement) || {
+    )! || {
       option: [],
     };
 
@@ -185,7 +185,7 @@ const reconfigureWorkspacePropertiesComponent: ReconfigureFn = ({
     workspaceXmlParsed.project.component.find(
       (componentEl) => componentEl['@_name'] === 'PropertiesComponent',
     )!['#text']!,
-  ) as { keyToString: { [key: string]: string } };
+  ) as { keyToString: Record<string, string> };
 
   const propertiesComponentRegex =
     /(<component\s+name="PropertiesComponent"\s*>)[\S\s]*?(<\/component>)/;

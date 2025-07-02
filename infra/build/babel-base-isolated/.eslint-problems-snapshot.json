@@ -1,0 +1,9 @@
+{
+  "src/babel.config.generator.ts": [
+    {
+      "count": 1,
+      "issueType": "@typescript-eslint/no-unnecessary-type-parameters"
+    },
+    { "count": 2, "issueType": "@typescript-eslint/naming-convention" }
+  ]
+}

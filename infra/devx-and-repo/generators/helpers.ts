@@ -13,7 +13,7 @@ import {
   REPO_DIR_BY_PKG_TYPE,
 } from './extra-template-vars';
 
-// eslint-disable-next-line @typescript-eslint/naming-convention -- Mimicking a constant on purpose
+// eslint-disable-next-line @typescript-eslint/naming-convention -- Mimicking constant
 let REPO_ROOT_DIR: string;
 export const getRepoRootDir = async () => {
   if (!REPO_ROOT_DIR) {
@@ -34,7 +34,8 @@ export const getDestinationByType = ({
   const baseDir = REPO_DIR_BY_PKG_TYPE[type];
   return path.resolve(
     REPO_ROOT_DIR,
-    `${typeof baseDir === 'string' ? baseDir : baseDir[subtype as InfraToolSubtype]}/${name}`,
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- We know subtype is defined
+    `${typeof baseDir === 'string' ? baseDir : baseDir[subtype!]}/${name}`,
   );
 };
 

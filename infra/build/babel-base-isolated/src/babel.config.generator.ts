@@ -8,9 +8,9 @@ import {
 
 import { NodeEnv, RuntimeEnv, SUPPORTED_WEB_BROWSERS } from '@repo/environment';
 
-type BabelConfigGeneratorCoreJsResolutionFixOnly = {
+interface BabelConfigGeneratorCoreJsResolutionFixOnly {
   coreJsResolutionFixOnly: true;
-};
+}
 
 export type BabelConfigGeneratorOptions =
   | BabelConfigGeneratorCoreJsResolutionFixOnly
@@ -89,7 +89,8 @@ export const getBabelConfig = (
                  * If we don't explicitly set corejs version, babel defaults to
                  * older nested dependency version
                  */
-                // eslint-disable-next-line @typescript-eslint/no-var-requires -- We need require() so that this is inlined
+
+                // eslint-disable-next-line @typescript-eslint/no-require-imports -- We need require() so that this is inlined
                 corejs: (require('core-js/package.json') as { version: string })
                   .version,
               },
@@ -173,7 +174,9 @@ export const getBabelConfig = (
  * @see https://github.com/babel/babel/issues/10379
  * @see https://github.com/babel/babel/issues/10142
  */
-type BabelNodeSourceAbstract = { value: string };
+interface BabelNodeSourceAbstract {
+  value: string;
+}
 const PATH_TO_CORE_JS_IN_THIS_PACKAGE = path.dirname(
   require.resolve('core-js'),
 );

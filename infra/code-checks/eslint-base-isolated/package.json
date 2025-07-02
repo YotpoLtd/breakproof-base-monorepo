@@ -36,7 +36,7 @@
     "@yotpo-common/shared-linter-config": "workspace:^",
     "ajv": "^8.17.1",
     "ajv-errors": "^3.0.0",
-    "eslint": "9.27.0",
+    "eslint": "9.30.1",
     "eslint-plugin-json-schema-validator": "5.4.0",
     "eslint-plugin-jsonc": "2.20.1",
     "prettier": "^3.4.2"

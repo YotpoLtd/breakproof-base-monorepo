@@ -1,0 +1,5 @@
+{
+  "src/lit-analyzer-ouput-parser.ts": [
+    { "count": 3, "issueType": "@typescript-eslint/no-unsafe-enum-comparison" }
+  ]
+}

@@ -21,7 +21,7 @@ export const params = async ({
    */
   await refreshPackages();
   const name =
-    (cliArgs.name && String(cliArgs.name)) ||
+    (cliArgs.name && String(cliArgs.name)) ??
     (await prompts.autocomplete({
       message: 'Which package you want to add release to?',
       choices: (await getPackages()).map((pkg) => pkg.manifest.name),
@@ -40,7 +40,7 @@ export const params = async ({
         });
 
   const releaseFiles =
-    cliArgs.releaseFiles ||
+    cliArgs.releaseFiles ??
     (await prompts.multiselect({
       message: 'What part of the package contents are you planning to release?',
       choices: ['dist', 'lib', 'README.md'],

@@ -147,7 +147,7 @@
    * This is achieved with a little bit of customization in .pnpmfile.cjs
    */
   codeEditorIntegrationDependencies: {
-    eslint: '9.27.0',
+    eslint: '9.30.1',
     prettier: '3.4.2',
   },
 

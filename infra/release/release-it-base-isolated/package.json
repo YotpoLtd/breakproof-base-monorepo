@@ -41,7 +41,7 @@
     "dev:with-deps": "pnpm --filter='{.}^...' build && pnpm --filter='{.}...' run --parallel '/^dev:(watch|serve)$/'",
     "build": "pnpm run transpile",
     "dev:watch": "pnpm run transpile --watch",
-    "release:perform": "cd $PACKAGE_DIR && release-it",
+    "release:perform": "cd $INIT_CWD && release-it",
     "release:conventional-commit:get-new-version": "cd $PACKAGE_DIR && VERSION_OUTPUT=$(pnpm run '/^release(:mfe:tag|:app:tag)?$/' --release-version --no-npm --no-github --no-git.push --no-preRelease) && ! (echo $VERSION_OUTPUT | grep -q 'No new version to release') && pnpm run '/^release(:mfe:tag|:app:tag)?$/' --release-version --no-github --no-git.push | grep -v 'Unable to verify if user' | grep -v 'Assuming new package'"
   },
   "dependencies": {
