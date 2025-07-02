@@ -15,9 +15,16 @@ export const getCodeEditorTypescriptEslintConfig = (
       parserOptions: {
         project: './tsconfig?(.!(*problems-snapshot*)).json',
         tsconfigRootDir,
+        projectService: {
+          /**
+           * Prevents language server from including .js files by default,
+           * which would make TypeScript checks loose and inconsistent between CLI & language server in code editors.
+           */
+          allowDefaultProject: [],
+        },
       },
-      // // not every year / version is present:
-      // // https://github.com/eslint/eslint/issues/15580#issuecomment-1030878719
+      // not every year / version is present:
+      // https://github.com/eslint/eslint/issues/15580#issuecomment-1030878719
       // ecmaVersion: 2018,
       sourceType: 'module',
     },

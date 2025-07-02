@@ -3,7 +3,6 @@ import * as path from 'node:path';
 import { FlatCompat } from '@eslint/eslintrc';
 import js from '@eslint/js';
 import { ESLint, Linter } from 'eslint';
-// @ts-expect-error package has no types
 import * as eslintImportPlugin from 'eslint-plugin-import';
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 // @ts-expect-error missing types
@@ -25,6 +24,7 @@ const sharedConfig: Linter.RulesRecord = {
   'no-unused-vars': [
     'error',
     {
+      caughtErrorsIgnorePattern: '^_',
       argsIgnorePattern: '^_',
       varsIgnorePattern: '^_',
       ignoreRestSiblings: true,
