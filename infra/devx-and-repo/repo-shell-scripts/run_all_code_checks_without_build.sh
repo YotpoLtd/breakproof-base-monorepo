@@ -4,6 +4,12 @@ set -x
 # fail if any commands fail
 set -e
 
+# Ensures scripts fail in the pipeline if any command in it fails — not just the last one.
+# Example: `false | true` will fail, but previously it would have succeeded.
+# This is necessary due to finding out that the `tee` command in this file
+# was still executing even if the commands before it failed.
+set -o pipefail
+
 if [ -z "$TEST_SCRIPT_NAME" ]; then
   echo "Please set the TEST_SCRIPT_NAME environment variable before running this script"
   exit 1
