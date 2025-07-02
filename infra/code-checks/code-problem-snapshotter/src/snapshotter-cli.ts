@@ -42,7 +42,8 @@ export const runSnapshotterCli = (
   snapshotFilename: string,
 ) => {
   // GET THE FIRST CLI ARGUMENT
-  // eslint-disable-next-line @typescript-eslint/naming-convention -- This is almost module-level
+
+  // eslint-disable-next-line @typescript-eslint/naming-convention -- Mimicking module-level constant
   const FIRST_USER_CLI_ARGUMENT = process.argv[2];
 
   // READ ENTIRE STDIN & START SCRIPT
@@ -52,22 +53,22 @@ export const runSnapshotterCli = (
   });
 
   process.stdin.on('end', () => {
-    // eslint-disable-next-line @typescript-eslint/naming-convention -- This is almost module-level
+    // eslint-disable-next-line @typescript-eslint/naming-convention -- Mimicking module-level constant
     const CURRENT_CODE_PROBLEMS = codeCheckerCliOutputParser(
       cleanInput(pipedInput),
     );
 
+    const knownProblemsSnapshot = getKnownProblemsSnapshot(snapshotFilename);
+
     switch (FIRST_USER_CLI_ARGUMENT) {
       case 'check-new-problems': {
-        const knownProblemsSnapshot =
-          getKnownProblemsSnapshot(snapshotFilename);
         const onlyNewProblemsSnapshot = getOnlyNewProblemsSnapshot(
           knownProblemsSnapshot,
           CURRENT_CODE_PROBLEMS,
         );
 
         if (Object.keys(onlyNewProblemsSnapshot).length > 0) {
-          printNewProblems(
+          void printNewProblems(
             knownProblemsSnapshot,
             onlyNewProblemsSnapshot,
             CURRENT_CODE_PROBLEMS,
@@ -82,10 +83,15 @@ export const runSnapshotterCli = (
         break;
       }
       case 'remember-existing-problems': {
-        void writeSnapshot(
-          getSnapshotFromCodeProblems(CURRENT_CODE_PROBLEMS),
-          snapshotFilename,
+        const currentProblemsSnapshot = getSnapshotFromCodeProblems(
+          CURRENT_CODE_PROBLEMS,
         );
+        if (
+          Object.keys(currentProblemsSnapshot).length > 0 ||
+          Object.keys(knownProblemsSnapshot).length > 0
+        ) {
+          void writeSnapshot(currentProblemsSnapshot, snapshotFilename);
+        }
         break;
       }
     }
