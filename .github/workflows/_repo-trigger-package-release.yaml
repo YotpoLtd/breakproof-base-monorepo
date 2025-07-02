@@ -11,7 +11,9 @@ on:
           Name of the branch, tag or SHA hash you want to trigger a release
           from. Default value will derive new version from git commits. Anything
           different from the default value will trigger a snapshot release.
-        default: ${{ github.event.repository.default_branch }}
+        # Ideally this is set to ${{ github.event.repository.default_branch }}
+        # but GitHub does not support it in default values
+        default: main
         required: false
         type: string
 

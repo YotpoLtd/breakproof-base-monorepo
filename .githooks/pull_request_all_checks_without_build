@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
+# output detailed info on what is being executed
 set -x
+# fail if any commands fail
+set -e
 
 #;
 #
