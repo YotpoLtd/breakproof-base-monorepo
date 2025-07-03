@@ -266,6 +266,11 @@
           '@types/fs-extra': '*',
         },
       },
+      '@eslint/eslintrc': {
+        peerDependencies: {
+          eslint: '*',
+        },
+      },
     },
     patchedDependencies: {
       /**

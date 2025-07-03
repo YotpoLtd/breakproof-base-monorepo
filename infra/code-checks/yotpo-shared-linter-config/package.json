@@ -51,7 +51,6 @@
   "devDependencies": {
     "@repo/circular-dependency-workaround": "workspace:^",
     "@repo/typescript-base-isolated": "workspace:^",
-    "@types/eslint": "9.6.1",
     "@types/lint-staged": "^13.3.0",
     "eslint": "9.30.1",
     "prettier": "^3.4.2",
