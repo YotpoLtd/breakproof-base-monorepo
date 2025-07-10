@@ -14,8 +14,13 @@
       "ts-skipLib-workaround": "./lib/release-it.base.js",
       "default": "./release-it.base.ts"
     },
+    "./tag-only": {
+      "types": "./lib/release-it.base.tag-only.d.ts",
+      "ts-skipLib-workaround": "./lib/release-it.base.tag-only.js",
+      "default": "./release-it.base.tag-only.ts"
+    },
     "./angular": {
-      "types": "./lib/release-it.angular.d.ts",
+      "types": "./lib/release-it.base.angular.d.ts",
       "ts-skipLib-workaround": "./lib/release-it.base.angular.js",
       "default": "./release-it.base.angular.ts"
     },
@@ -37,7 +42,7 @@
     "build": "pnpm run transpile",
     "dev:watch": "pnpm run transpile --watch",
     "release:perform": "cd $PACKAGE_DIR && release-it",
-    "release:conventional-commit:get-new-version": "cd $PACKAGE_DIR && VERSION_OUTPUT=$(pnpm run '/^release(:mfe:tag)?$/' --release-version --no-npm --no-github --no-git.push --no-preRelease) && ! (echo $VERSION_OUTPUT | grep -q 'No new version to release') && pnpm run '/^release(:mfe:tag)?$/' --release-version --no-github --no-git.push | grep -v 'Unable to verify if user' | grep -v 'Assuming new package'"
+    "release:conventional-commit:get-new-version": "cd $PACKAGE_DIR && VERSION_OUTPUT=$(pnpm run '/^release(:mfe:tag|:app:tag)?$/' --release-version --no-npm --no-github --no-git.push --no-preRelease) && ! (echo $VERSION_OUTPUT | grep -q 'No new version to release') && pnpm run '/^release(:mfe:tag|:app:tag)?$/' --release-version --no-github --no-git.push | grep -v 'Unable to verify if user' | grep -v 'Assuming new package'"
   },
   "dependencies": {
     "@release-it/conventional-changelog": "^8",

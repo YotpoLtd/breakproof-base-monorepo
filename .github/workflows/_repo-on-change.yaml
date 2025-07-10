@@ -256,6 +256,9 @@ jobs:
     outputs:
       # List of packages with upcoming new releases in the format: `<package name>@<version> ...`
       list: ${{ steps.releases.outputs.list }}
+      # List of packages with upcoming new releases in the format: ["<NAME A>", "<NAME B>", ...]
+      list-as-names-only-json:
+        ${{ steps.releases.outputs.list-as-names-only-json }}
     permissions:
       pull-requests: write
     steps:
@@ -370,7 +373,7 @@ jobs:
           echo "$AFFECTED_PACKAGES_LIST_JSON" | jq -r --arg pwd "$PWD" '.[] | " - **\(.name)** — \(.path | sub("^" + $pwd + "/"; ""))"' >> "$GITHUB_STEP_SUMMARY"
 
           # shellcheck disable=2086
-          echo -n packages-with-potentially-affected-build=$AFFECTED_PACKAGES_LIST_NO_NEW_LINES >> "$GITHUB_OUTPUT"
+          echo packages-with-potentially-affected-build=$AFFECTED_PACKAGES_LIST_NO_NEW_LINES >> "$GITHUB_OUTPUT"
 
   #
   # Verify the affected packages in the PR pass tests executed in the `test:github-pr` script defined in `pockage.json`
@@ -407,7 +410,7 @@ jobs:
           Build changed packages, their dependencies and any other that directly
           or indirectly use them
         run: |
-          pnpm --filter='[${{ needs.basics.outputs.git-diff-base }}]...' run build
+          pnpm --filter='...[${{ needs.basics.outputs.git-diff-base }}]...' run build
 
       - name:
           Run unit tests for changed packages and anything that directly or
@@ -528,6 +531,65 @@ jobs:
             exit 1
           fi
           pnpm --filter='${{ matrix.package }}' run test:e2e:github-pr:cypress
+
+  #
+  # Mark this job as complete but dispatch other separate project-specific workflows
+  # This is to prevent cancelling the deployment when this workflow is cancelled
+  #
+  dispatch-separate-deployment-for-each-project:
+    # even if e2e tests are skipped, we still want to dispatch the deployment workflow
+    # currently e2e tests only run on PRs, not on merge to master, but we want to be future-proof
+    needs: [upcoming-releases, test-e2e-cypress]
+    if: |-
+      always() &&
+      github.event_name == 'push' &&
+      needs.upcoming-releases.result == 'success' &&
+      (needs.test-e2e-cypress.result == 'success' || needs.test-e2e-cypress.result == 'skipped')
+    strategy:
+      fail-fast: false
+      matrix:
+        package: ${{fromJSON(needs.upcoming-releases.outputs.list-as-names-only-json)}}
+    runs-on: ubuntu-latest
+    env:
+      NO_DEPLOY_TAG: '${{ matrix.package }}@NO_AUTO_DEPLOY'
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          fetch-tags: true
+
+      - name: Check if deployment is blocked by NO_DEPLOY tag
+        id: check-no-deploy
+        run: |
+          echo "Checking for NO_DEPLOY tag: ${{ env.NO_DEPLOY_TAG }}"
+
+          if git tag --list "${{ env.NO_DEPLOY_TAG }}" | grep -q "${{ env.NO_DEPLOY_TAG }}"; then
+            echo "🚫 Deployment blocked for ${{ matrix.package }} - NO_DEPLOY tag exists: ${{ env.NO_DEPLOY_TAG }}"
+            echo "should-deploy=false" >> $GITHUB_OUTPUT
+          else
+            echo "✅ Deployment allowed for ${{ matrix.package }} - no NO_DEPLOY tag found"
+            echo "should-deploy=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Dispatch deployment workflow
+        if: steps.check-no-deploy.outputs.should-deploy == 'true'
+        uses: the-actions-org/workflow-dispatch@v4
+        with:
+          workflow: _repo-deploy-single-project-on-push.yaml
+          inputs: |-
+            {
+              "package-name": "${{ matrix.package }}",
+              "git-ref": "${{ github.ref_name }}"
+            }
+          token: ${{ github.token }}
+          wait-for-completion: false
+          display-workflow-run-url-interval: 10s
+
+      - name: Skip deployment (NO_DEPLOY tag exists)
+        if: steps.check-no-deploy.outputs.should-deploy == 'false'
+        run: |
+          echo "🚫 Skipping deployment for ${{ matrix.package }} due to NO_DEPLOY tag"
+          echo "To re-enable deployments, remove the tag: ${{ env.NO_DEPLOY_TAG }}"
 
   #
   # Verify the PR matches the repository conventions

@@ -1,0 +1,126 @@
+name: Pause, resume, or check automatic deployment status of individual project
+on:
+  workflow_dispatch:
+    inputs:
+      type:
+        description: Type of deployment control to perform
+        type: choice
+        options:
+          - pause
+          - resume
+          - check
+        required: true
+      package-name:
+        description:
+          Name of package to be deployed, as written in its `package.json`
+        type: string
+        required: true
+  workflow_call:
+    inputs:
+      type:
+        description: Type of deployment control to perform
+        type: string
+        required: true
+      package-name:
+        description:
+          Name of package to be deployed, as written in its `package.json`
+        type: string
+        required: true
+    outputs:
+      is-paused:
+        description: Whether automatic deployments are currently paused
+        value: ${{ jobs.control-deployment.outputs.is-paused }}
+
+env:
+  GIT_BOT_EMAIL: system@yotpo.com
+  GIT_BOT_NAME: SystemYotpo
+
+jobs:
+  control-deployment:
+    runs-on: ubuntu-latest
+    env:
+      NO_DEPLOY_TAG: '${{ inputs.package-name }}@NO_AUTO_DEPLOY'
+    outputs:
+      is-paused: ${{ steps.check-status.outputs.is-paused }}
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          fetch-tags: true
+          token: ${{ secrets.AUTORELEASE_GITHUB_TOKEN }}
+
+      - id: check-status
+        run: |
+          if git tag --list '${{ env.NO_DEPLOY_TAG }}' | grep -q '${{ env.NO_DEPLOY_TAG }}'; then
+            echo 'is-paused=true' >> $GITHUB_OUTPUT
+          else
+            echo 'is-paused=false' >> $GITHUB_OUTPUT
+          fi
+
+      - name: Pause automatic deployments
+        if:
+          ${{ inputs.type == 'pause' && steps.check-status.outputs.is-paused ==
+          'false' }}
+        run: |
+          TIMESTAMP=$(date -u +%Y%m%d-%H%M%S)
+
+          echo '### 🚫 Pausing Automatic Deployments' >> $GITHUB_STEP_SUMMARY
+          echo 'Creating NO_AUTO_DEPLOY tag: `${{ env.NO_DEPLOY_TAG }}`' >> $GITHUB_STEP_SUMMARY
+          echo "Timestamp: `$TIMESTAMP`" >> $GITHUB_STEP_SUMMARY
+          echo '' >> $GITHUB_STEP_SUMMARY
+
+          git config --local user.email '${{ env.GIT_BOT_EMAIL }}'
+          git config --local user.name '${{ env.GIT_BOT_NAME }}'
+          git tag '${{ env.NO_DEPLOY_TAG }}' -m "Pause automatic deployments for ${{ inputs.package-name }} at $TIMESTAMP"
+          git push origin '${{ env.NO_DEPLOY_TAG }}'
+
+          echo '✅ **Automatic Deployments PAUSED** for `${{ inputs.package-name }}`' >> $GITHUB_STEP_SUMMARY
+          echo 'Tag created: `${{ env.NO_DEPLOY_TAG }}`' >> $GITHUB_STEP_SUMMARY
+
+      - name: Resume automatic deployments
+        if:
+          ${{ inputs.type == 'resume' && steps.check-status.outputs.is-paused ==
+          'true' }}
+        run: |
+          echo '### ✅ Resuming Automatic Deployments' >> $GITHUB_STEP_SUMMARY
+          echo 'Removing NO_AUTO_DEPLOY tag: `${{ env.NO_DEPLOY_TAG }}`' >> $GITHUB_STEP_SUMMARY
+          echo '' >> $GITHUB_STEP_SUMMARY
+
+          if git ls-remote --tags origin '${{ env.NO_DEPLOY_TAG }}' | grep -q '${{ env.NO_DEPLOY_TAG }}'; then
+            git push origin --delete '${{ env.NO_DEPLOY_TAG }}'
+            echo '✅ **Automatic Deployments RESUMED** for `${{ inputs.package-name }}`' >> $GITHUB_STEP_SUMMARY
+            echo 'Tag removed: `${{ env.NO_DEPLOY_TAG }}`' >> $GITHUB_STEP_SUMMARY
+          else
+            echo 'ℹ️ No NO_AUTO_DEPLOY tag found for `${{ inputs.package-name }}`' >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Already paused (automatic deployments)
+        if:
+          ${{ inputs.type == 'pause' && steps.check-status.outputs.is-paused ==
+          'true' }}
+        run: |
+          echo '### ℹ️ Already Paused' >> $GITHUB_STEP_SUMMARY
+          echo 'ℹ️ Automatic Deployments are already **PAUSED** for `${{ inputs.package-name }}`' >> $GITHUB_STEP_SUMMARY
+          echo 'NO_AUTO_DEPLOY tag already exists' >> $GITHUB_STEP_SUMMARY
+
+      - name: Already active (automatic deployments)
+        if:
+          ${{ inputs.type == 'resume' && steps.check-status.outputs.is-paused ==
+          'false' }}
+        run: |
+          echo '### ℹ️ Already Active' >> $GITHUB_STEP_SUMMARY
+          echo 'ℹ️ Automatic Deployments are already **ACTIVE** for `${{ inputs.package-name }}`' >> $GITHUB_STEP_SUMMARY
+          echo 'No NO_AUTO_DEPLOY tag found' >> $GITHUB_STEP_SUMMARY
+
+      - name: Show automatic deployment status
+        if: ${{ inputs.type == 'check' }}
+        run: |
+          echo '### 📊 Current Automatic Deployment Status' >> $GITHUB_STEP_SUMMARY
+
+          if [ '${{ steps.check-status.outputs.is-paused }}' == 'true' ]; then
+            echo '🚫 **Automatic Deployments are PAUSED** for `${{ inputs.package-name }}`' >> $GITHUB_STEP_SUMMARY
+            echo 'To resume, run this workflow with `type: resume`' >> $GITHUB_STEP_SUMMARY
+          else
+            echo '✅ **Automatic Deployments are ACTIVE** for `${{ inputs.package-name }}`' >> $GITHUB_STEP_SUMMARY
+            echo 'To pause, run this workflow with `type: pause`' >> $GITHUB_STEP_SUMMARY
+          fi
