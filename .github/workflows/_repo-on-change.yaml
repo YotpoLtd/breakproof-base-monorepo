@@ -544,7 +544,8 @@ jobs:
       always() &&
       github.event_name == 'push' &&
       needs.upcoming-releases.result == 'success' &&
-      (needs.test-e2e-cypress.result == 'success' || needs.test-e2e-cypress.result == 'skipped')
+      (needs.test-e2e-cypress.result == 'success' || needs.test-e2e-cypress.result == 'skipped') &&
+      needs.upcoming-releases.outputs.list != ''
     strategy:
       fail-fast: false
       matrix:
