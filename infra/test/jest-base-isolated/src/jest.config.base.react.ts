@@ -1,6 +1,8 @@
 import * as path from 'node:path';
 
-import jestBaseConfig from './jest.config.base';
+import jestBaseConfig, {
+  JEST_BABEL_TRANSFORM_FILE_PATTERN,
+} from './jest.config.base';
 import { JestConfig } from './jest.types';
 
 /*
@@ -18,6 +20,16 @@ const config: JestConfig = {
      * to React components
      */
     '\\.svg': path.join(__dirname, '__mocks__/mockFileAsDivString'),
+  },
+  transform: {
+    ...jestBaseConfig.transform,
+    [JEST_BABEL_TRANSFORM_FILE_PATTERN]: [
+      jestBaseConfig.transform[JEST_BABEL_TRANSFORM_FILE_PATTERN][0],
+      /**
+       * Those can be any Babel options: https://babeljs.io/docs/options
+       */
+      { configFile: require.resolve('./babel.jest.config.react') },
+    ],
   },
 };
 

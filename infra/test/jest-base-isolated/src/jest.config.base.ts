@@ -6,11 +6,13 @@ import { JestConfig } from './jest.types';
 
 const CURRENT_WORKING_DIR = process.cwd();
 
+export const JEST_BABEL_TRANSFORM_FILE_PATTERN = '\\.[jt]sx?$';
+
 /*
  * For a detailed explanation regarding each configuration property and type check, visit:
  * https://jestjs.io/docs/configuration
  */
-const config: JestConfig = {
+const config = {
   rootDir: CURRENT_WORKING_DIR,
   resolver: path.join(__dirname, 'jest.resolver.js'),
   // The test environment that will be used for testing
@@ -45,7 +47,7 @@ const config: JestConfig = {
   },
   // A map from regular expressions to transformers
   transform: {
-    '\\.[jt]sx?$': [
+    [JEST_BABEL_TRANSFORM_FILE_PATTERN]: [
       /**
        * We don't have babel-jest installed here since it will require other
        * babel stuff as peer dependencies, so we isolate it in
@@ -63,6 +65,6 @@ const config: JestConfig = {
       { configFile: require.resolve('./babel.jest.config') },
     ],
   },
-};
+} as const satisfies JestConfig;
 
 export default config;
