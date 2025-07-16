@@ -36,8 +36,15 @@ env:
   GIT_BOT_NAME: SystemYotpo
 
 jobs:
+  ensure-admin-user-or-workflow-call:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/ensure-admin-user-or-workflow-call
+
   control-deployment:
     runs-on: ubuntu-latest
+    needs: [ensure-admin-user-or-workflow-call]
     env:
       NO_DEPLOY_TAG: '${{ inputs.package-name }}@NO_AUTO_DEPLOY'
     outputs:

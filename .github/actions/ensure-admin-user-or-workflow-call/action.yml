@@ -1,0 +1,47 @@
+name: Ensure Admin User or Workflow Call
+description:
+  Validates that the user has admin permissions, skips validation for
+  workflow_call
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Check if user is authorized if not triggered by 'workflow_call'
+      shell: bash
+      run: |
+        # Skip user validation if workflow was called by another workflow
+        if [ '${{ github.event_name }}' = 'workflow_call' ]; then
+          echo '## 🤖 Workflow Authorization' >> $GITHUB_STEP_SUMMARY
+          echo 'Workflow triggered via `workflow_call` - skipping user validation' >> $GITHUB_STEP_SUMMARY
+          echo '' >> $GITHUB_STEP_SUMMARY
+          exit 0
+        fi
+
+        # For workflow_dispatch, validate the user has admin permissions
+        echo '## 👤 User Authorization Check' >> $GITHUB_STEP_SUMMARY
+        echo 'Workflow triggered via `workflow_dispatch` - checking if user **${{ github.actor }}** has admin permissions' >> $GITHUB_STEP_SUMMARY
+        echo '' >> $GITHUB_STEP_SUMMARY
+
+        # Check user's repository permissions using GitHub API
+        PERMISSION_RESPONSE=$(curl -s -H 'Authorization: token ${{ github.token }}' \
+          -H 'Accept: application/vnd.github.v3+json' \
+          'https://api.github.com/repos/${{ github.repository }}/collaborators/${{ github.actor }}/permission')
+
+        # Extract permission level from response
+        PERMISSION_LEVEL=$(echo "$PERMISSION_RESPONSE" | jq -r '.permission // "none"')
+
+        echo '**User:** ${{ github.actor }}' >> $GITHUB_STEP_SUMMARY
+        echo "**Permission Level:** \`$PERMISSION_LEVEL\`" >> $GITHUB_STEP_SUMMARY
+        echo '' >> $GITHUB_STEP_SUMMARY
+
+        # Check if user has admin permissions
+        if [ "$PERMISSION_LEVEL" = 'admin' ]; then
+          echo '### ✅ Authorization Successful' >> $GITHUB_STEP_SUMMARY
+          echo 'User **${{ github.actor }}** has admin permissions and is authorized to run deployments' >> $GITHUB_STEP_SUMMARY
+        else
+          echo '### ❌ Authorization Failed' >> $GITHUB_STEP_SUMMARY
+          echo "User **${{ github.actor }}** does not have admin permissions (current: \`$PERMISSION_LEVEL\`)" >> $GITHUB_STEP_SUMMARY
+          echo '' >> $GITHUB_STEP_SUMMARY
+          echo '**Note:** Only repository administrators can run deployment workflows' >> $GITHUB_STEP_SUMMARY
+          exit 1
+        fi

@@ -33,9 +33,16 @@ env:
   SECRET_SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
 
 jobs:
+  ensure-admin-user-or-workflow-call:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/ensure-admin-user-or-workflow-call
+
   example:
     if: ${{ inputs.package-name == '@example/example-project-name' }}
     runs-on: ubuntu-latest
+    needs: [ensure-admin-user-or-workflow-call]
     env:
       SLACK_CHANNEL: name-of-slack-channel-that-will-get-deployment-notifications
     steps:
