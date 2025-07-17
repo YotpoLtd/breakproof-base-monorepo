@@ -10,9 +10,9 @@ runs:
       shell: bash
       run: |
         # Skip user validation if workflow was called by another workflow
-        if [ '${{ github.event_name }}' = 'workflow_call' ]; then
-          echo '## 🤖 Workflow Authorization' >> $GITHUB_STEP_SUMMARY
-          echo 'Workflow triggered via `workflow_call` - skipping user validation' >> $GITHUB_STEP_SUMMARY
+        if [ '${{ github.event_name }}' = 'workflow_call' ] || [ "${{ github.actor }}" = "github-actions[bot]" ]; then
+          echo '## 🤖 Automated Authorization' >> $GITHUB_STEP_SUMMARY
+          echo 'Workflow triggered by another workflow - skipping user validation' >> $GITHUB_STEP_SUMMARY
           echo '' >> $GITHUB_STEP_SUMMARY
           exit 0
         fi
