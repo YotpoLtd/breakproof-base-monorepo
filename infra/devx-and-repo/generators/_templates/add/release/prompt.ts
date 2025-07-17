@@ -1,23 +1,20 @@
-/**
- * @type {{[name: string]: typeof import('enquirer').prompt} }}
- */
+/** @type {{ [name: string]: typeof import('enquirer').prompt }} } */
 import prompts from 'enquirer';
 
 // if wondering about the `#...` import see: https://nodejs.org/api/packages.html#subpath-imports
 import { getPackages, refreshPackages } from '#extra-template-vars';
 import * as sharedPrompts from '#shared-prompts';
 
-/**
- * @see For list of built-in types: https://github.com/enquirer/enquirer/tree/master/lib/prompts
- */
+/** @see For list of built-in types: https://github.com/enquirer/enquirer/tree/master/lib/prompts */
 export const params = async ({
   args: cliArgs,
 }: {
   args: Record<string, string | boolean>;
 }) => {
   /**
-   * Calling refreshPackages explicitly since this generator can be invoked with all
-   * arguments already provided so `getPackages` will never be called and calculated
+   * Calling refreshPackages explicitly since this generator can be invoked with
+   * all arguments already provided so `getPackages` will never be called and
+   * calculated
    */
   await refreshPackages();
   const name =

@@ -50,9 +50,7 @@ export const stringifyArguments = (parsedArgs: Record<string, unknown>) => {
 
 // eslint-disable-next-line no-console -- Aliasing console to another function for semantic usage
 export const printToTerminal = console.log.bind(console);
-/**
- * Helper to output progress info
- */
+/** Helper to output progress info */
 export const printCheck = (checkDescription: string) =>
   printToTerminal(
     chalk.blue(
@@ -62,9 +60,7 @@ export const printCheck = (checkDescription: string) =>
     ),
   );
 
-/**
- * Helper to output error info
- */
+/** Helper to output error info */
 export const printError = (err: string, prefix = 'PACKAGE PROBLEM') => {
   printToTerminal(`
 ${chalk.bgRed(chalk.whiteBright(` ${prefix}: `))} ${chalk.red(err)}`);

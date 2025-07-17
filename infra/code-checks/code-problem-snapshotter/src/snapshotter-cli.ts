@@ -20,9 +20,7 @@ const cliOptions = nopt(CLI_OPTIONS_CONFIG);
 export const getSnapshotFilename = (snapshotSnapshotFilename: string): string =>
   (cliOptions['snapshot-filename'] as string) || snapshotSnapshotFilename;
 
-/**
- * Works around: https://github.com/pnpm/pnpm/issues/9563
- */
+/** Works around: https://github.com/pnpm/pnpm/issues/9563 */
 const cleanInput = (inputString: string) =>
   inputString
     .split('\n')
@@ -33,7 +31,8 @@ const cleanInput = (inputString: string) =>
     .join('\n');
 
 /**
- * The main job of this package is to provide reusable CLI functionality to others.
+ * The main job of this package is to provide reusable CLI functionality to
+ * others.
  *
  * This is the function that does that.
  */

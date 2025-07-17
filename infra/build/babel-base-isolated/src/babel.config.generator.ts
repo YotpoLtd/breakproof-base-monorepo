@@ -16,17 +16,11 @@ export type BabelConfigGeneratorOptions =
   | BabelConfigGeneratorCoreJsResolutionFixOnly
   | {
       mode: NodeEnv;
-      /**
-       * Are you going to use Lit?
-       */
+      /** Are you going to use Lit? */
       lit?: boolean;
-      /**
-       * Are you going to use React?
-       */
+      /** Are you going to use React? */
       react?: boolean;
-      /**
-       * Are you going to use styled-components?
-       */
+      /** Are you going to use styled-components? */
       reactStyledComponents?: boolean;
       /**
        * Stops automatic import of core-js polyfills. Useful when analyzing the
@@ -38,9 +32,7 @@ export type BabelConfigGeneratorOptions =
        * babel-base-isolated/node_modules
        */
       coreJsResolutionFix?: boolean;
-      /**
-       * What runtime environment you want to transpile for?
-       */
+      /** What runtime environment you want to transpile for? */
       runtimeTarget?: RuntimeEnv;
     };
 
@@ -51,9 +43,7 @@ const isCoreJsResolutionFixOnly = (
 ): options is BabelConfigGeneratorCoreJsResolutionFixOnly =>
   'coreJsResolutionFixOnly' in options && options.coreJsResolutionFixOnly;
 
-/**
- * Get sensible babel config based on a minimal set of input
- */
+/** Get sensible babel config based on a minimal set of input */
 export const getBabelConfig = (
   options: BabelConfigGeneratorOptions,
 ): SupportedBabelOptions => ({
@@ -71,9 +61,7 @@ export const getBabelConfig = (
     : {
         presets: (
           [
-            /**
-             * @see see the jsdoc of resolveCoreJsToCurrentDir
-             */
+            /** @see see the jsdoc of resolveCoreJsToCurrentDir */
             options.coreJsResolutionFix !== false && {
               plugins: [resolveCoreJsToCurrentDirPlugin],
             },
@@ -139,9 +127,7 @@ export const getBabelConfig = (
               ],
             ],
           },
-          /**
-           * TEMPORARILY NEEDED UNTIL WE REMOVE ANGULAR-specific DEPENDENCIES
-           */
+          /** TEMPORARILY NEEDED UNTIL WE REMOVE ANGULAR-specific DEPENDENCIES */
           {
             test: /\.ts$/,
             plugins: [

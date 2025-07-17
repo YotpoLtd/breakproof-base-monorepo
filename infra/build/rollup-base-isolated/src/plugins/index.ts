@@ -12,8 +12,8 @@ export { default as resolve } from '@rollup/plugin-node-resolve';
 /**
  * Fixes over the official `@rollup/plugin-typescript`:
  *
- * 1. has problems with type definition so we cast-to-fix
- * 2. official plugin does not use the TS from the package by default
+ * 1. Has problems with type definition so we cast-to-fix
+ * 2. Official plugin does not use the TS from the package by default
  *
  * @see https://github.com/rollup/plugins/issues/1662
  */

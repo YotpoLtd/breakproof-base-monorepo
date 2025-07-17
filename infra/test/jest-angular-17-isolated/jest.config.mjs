@@ -9,8 +9,9 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectSpecificJestSetup = path.join(process.cwd(), 'jest.setup.ts');
 
 /**
- * The Jest configuration object, defining how Jest should run tests in the project.
- * This configuration is referring to tests written in `*.spec.ts` files in the `/src` directory.
+ * The Jest configuration object, defining how Jest should run tests in the
+ * project. This configuration is referring to tests written in `*.spec.ts`
+ * files in the `/src` directory.
  */
 /** @type {import('@repo/jest-base-isolated/jest.types').JestConfig} */
 const config = {

@@ -1,5 +1,6 @@
 /**
  * The schema is created using a few tools:
+ *
  * - @see https://jsonformatter.org/json-to-jsonschema
  * - @see LLM suggestions
  */
@@ -28,9 +29,7 @@ const NODEJS_VERSION_ERR_MSG = `You need to define ${JSON.stringify({
   },
 })}`;
 
-/**
- * Managed by FE infra team
- */
+/** Managed by FE infra team */
 const ALLOWED_PACKAGE_MANAGER = 'pnpm@9.15.9';
 
 export default {

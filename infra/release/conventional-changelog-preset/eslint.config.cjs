@@ -6,8 +6,8 @@ const {
   getCodeEditorTypescriptEslintConfig,
 } = require('@repo/eslint-base-isolated/eslint-config');
 /**
- * We don't want to install eslint locally since we execute eslint from @repo/eslint-base-isolated,
- * so we want to alias it
+ * We don't want to install eslint locally since we execute eslint from
+ * `@repo/eslint-base-isolated`, so we want to alias it
  */
 moduleAlias.addAliases({
   eslint: `${findRoot(require.resolve('@repo/eslint-base-isolated/package.json'))}/node_modules/eslint`,

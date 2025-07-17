@@ -27,9 +27,7 @@ moduleAlias.addAliases({
   ),
 });
 
-/**
- * There are not published types for the `babel-loader`
- */
+/** There are not published types for the `babel-loader` */
 interface BabelLoaderOptions extends SupportedBabelOptions {
   sourceMap: boolean;
   cacheDirectory: boolean;
@@ -73,22 +71,23 @@ export const getModuleRuleForSourceMapsInNodeModules = () => ({
 /**
  * This rule prevents errors like:
  *
- *   Module not found: Error: Can't resolve '<some import to package>'
- *   The request '<some import to package>' failed to resolve only because it was resolved as fully specified
+ * Module not found: Error: Can't resolve
+ * '<some import to package>' The request
+ * '<some import to package>' failed to resolve only because
+ * it was resolved as fully specified
  *
- * for packages in `node_modules`.
+ * For packages in `node_modules`.
  *
- * The error usually occurs when a package is an EcmaScript Module,
- * e.g. where the package.json contains `"type": "module"` but it hasn't
- * defined "exports" property.
+ * The error usually occurs when a package is an EcmaScript Module, e.g. where
+ * the package.json contains `"type": "module"` but it hasn't defined "exports"
+ * property.
  *
- * In such situation it's expected all imports from this module
- * to include the file extension. This is what fully specified means.
+ * In such situation it's expected all imports from this module to include the
+ * file extension. This is what fully specified means.
  *
- * In yotpo (but likely elsewhere as well) we have legacy packages that
- * don't follow this requirement and omit the file extensions, we need to
- * disable this expectation.
- *
+ * In yotpo (but likely elsewhere as well) we have legacy packages that don't
+ * follow this requirement and omit the file extensions, we need to disable this
+ * expectation.
  */
 export const getModuleRuleForESModulePackagesWithNoExports = () => ({
   test: /\.(js|cjs|mjs)$/,

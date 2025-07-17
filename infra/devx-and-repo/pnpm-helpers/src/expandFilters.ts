@@ -7,16 +7,17 @@ import {
 } from './filterPackagesExtended';
 
 /**
- * CLI script that accepts --filter='' arguments like `pnpm` and returns
- * an "expanded" version of them.
+ * CLI script that accepts --filter='' arguments like `pnpm` and returns an
+ * "expanded" version of them.
  *
- * @example Given a repo with 3 packages: a,b,c:
+ * @example
+ *   Given a repo with 3 packages: a,b,c:
  *
- * > $ pnpm node pnpm-expand-filters.mjs --filter='*'
- * > --filter='a' --filter='b' --filter='c'
+ *   > $ pnpm node pnpm-expand-filters.mjs --filter='*'
+ *   > --filter='a' --filter='b' --filter='c'
  *
- * > $ pnpm node pnpm-expand-filters.mjs --filter='*'  --filter='!c'
- * > --filter='a' --filter='b'
+ *   > $ pnpm node pnpm-expand-filters.mjs --filter='*'  --filter='!c'
+ *   > --filter='a' --filter='b'
  */
 
 const CLI_OPTIONS_CONFIG = {

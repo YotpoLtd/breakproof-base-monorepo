@@ -20,9 +20,7 @@ export = (requestedFilePath: string, options: ResolverOptions) => {
    * `resolve.exports`
    */
   const { conditions, defaultResolver, ...otherOptions } = options;
-  /**
-   * @see `paths` docs in https://www.npmjs.com/package/resolve
-   */
+  /** @see `paths` docs in https://www.npmjs.com/package/resolve */
   const modulePaths = (_: string, requestedFromFilePath: string) =>
     [
       // first, we prefer dependnecies from the package that we are testing
@@ -54,9 +52,9 @@ export = (requestedFilePath: string, options: ResolverOptions) => {
      * the requested module (act as node_modules).
      *
      * However, this is too loose and because we have multiple packages with
-     * different dependencies using the @repo/jest-base-isolated we want to
-     * use such array of 'paths' only if it refers to the directory where the
-     * tests were started from.
+     * different dependencies using the @repo/jest-base-isolated we want to use
+     * such array of 'paths' only if it refers to the directory where the tests
+     * were started from.
      *
      * Any other request will go through the natural node_modules ancestor
      * resolution.

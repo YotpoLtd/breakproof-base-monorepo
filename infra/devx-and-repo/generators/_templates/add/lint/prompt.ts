@@ -18,17 +18,16 @@ export interface AddLintParams {
   [otherCliArg: string]: string | boolean;
 }
 
-/**
- * @see For list of built-in types: https://github.com/enquirer/enquirer/tree/master/lib/prompts
- */
+/** @see For list of built-in types: https://github.com/enquirer/enquirer/tree/master/lib/prompts */
 export const params = async ({
   args: cliArgs,
 }: {
   args: AddLintParams;
 }): Promise<AddLintParams> => {
   /**
-   * Calling refreshPackages explicitly since this generator can be invoked with all
-   * arguments already provided so `getPackages` will never be called and calculated
+   * Calling refreshPackages explicitly since this generator can be invoked with
+   * all arguments already provided so `getPackages` will never be called and
+   * calculated
    */
   await refreshPackages();
   const name =

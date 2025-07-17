@@ -4,11 +4,8 @@ import { NODE_VERSIONS } from '@repo/environment';
 import { getAllPackages } from '@repo/pnpm-helpers';
 
 /**
- *
- *
- * Anything exported from this file is available to all generators template files (`*.ejs.t`)
- *
- *
+ * Anything exported from this file is available to all generators template
+ * files (`*.ejs.t`)
  */
 
 export enum PackageType {

@@ -1,9 +1,9 @@
 /**
- * Override the terrible type definitions of `enquirer` in order
- * to get its better UX over inquirer.
+ * Override the terrible type definitions of `enquirer` in order to get its
+ * better UX over inquirer.
  *
- * These are only partial type definitions of the things we use.
- * They don't represent the entire API of `enquirer`
+ * These are only partial type definitions of the things we use. They don't
+ * represent the entire API of `enquirer`
  */
 declare module 'enquirer' {
   type ErrorMessage = string;

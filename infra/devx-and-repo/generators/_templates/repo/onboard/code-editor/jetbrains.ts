@@ -34,9 +34,7 @@ type ReconfigureFn = (options: {
 const getWorkspaceXmlPath = (repoRootDir: string) =>
   path.join(repoRootDir, '.idea/workspace.xml');
 
-/**
- * Make sure '<repo root>/.idea/workspace.xml' is created by the JetBrains IDE
- */
+/** Make sure '<repo root>/.idea/workspace.xml' is created by the JetBrains IDE */
 export const ensureJetBrainsWorkspaceXml = async (repoRootDir: string) => {
   printCheck(chalk.blue(`Checking for <repo root>/.idea/workspace.xml`));
   if (!fs.existsSync(getWorkspaceXmlPath(repoRootDir))) {
@@ -62,9 +60,7 @@ export const ensureJetBrainsWorkspaceXml = async (repoRootDir: string) => {
 // Wrapping text in CDATA is a way to escape text in XML
 const wrapInCDATA = (text: string) => `<![CDATA[${text}]]>`;
 
-/**
- * Apply all recommendations to '<repo root>/.idea/workspace.xml'
- */
+/** Apply all recommendations to '<repo root>/.idea/workspace.xml' */
 export const reconfigureWorkspaceXml = async (repoRootDir: string) => {
   const xmlParser = new XMLParser({
     ignoreAttributes: false,
@@ -105,7 +101,8 @@ export const reconfigureWorkspaceXml = async (repoRootDir: string) => {
 };
 
 /**
- * Updates <component name="VcsManagerConfiguration"> to fit recommended settings for this repo
+ * Updates <component name="VcsManagerConfiguration"> to fit recommended
+ * settings for this repo
  */
 const reconfigureWorkspaceVcsManagerComponent: ReconfigureFn = ({
   repoRootDir,
@@ -165,7 +162,8 @@ const reconfigureWorkspaceVcsManagerComponent: ReconfigureFn = ({
 };
 
 /**
- * Updates <component name="PropertiesComponent"> to fit recommended settings for this repo
+ * Updates <component name="PropertiesComponent"> to fit recommended settings
+ * for this repo
  */
 const reconfigureWorkspacePropertiesComponent: ReconfigureFn = ({
   repoRootDir,
@@ -217,7 +215,8 @@ const overwriteFile = async (destinationPath: string, sourcePath: string) => {
 };
 
 /**
- * Overwrites eslint, prettier and general JS .idea files to fit recommended settings for this repo
+ * Overwrites eslint, prettier and general JS .idea files to fit recommended
+ * settings for this repo
  */
 export const overwriteJetBrainsFiles = (repoDir: string) => {
   return Promise.all([

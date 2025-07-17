@@ -47,9 +47,12 @@ export interface FilterPackagesExtendedOptions {
 
 /**
  * Extends `parsePackageSelector` from `@pnpm/filter-workspace-packages` by:
+ *
  * 1. Understanding `... < ` prefix which means "select only parent dependants"
- * 2. Understanding ` > ...` suffix which means "select only children from dependencies"
- * 3. When passing a path or glob, make it relative to workspace root unless it's absolute
+ * 2. Understanding ` > ...` suffix which means "select only children from
+ *    dependencies"
+ * 3. When passing a path or glob, make it relative to workspace root unless it's
+ *    absolute
  */
 const parsePnpmFilterArgs = ({
   filterArgs,
@@ -270,15 +273,13 @@ const makeDevtoolsAwareGraphCreator = ({
 };
 
 /**
- * CSS selectors:
- * '* < pakagename > *' -> '...pakagename...', onlyChildren, onlyParents
- * '* pakagename > *' -> '...pakagename...', onlyChildren
- * '* pakagename *' -> '...pakagename...'
+ * CSS selectors: '* < pakagename > _' -> '...pakagename...', onlyChildren,
+ * onlyParents '_ pakagename > _' -> '...pakagename...', onlyChildren '_
+ * pakagename *' -> '...pakagename...'
  *
- * NOT YET:
- * --filter-build='' -> no devtools + ignore lint & test  changed files
- * --filter-test='' -> no devtools (besides test ones?) + ignore lint changed files
- * --filter-code-check='' -> only
+ * NOT YET: --filter-build='' -> no devtools + ignore lint & test changed files
+ * --filter-test='' -> no devtools (besides test ones?) + ignore lint changed
+ * files --filter-code-check='' -> only
  */
 export async function filterPackagesExtended({
   filter,

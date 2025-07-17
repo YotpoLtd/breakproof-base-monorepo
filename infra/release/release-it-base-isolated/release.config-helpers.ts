@@ -2,9 +2,7 @@ import { execSync } from 'node:child_process';
 
 import { ReleaseItConfig } from './release.types';
 
-/**
- * Helper to merge the hooks of two `release-it` configs
- */
+/** Helper to merge the hooks of two `release-it` configs */
 export const getMergedHooks = (
   baseConfig: ReleaseItConfig,
   newConfig: ReleaseItConfig,

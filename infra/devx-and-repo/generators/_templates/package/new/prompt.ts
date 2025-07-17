@@ -25,9 +25,7 @@ import * as sharedPrompts from '#shared-prompts';
 import { params as lintParams } from '../../add/lint/prompt';
 import { params as releaseParams } from '../../add/release/prompt';
 
-/**
- * Ensures developer adds owners in CODEOWNERS file
- */
+/** Ensures developer adds owners in CODEOWNERS file */
 const ensureCodeowners = async (
   repoRootDir: string,
   projectDirs: Array<string>,
@@ -52,8 +50,8 @@ const ensureCodeowners = async (
   }
   const hasAddedOwners = await prompts.quiz({
     ...sharedPrompts.COMMON_DEVELOPER_QUIZ_OPTIONS,
-    prefix: `${chalk.yellow(`Every project must have owners.
-`)}`,
+    prefix: chalk.yellow(`Every project must have owners.
+`),
     message: `Can you add:
 ${chalk.green(`
 ${projectDirs.map((projectDir) => `${projectDir.replace(repoRootDir, '')} <YOUR TEAM NAME IN GITHUB>`).join('\n')}
@@ -72,9 +70,7 @@ to ${terminalLink(
   }
 };
 
-/**
- * @see For list of built-in types: https://github.com/enquirer/enquirer/tree/master/lib/prompts
- */
+/** @see For list of built-in types: https://github.com/enquirer/enquirer/tree/master/lib/prompts */
 export const params = async ({
   args: cliArgs,
 }: {
@@ -87,7 +83,7 @@ export const params = async ({
     (PACKAGE_SUBTYPE_BY_TYPE[type] &&
       (await prompts.autocomplete({
         message: 'Subtype of the package?',
-        choices: Object.values(PACKAGE_SUBTYPE_BY_TYPE[type]!).map((value) => ({
+        choices: Object.values(PACKAGE_SUBTYPE_BY_TYPE[type]).map((value) => ({
           title: value,
           value,
         })),

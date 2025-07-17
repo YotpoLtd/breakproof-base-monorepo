@@ -1,6 +1,4 @@
-/**
- * This file is imported & transpiled by `release-it`
- */
+/** This file is imported & transpiled by `release-it` */
 import type { ReleaseItConfig } from './release.types';
 import baseConfig from './release-it.base';
 export * from './release.types';

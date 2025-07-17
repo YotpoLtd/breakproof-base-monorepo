@@ -15,9 +15,7 @@ import { createTemplateRenderer } from './template';
 
 const renderTemplate = createTemplateRenderer(__dirname);
 
-/**
- * @see For list of built-in types: https://github.com/enquirer/enquirer/tree/master/lib/prompts
- */
+/** @see For list of built-in types: https://github.com/enquirer/enquirer/tree/master/lib/prompts */
 export const params = async () => {
   const repoRoot = await getRepoRootDir();
   process.chdir(repoRoot);

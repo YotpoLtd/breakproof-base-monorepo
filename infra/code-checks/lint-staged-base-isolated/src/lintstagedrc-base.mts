@@ -13,18 +13,21 @@ export * from './lintstagedrc-base-without-snapshotting.mjs';
 export const LINT_SHOULD_SNAPSHOT = Boolean(process.env.LINT_SHOULD_SNAPSHOT);
 
 /**
- * There is an INTERMITTENT bug in `pnpm` when `--silent` is used together with `--stream`.
- * The result is nothing is being output.
+ * There is an INTERMITTENT bug in `pnpm` when `--silent` is used together with
+ * `--stream`. The result is nothing is being output.
  *
- * We don't pass `--stream` here but if `lint-staged` is executed from another `pnpm`
- * command that uses `--stream` or `--parallel` then the `--stream` mode is activated.
+ * We don't pass `--stream` here but if `lint-staged` is executed from another
+ * `pnpm` command that uses `--stream` or `--parallel` then the `--stream` mode
+ * is activated.
  *
  * So, we explicitly pass `--no-stream` to make sure, we don't hit this problem.
  *
- * And we don't know when it is appearing, so this fix must be added to docs
- * and applied to all packages that use error snapshotting like eslint or tsc snapshotting.
+ * And we don't know when it is appearing, so this fix must be added to docs and
+ * applied to all packages that use error snapshotting like eslint or tsc
+ * snapshotting.
  *
  * Alternative fix, previously used was to unset `npm_config_stream=''` here.
+ *
  * @see https://pnpm.io/cli/run#--stream
  * @see https://pnpm.io/cli/run#options (search for --silent)
  */
