@@ -8,6 +8,23 @@ import { Linter } from 'eslint';
 const ASSETS_EXTENSIONS = ['svg', 'css', 'png', 'jpg', 'jpeg', 'gif'] as const;
 
 /**
+ * Config option for eslint typescript naming rule
+ * Excludes top-level `Route` declarations used by tanstack router
+ */
+const TANSTACK_ROUTE_NAMING_EXCLUDE_FILTER = {
+  match: false,
+  regex: '^Route$',
+};
+/**
+ * A meaningless filter to bump the priority of a naming rule.
+ * Otherwise, any other naming rule with `filter` will always override it
+ */
+const NAMING_PRIORITY_FILTER = {
+  match: true,
+  regex: '.*',
+};
+
+/**
  * Converts `.` to `\.` in all passed strings
  */
 const convertNamesToRegexUnionString = <T extends Array<string>>(
@@ -90,17 +107,24 @@ export const getNamingConventionRules = (
       selector: ['variableLike', 'property', 'memberLike'],
       filter: {
         match: true,
-        regex: '.*Component$',
+        // Match all variables that end with `Component`
+        // Exclude known third party config options like `errorComponent` and `notFoundComponent`
+        regex: '^(?!(errorComponent|notFoundComponent)$).*Component$',
       },
       format: ['PascalCase'],
     },
-    {
+    ...[
+      {
+        selector: 'variable',
+        modifiers: ['const', 'global'],
+        types: ['function'],
+      },
+      { selector: ['function'], modifiers: ['global'] },
+    ].map((selectorObj) => ({
       // Rule for top level functions and a case for react components
-      selector: 'variable',
-      modifiers: ['const', 'global'],
+      ...selectorObj,
       format: [
         'camelCase',
-        'PascalCase',
         /**
          * React components should start with capital letter and can be
          * dynamically assigned within functions
@@ -108,8 +132,8 @@ export const getNamingConventionRules = (
          */
         includeJSX && 'PascalCase',
       ].filter(Boolean),
-      types: ['function'],
-    },
+      filter: NAMING_PRIORITY_FILTER,
+    })),
     {
       // All top level vars with primitive types
       selector: 'variable',
@@ -122,6 +146,7 @@ export const getNamingConventionRules = (
       selector: 'variable',
       modifiers: ['const', 'global'],
       format: ['camelCase', 'UPPER_CASE'],
+      filter: TANSTACK_ROUTE_NAMING_EXCLUDE_FILTER,
     },
     {
       // Boolean vars convention
@@ -146,6 +171,7 @@ export const getNamingConventionRules = (
       selector: ['memberLike', 'variableLike'],
       leadingUnderscore: 'allow',
       format: ['camelCase'],
+      filter: TANSTACK_ROUTE_NAMING_EXCLUDE_FILTER,
     },
   ],
 });
