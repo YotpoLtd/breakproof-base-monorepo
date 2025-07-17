@@ -28,7 +28,7 @@ const config: EslintConfig = [
     },
   },
   {
-    files: ['**/*.{jsx,tsx}'],
+    files: ['**/*.tsx'],
     languageOptions: {
       parserOptions: {
         ecmaFeatures: {
