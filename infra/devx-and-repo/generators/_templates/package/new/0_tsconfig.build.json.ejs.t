@@ -19,9 +19,6 @@ to: "<%- `${h.getDestinationByType({ type, subtype, name })}/tsconfig.build.json
       "rootDir": "src",
       "outDir": "dist",
     <% } %>
-    <% if (type === PackageType.INFRA_TOOL) { %>
-      "tsBuildInfoFile": "./node_modules/.cache/tsc/tsconfig.build.tsbuildinfo",
-    <% } %>
   },
   "include": [
     "src/**/*.ts"
