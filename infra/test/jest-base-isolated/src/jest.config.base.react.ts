@@ -25,9 +25,7 @@ const config: JestConfig = {
     ...jestBaseConfig.transform,
     [JEST_BABEL_TRANSFORM_FILE_PATTERN]: [
       jestBaseConfig.transform[JEST_BABEL_TRANSFORM_FILE_PATTERN][0],
-      /**
-       * Those can be any Babel options: https://babeljs.io/docs/options
-       */
+      /** Those can be any Babel options: https://babeljs.io/docs/options */
       { configFile: require.resolve('./babel.jest.config.react') },
     ],
   },
