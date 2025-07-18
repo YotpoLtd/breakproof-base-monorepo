@@ -252,7 +252,7 @@ const config: EslintConfig = [
       'promise/no-new-statics': 'error',
 
       /**
-     * @TODO: Enable these rules when we have @repo/tscore package
+       * @TODO: Enable these rules when we have @repo/tscore package
        * Rules here are created with the help of the AST explorer and eslint docs:
        * 1. https://astexplorer.net/#/gist/214d5e94b1d39e5c76a9b4a867821e53/02a4993797ebd73093efa33a2aa9835f7ca3d12a
        * 2. https://eslint.org/docs/latest/extend/selectors
@@ -263,7 +263,7 @@ const config: EslintConfig = [
       //	'error',
       //	{
       //		selector: 'CatchClause > BlockStatement > :first-child:not(ThrowStatement,ExpressionStatement[expression.callee.name="assertCanHandle"])',
-    //		message: 'Always add `assertCanHandle(..)` first in your catch {} expressions. Import `assertCanHandle` from `@repo/tscore`',
+      //		message: 'Always add `assertCanHandle(..)` first in your catch {} expressions. Import `assertCanHandle` from `@repo/tscore`',
       //	},
       //	//{
       //	//	selector: 'Identifier[name="catch"]',

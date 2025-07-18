@@ -151,9 +151,7 @@ Make sure you accept the prompts that appear at the lower right`,
   }
 
   if (!options?.isSingleTeam) {
-    /**
-      CODEOWNERS MAINTENANCE
-     */
+    /** CODEOWNERS MAINTENANCE */
     stepNum++;
     const willAddCodeowners = await prompts.quiz({
       ...COMMON_DEVELOPER_QUIZ_OPTIONS,

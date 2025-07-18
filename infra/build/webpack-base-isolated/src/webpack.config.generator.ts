@@ -71,10 +71,9 @@ export const getModuleRuleForSourceMapsInNodeModules = () => ({
 /**
  * This rule prevents errors like:
  *
- * Module not found: Error: Can't resolve
- * '<some import to package>' The request
- * '<some import to package>' failed to resolve only because
- * it was resolved as fully specified
+ * Module not found: Error: Can't resolve '<some import to package>' The request
+ * '<some import to package>' failed to resolve only because it was resolved as
+ * fully specified
  *
  * For packages in `node_modules`.
  *

@@ -6,7 +6,8 @@
  */
 
 /**
- * If you need to add another nodejs version, edit .nodejs-versions-whitelist.cjs
+ * If you need to add another nodejs version, edit
+ * .nodejs-versions-whitelist.cjs
  */
 import fs from 'node:fs';
 import path from 'node:path';

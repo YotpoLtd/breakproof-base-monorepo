@@ -121,7 +121,7 @@ export const params = async ({
 
   const name =
     cliArgs.name ||
-    (await prompts.input<string>({
+    (await prompts.input({
       message: 'Package name (without the `@` scope)?',
       validate: (name) => {
         if (!name) {

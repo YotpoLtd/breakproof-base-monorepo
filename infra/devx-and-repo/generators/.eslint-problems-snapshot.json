@@ -1,50 +1,31 @@
 {
   "_templates/package/new/prompt.ts": [
-    {
-      "count": 1,
-      "issueType": "@typescript-eslint/no-unnecessary-template-expression"
-    },
     { "count": 1, "issueType": "@typescript-eslint/no-unnecessary-condition" },
-    { "count": 1, "issueType": "@typescript-eslint/no-non-null-assertion" },
+    { "count": 4, "issueType": "@typescript-eslint/prefer-nullish-coalescing" },
+    { "count": 1, "issueType": "@typescript-eslint/no-unsafe-enum-comparison" },
     {
-      "count": 1,
-      "issueType": "@typescript-eslint/no-unnecessary-type-assertion"
-    },
-    { "count": 3, "issueType": "@typescript-eslint/prefer-nullish-coalescing" }
+      "count": 4,
+      "issueType": "@typescript-eslint/restrict-template-expressions"
+    }
   ],
   "_templates/repo/audit-package-alignment-to-repo/prompt.ts": [
-    {
-      "count": 1,
-      "issueType": "@typescript-eslint/no-unnecessary-template-expression"
-    },
     { "count": 2, "issueType": "@typescript-eslint/no-unused-vars" },
-    {
-      "count": 1,
-      "issueType": "@typescript-eslint/no-duplicate-type-constituents"
-    },
     { "count": 2, "issueType": "@typescript-eslint/no-non-null-assertion" },
     { "count": 1, "issueType": "@typescript-eslint/prefer-nullish-coalescing" }
   ],
+  "_templates/repo/init/prompt.ts": [
+    { "count": 1, "issueType": "@typescript-eslint/no-unnecessary-condition" }
+  ],
   "_templates/repo/onboard/code-editor/jetbrains.ts": [
-    { "count": 4, "issueType": "@typescript-eslint/no-unsafe-assignment" },
     { "count": 1, "issueType": "@typescript-eslint/no-unnecessary-condition" },
     { "count": 1, "issueType": "@typescript-eslint/no-non-null-assertion" },
     { "count": 3, "issueType": "@typescript-eslint/prefer-nullish-coalescing" }
   ],
-  "_templates/repo/onboard/code-editor/vscode.ts": [
-    { "count": 2, "issueType": "@typescript-eslint/no-unsafe-assignment" }
-  ],
   "_templates/repo/onboard/prompt.ts": [
-    {
-      "count": 5,
-      "issueType": "@typescript-eslint/no-unnecessary-template-expression"
-    },
+    { "count": 1, "issueType": "@typescript-eslint/prefer-nullish-coalescing" },
     {
       "count": 1,
       "issueType": "@typescript-eslint/restrict-template-expressions"
     }
-  ],
-  "extra-template-vars.ts": [
-    { "count": 1, "issueType": "@typescript-eslint/naming-convention" }
   ]
 }

@@ -68,7 +68,7 @@ const getValidPackageInfo = async (
   let packageJsonFilePath: string;
   let packageJson: { name: string; scripts?: Record<string, string> };
 
-  const packageDir = await prompts.input<string>({
+  const packageDir = await prompts.input({
     message: 'Package directory:',
     ...(initialValue && { initial: initialValue }),
     validate: (typedPackageDir) => {

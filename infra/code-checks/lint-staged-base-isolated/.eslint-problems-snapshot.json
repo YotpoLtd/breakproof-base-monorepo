@@ -1,7 +1,6 @@
 {
   "src/lintstagedrc-base-without-snapshotting.mts": [
-    { "count": 3, "issueType": "@typescript-eslint/prefer-nullish-coalescing" },
-    { "count": 1, "issueType": "@typescript-eslint/array-type" }
+    { "count": 3, "issueType": "@typescript-eslint/prefer-nullish-coalescing" }
   ],
   "src/lintstagedrc-base.mts": [
     {

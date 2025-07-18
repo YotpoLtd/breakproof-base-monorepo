@@ -102,7 +102,8 @@ export const params = async () => {
 
   /**
    * 1. Make sure no other file is staged
-   * 2. Make 2 commits, otherwise git will make the wrong assumption the files haven't moved but have changed
+   * 2. Make 2 commits, otherwise git will make the wrong assumption the files
+   *    haven't moved but have changed
    */
   await $`git reset`;
 
