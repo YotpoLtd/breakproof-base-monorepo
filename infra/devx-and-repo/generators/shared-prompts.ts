@@ -6,6 +6,7 @@ import {
   getPackages,
   HELP_ACTION_PROMISE_TEXT,
   PackageType,
+  TechStack,
 } from '#extra-template-vars';
 
 export const getType = async (
@@ -68,6 +69,22 @@ export const getSupportingForProject = async (
       : false;
   }
 };
+
+export const getTechStack = async (
+  type: PackageType,
+  cliArgs?: Record<string, string | boolean>,
+): Promise<TechStack> =>
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- False positive because of the type assertion
+  (cliArgs?.techStack as TechStack) ||
+  (type === PackageType.INFRA_TOOL || type === PackageType.E2E_APP
+    ? TechStack.BASE
+    : await prompts.autocomplete({
+        message: 'Tech stack?',
+        choices: Object.values(TechStack).map((value) => ({
+          title: value,
+          value,
+        })),
+      }));
 
 export const createDeveloperQuizOptions = ({
   yes = 'Ok, done',

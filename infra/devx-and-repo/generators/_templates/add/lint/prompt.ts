@@ -5,12 +5,14 @@ import {
   getPackages,
   PackageType,
   refreshPackages,
+  TechStack,
 } from '#extra-template-vars';
 import * as sharedPrompts from '#shared-prompts';
 
 export interface AddLintParams {
   name?: string;
   type?: PackageType;
+  techStack?: TechStack;
   hasTypescript?: boolean;
   hasTsConfigNode?: boolean;
   isSandbox?: boolean;
@@ -60,6 +62,8 @@ export const params = async ({
           initial: false,
         }));
 
+  const techStack = await sharedPrompts.getTechStack(type, cliArgs);
+
   const isSandbox = await sharedPrompts.getIsSandbox(type, cliArgs);
   const supportingForProject = await sharedPrompts.getSupportingForProject(
     type,
@@ -72,6 +76,7 @@ export const params = async ({
     type,
     hasTypescript,
     hasTsConfigNode,
+    techStack,
     isSandbox,
     supportingForProject,
   };

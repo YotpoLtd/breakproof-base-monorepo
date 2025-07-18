@@ -6,12 +6,10 @@ import { NODE_VERSIONS, NPM_SCOPES } from '@repo/environment';
 
 // if wondering about the `#...` import see: https://nodejs.org/api/packages.html#subpath-imports
 import {
-  HELP_ACTION_TEXT,
   InfraToolSubtype,
   NODE_VERSION_LATEST,
   PACKAGE_SUBTYPE_BY_TYPE,
   PackageType,
-  TechStack,
 } from '#extra-template-vars';
 import {
   getDestinationByType,
@@ -79,6 +77,7 @@ export const params = async ({
   const type = await sharedPrompts.getType(cliArgs);
 
   const subtype =
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- False positive because of the type assertion
     (cliArgs.subtype as InfraToolSubtype) ||
     (PACKAGE_SUBTYPE_BY_TYPE[type] &&
       (await prompts.autocomplete({
@@ -89,20 +88,10 @@ export const params = async ({
         })),
       })));
 
-  const techStack =
-    cliArgs.techStack ||
-    (type === PackageType.INFRA_TOOL || type === PackageType.E2E_APP
-      ? TechStack.BASE
-      : await prompts.autocomplete({
-          message: 'Tech stack?',
-          choices: Object.values(TechStack).map((value) => ({
-            title: value,
-            value,
-          })),
-        }));
+  const techStack = await sharedPrompts.getTechStack(type, cliArgs);
 
   const nodeVersion =
-    cliArgs.nodeVersion ||
+    cliArgs.nodeVersion ??
     (type === PackageType.E2E_APP
       ? NODE_VERSION_LATEST
       : await prompts.autocomplete({
@@ -113,14 +102,8 @@ export const params = async ({
           })),
         }));
 
-  if (techStack === TechStack.ANGULAR13) {
-    throw new Error(
-      `Generator for packages based on Angular 13 is not implemented yet! Please ${HELP_ACTION_TEXT}.`,
-    );
-  }
-
-  const name =
-    cliArgs.name ||
+  const name: string =
+    cliArgs.name ??
     (await prompts.input({
       message: 'Package name (without the `@` scope)?',
       validate: (name) => {
@@ -132,7 +115,7 @@ export const params = async ({
     }));
 
   const npmScope =
-    cliArgs.npmScope ||
+    cliArgs.npmScope ??
     (await prompts.autocomplete({
       message: 'Full package name (with `@` scope)?',
       choices: NPM_SCOPES.map((scope) => ({
@@ -141,7 +124,7 @@ export const params = async ({
       })),
     }));
 
-  const nameWithScope = `@${npmScope}/${name}`;
+  const nameWithScope = npmScope !== name ? `@${npmScope}/${name}` : name;
 
   if (!cliArgs.skipCodeownersCheck) {
     await ensureCodeowners(await getRepoRootDir(), [
@@ -197,6 +180,7 @@ export const params = async ({
       type,
       hasTypescript: true,
       hasTsConfigNode: true,
+      techStack,
       isSandbox,
       supportingForProject,
     },
