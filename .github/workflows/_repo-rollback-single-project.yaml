@@ -1,0 +1,39 @@
+name: Rollback deployment of individual project
+on:
+  workflow_dispatch:
+    inputs:
+      package-name:
+        description:
+          Name of package to be rolled back, as written in its `package.json`
+        type: string
+        required: true
+      version:
+        description: |-
+          Last known good version to checkout and deploy (the <version> of git tag `<package-name>@<version>`)
+        type: string
+        required: true
+
+concurrency:
+  group: ${{ inputs.package-name }}-deployment
+  cancel-in-progress: false
+
+jobs:
+  ensure-admin-user:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/ensure-admin-user
+
+  pause-automatic-deployments:
+    needs: [ensure-admin-user]
+    uses: ./.github/workflows/_repo-deployment-control.yaml
+    with:
+      type: pause
+      package-name: ${{ inputs.package-name }}
+
+  deploy-at-specified-version:
+    needs: [ensure-admin-user]
+    uses: ./.github/workflows/_repo-deploy-single-project-on-push.yaml
+    with:
+      package-name: ${{ inputs.package-name }}
+      git-ref: ${{ inputs.package-name }}@${{ inputs.version }}

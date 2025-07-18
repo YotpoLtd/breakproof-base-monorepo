@@ -15,11 +15,11 @@ const md = markdownit();
 /**
  * Parse string such as:
  *
- * | Line | Column | Type    | Rule                          | Message                                          |
- * |------|--------|---------|-------------------------------|--------------------------------------------------|
- * | 85   | 17     | `error-or-smth-else` | rule-name-here           | Message  here               |
+ * | Line | Column | Type                 | Rule           | Message      |
+ * | ---- | ------ | -------------------- | -------------- | ------------ |
+ * | 85   | 17     | `error-or-smth-else` | rule-name-here | Message here |
  *
- * to code problem objects.
+ * To code problem objects.
  */
 const parseLitMarkdownTableToCodeProblems = (
   markdownTableStr: string,
@@ -57,11 +57,11 @@ const parseLitMarkdownTableToCodeProblems = (
 };
 
 /**
- * This is intended to consume the output of `lit-analyze` CLI command
- * and parse it to an array of CodeProblem items.
+ * This is intended to consume the output of `lit-analyze` CLI command and parse
+ * it to an array of CodeProblem items.
  *
- * For this to work must be executed with the `--format markdown` option,
- * i.e. `lit-analyze --format markdown`
+ * For this to work must be executed with the `--format markdown` option, i.e.
+ * `lit-analyze --format markdown`
  */
 export const getCodeProblemListFromLitAnalyzerOutput = (
   litAnalyzerOutput: LitAnalyzerCliMarkdownOutput,

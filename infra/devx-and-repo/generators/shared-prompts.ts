@@ -6,11 +6,13 @@ import {
   getPackages,
   HELP_ACTION_PROMISE_TEXT,
   PackageType,
+  TechStack,
 } from '#extra-template-vars';
 
 export const getType = async (
   cliArgs?: Record<string, string | boolean>,
 ): Promise<PackageType> =>
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- False positive because of the type assertion
   (cliArgs?.type as PackageType) ||
   (await prompts.autocomplete({
     message: 'What type of package is this?',
@@ -35,11 +37,9 @@ export const getIsSandbox = async (
         })
       : false;
 
-export const getSupportingForProject = async <
-  T extends Record<string, string | boolean>,
->(
+export const getSupportingForProject = async (
   type: PackageType,
-  cliArgs?: T,
+  cliArgs?: Record<string, string | boolean>,
   isSandbox?: boolean,
 ): Promise<false | string> => {
   if (cliArgs?.supportingForProject) {
@@ -70,6 +70,22 @@ export const getSupportingForProject = async <
   }
 };
 
+export const getTechStack = async (
+  type: PackageType,
+  cliArgs?: Record<string, string | boolean>,
+): Promise<TechStack> =>
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- False positive because of the type assertion
+  (cliArgs?.techStack as TechStack) ||
+  (type === PackageType.INFRA_TOOL || type === PackageType.E2E_APP
+    ? TechStack.BASE
+    : await prompts.autocomplete({
+        message: 'Tech stack?',
+        choices: Object.values(TechStack).map((value) => ({
+          title: value,
+          value,
+        })),
+      }));
+
 export const createDeveloperQuizOptions = ({
   yes = 'Ok, done',
   no = `I'm not sure. ${HELP_ACTION_PROMISE_TEXT}`,
@@ -90,6 +106,6 @@ export const COMMON_DEVELOPER_QUIZ_OPTIONS = {
 export const createQuizStepHeader = (stepNumber: number, header = '') => `
 
 ------------------
- ${chalk.blueBright(`# Step ${stepNumber}`)}
+ ${chalk.blueBright(`# Step ${String(stepNumber)}`)}
  ${header}
 `;

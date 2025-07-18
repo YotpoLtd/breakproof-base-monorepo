@@ -19,6 +19,10 @@ outputs:
   list-as-names-only:
     description: List of packages to be released in the format "<NAME>" per line
     value: ${{ steps.releases.outputs.list-as-names-only }}
+  list-as-names-only-json:
+    description: |-
+      List of packages to be released as a JSON array in the format ["<NAME A>", "<NAME B>", ...]
+    value: ${{ steps.releases.outputs.list-as-names-only-json }}
   list-as-md:
     description:
       List of packages to be released as markdown bullet list,
@@ -86,23 +90,25 @@ runs:
         LIST_AS_MD=$(echo "$LIST" | sed 's/^/- `/; s/$/`/')
 
         # create a version of the list with ONLY NAMES of packages
-        LIST_AS_NAMES_ONLY=$(echo "$LIST" | sed -E 's/(.+)@.*/\1/;')
+        export LIST_AS_NAMES_ONLY=$(echo "$LIST" | sed -E 's/(.+)@.*/\1/;')
+        LIST_AS_NAMES_ONLY_JSON=$(pnpm node -p 'JSON.stringify(process.env.LIST_AS_NAMES_ONLY.split("\n"))')
 
         echo "is-main-breakproof-repo=$IS_MAIN_BREAKPROOF_REPO" >> $GITHUB_OUTPUT
         echo "list=$LIST_NO_NEW_LINES" >> $GITHUB_OUTPUT
         echo -e "list-as-names-only<<EOF\n${LIST_AS_NAMES_ONLY}\nEOF" >> $GITHUB_OUTPUT
         echo -e "list-as-md<<EOF\n${LIST_AS_MD}\nEOF" >> $GITHUB_OUTPUT
+        echo -e "list-as-names-only-json<<EOF\n${LIST_AS_NAMES_ONLY_JSON}\nEOF" >> $GITHUB_OUTPUT
 
     - name: Add workflow summary of upcoming releases
       if: ${{ steps.releases.outputs.list && inputs.add-summary == 'true' }}
       shell: bash
       run: |
-        echo '### 🚀️ UPCOMING PACKAGE RELEASES 🚀️️' >> $GITHUB_STEP_SUMMARY
+        echo '### 🚀️ UPCOMING RELEASES 🚀️️' >> $GITHUB_STEP_SUMMARY
         echo '${{ steps.releases.outputs.list-as-md }}' >> $GITHUB_STEP_SUMMARY
 
     - name: Add workflow summary for no releases
       if: ${{ ! steps.releases.outputs.list && inputs.add-summary == 'true' }}
       shell: bash
       run: |
-        echo '### 🏳️️ NO PACKAGE RELEASES 🏳️' >> $GITHUB_STEP_SUMMARY
-        echo 'If you actually intend to trigger a release, you need to rewrite your [commit messages to fit the expected format for autorelease](${{ github.server_url }}/${{ github.repository }}/blob/${{ github.event.repository.default_branch }}/docs/autorelease-commits.md).' >> $GITHUB_STEP_SUMMARY
+        echo '### 🏳️️ NO RELEASES 🏳️' >> $GITHUB_STEP_SUMMARY
+        echo 'If you actually intend to trigger a release, you need to rewrite your [commit messages to fit the expected format for autorelease](https://yotpo.roadie.so/catalog/default/component/frontend-golden-path/autorelease/commits).' >> $GITHUB_STEP_SUMMARY

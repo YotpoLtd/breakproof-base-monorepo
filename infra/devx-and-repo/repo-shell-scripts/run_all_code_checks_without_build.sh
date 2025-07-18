@@ -61,5 +61,5 @@ pnpm_affected_test_filter --parallel --workspace-concurrency="$(nproc)" --aggreg
 pnpm --filter="[$GIT_DIFF_BASE]" \
   --filter='!@repo/citools' \
   --filter='!devtools' \
-  --parallel --workspace-concurrency="$(nproc)" --aggregate-output \
-  run "$LINT_SCRIPT_NAME" | tee
+  --parallel --workspace-concurrency="$(nproc)" --no-stream \
+  run "$LINT_SCRIPT_NAME"

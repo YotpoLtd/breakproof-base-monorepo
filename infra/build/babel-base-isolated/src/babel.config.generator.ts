@@ -8,25 +8,19 @@ import {
 
 import { NodeEnv, RuntimeEnv, SUPPORTED_WEB_BROWSERS } from '@repo/environment';
 
-type BabelConfigGeneratorCoreJsResolutionFixOnly = {
+interface BabelConfigGeneratorCoreJsResolutionFixOnly {
   coreJsResolutionFixOnly: true;
-};
+}
 
 export type BabelConfigGeneratorOptions =
   | BabelConfigGeneratorCoreJsResolutionFixOnly
   | {
       mode: NodeEnv;
-      /**
-       * Are you going to use Lit?
-       */
+      /** Are you going to use Lit? */
       lit?: boolean;
-      /**
-       * Are you going to use React?
-       */
+      /** Are you going to use React? */
       react?: boolean;
-      /**
-       * Are you going to use styled-components?
-       */
+      /** Are you going to use styled-components? */
       reactStyledComponents?: boolean;
       /**
        * Stops automatic import of core-js polyfills. Useful when analyzing the
@@ -38,9 +32,7 @@ export type BabelConfigGeneratorOptions =
        * babel-base-isolated/node_modules
        */
       coreJsResolutionFix?: boolean;
-      /**
-       * What runtime environment you want to transpile for?
-       */
+      /** What runtime environment you want to transpile for? */
       runtimeTarget?: RuntimeEnv;
     };
 
@@ -51,9 +43,7 @@ const isCoreJsResolutionFixOnly = (
 ): options is BabelConfigGeneratorCoreJsResolutionFixOnly =>
   'coreJsResolutionFixOnly' in options && options.coreJsResolutionFixOnly;
 
-/**
- * Get sensible babel config based on a minimal set of input
- */
+/** Get sensible babel config based on a minimal set of input */
 export const getBabelConfig = (
   options: BabelConfigGeneratorOptions,
 ): SupportedBabelOptions => ({
@@ -71,9 +61,7 @@ export const getBabelConfig = (
     : {
         presets: (
           [
-            /**
-             * @see see the jsdoc of resolveCoreJsToCurrentDir
-             */
+            /** @see see the jsdoc of resolveCoreJsToCurrentDir */
             options.coreJsResolutionFix !== false && {
               plugins: [resolveCoreJsToCurrentDirPlugin],
             },
@@ -89,7 +77,8 @@ export const getBabelConfig = (
                  * If we don't explicitly set corejs version, babel defaults to
                  * older nested dependency version
                  */
-                // eslint-disable-next-line @typescript-eslint/no-var-requires -- We need require() so that this is inlined
+
+                // eslint-disable-next-line @typescript-eslint/no-require-imports -- We need require() so that this is inlined
                 corejs: (require('core-js/package.json') as { version: string })
                   .version,
               },
@@ -138,9 +127,7 @@ export const getBabelConfig = (
               ],
             ],
           },
-          /**
-           * TEMPORARILY NEEDED UNTIL WE REMOVE ANGULAR-specific DEPENDENCIES
-           */
+          /** TEMPORARILY NEEDED UNTIL WE REMOVE ANGULAR-specific DEPENDENCIES */
           {
             test: /\.ts$/,
             plugins: [
@@ -173,7 +160,9 @@ export const getBabelConfig = (
  * @see https://github.com/babel/babel/issues/10379
  * @see https://github.com/babel/babel/issues/10142
  */
-type BabelNodeSourceAbstract = { value: string };
+interface BabelNodeSourceAbstract {
+  value: string;
+}
 const PATH_TO_CORE_JS_IN_THIS_PACKAGE = path.dirname(
   require.resolve('core-js'),
 );

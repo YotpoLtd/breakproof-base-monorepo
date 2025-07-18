@@ -2,7 +2,7 @@
 to: "<%- h.getPackageDir(name) %>/eslint.config.cjs"
 ---
 const {
-  browser: baseEslint
+  <%- techStack === TechStack.REACT ? 'react' : 'browser' %>: baseEslint
   <% if (hasTypescript) { %>
     , getCodeEditorTypescriptEslintConfig
   <% } %>

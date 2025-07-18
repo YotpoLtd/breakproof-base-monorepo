@@ -1,0 +1,8 @@
+{
+  "src/babel.config.generator.ts": [
+    {
+      "count": 1,
+      "issueType": "@typescript-eslint/no-unnecessary-type-parameters"
+    }
+  ]
+}

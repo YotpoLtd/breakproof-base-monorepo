@@ -1,12 +1,15 @@
-// @ts-expect-error TS thinks that we can't consume ES module but we can
-import { FlatCompat } from '@eslint/eslintrc';
+import eslintPluginReact from 'eslint-plugin-react';
+import eslintPluginReactHooks from 'eslint-plugin-react-hooks';
 
 import eslintBrowserConfig from './eslint-config-browser';
-import { EslintConfig } from './types';
+import { getNamingConventionRules } from './rules';
+import { EslintConfig, EslintConfigEntry } from './types';
 
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-});
+const eslintPluginReactRecommended = {
+  ...eslintPluginReact.configs.flat.recommended,
+} as EslintConfigEntry;
+// we don't want to allow JSX on each file
+delete eslintPluginReactRecommended.languageOptions;
 
 /**
  * Base eslint configuration that combines the browser-specific eslint base config
@@ -24,10 +27,25 @@ const config: EslintConfig = [
       },
     },
   },
-  ...compat.config({
-    extends: ['plugin:react/recommended', 'plugin:react-hooks/recommended'],
-  }),
   {
+    files: ['**/*.tsx'],
+    languageOptions: {
+      parserOptions: {
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
+    },
+    rules: {
+      ...getNamingConventionRules(true),
+    },
+  },
+  eslintPluginReactRecommended,
+  eslintPluginReactHooks.configs['recommended-latest'],
+  {
+    plugins: {
+      react: eslintPluginReact,
+    },
     rules: {
       /**
        * Some self-explanatory rules for React codebase

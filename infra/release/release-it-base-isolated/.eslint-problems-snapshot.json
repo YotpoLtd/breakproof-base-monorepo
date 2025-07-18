@@ -1,0 +1,12 @@
+{
+  "release-it.base.ts": [
+    { "count": 1, "issueType": "@typescript-eslint/prefer-nullish-coalescing" },
+    {
+      "count": 1,
+      "issueType": "@typescript-eslint/restrict-template-expressions"
+    }
+  ],
+  "release.config-helpers.ts": [
+    { "count": 3, "issueType": "@typescript-eslint/prefer-nullish-coalescing" }
+  ]
+}

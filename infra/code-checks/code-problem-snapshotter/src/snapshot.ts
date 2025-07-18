@@ -11,13 +11,14 @@ export const getSnapshotFilePath = (snapshotFilename: Filename) =>
   path.resolve(process.cwd(), snapshotFilename);
 
 /**
- * Based on a list of file problems, create a snapshot object ready to be written
+ * Based on a list of file problems, create a snapshot object ready to be
+ * written
  */
 export const getSnapshotFromCodeProblems = (codeProblems: Array<CodeProblem>) =>
   codeProblems.reduce<CodeProblemsSnapshot>(
     (partialSnapshot, { filename, issueType }) => {
       partialSnapshot[filename] = partialSnapshot[filename] || [];
-      const codeProblemSummaryList = partialSnapshot[filename]!;
+      const codeProblemSummaryList = partialSnapshot[filename];
 
       const codeProblemSummary = codeProblemSummaryList.find(
         (aFleProblemSummary) => aFleProblemSummary.issueType === issueType,
@@ -37,9 +38,7 @@ export const getSnapshotFromCodeProblems = (codeProblems: Array<CodeProblem>) =>
     {},
   );
 
-/**
- * Write the snapshot object to disk
- */
+/** Write the snapshot object to disk */
 export const writeSnapshot = async (
   snapshot: CodeProblemsSnapshot,
   snapshotFilename: Filename,
@@ -62,9 +61,7 @@ export const writeSnapshot = async (
   );
 };
 
-/**
- * Read the snapshot file
- */
+/** Read the snapshot file */
 export const getKnownProblemsSnapshot = (snapshotFilename: Filename) => {
   const snapshotFilePath = getSnapshotFilePath(snapshotFilename);
 
@@ -77,9 +74,7 @@ export const getKnownProblemsSnapshot = (snapshotFilename: Filename) => {
   ) as CodeProblemsSnapshot;
 };
 
-/**
- * Get a snapshot of the new problems only
- */
+/** Get a snapshot of the new problems only */
 export const getOnlyNewProblemsSnapshot = (
   knownProblemsSnapshot: CodeProblemsSnapshot,
   allCurrentCodeProblems: Array<CodeProblem>,
@@ -117,9 +112,7 @@ export const getOnlyNewProblemsSnapshot = (
   );
 };
 
-/**
- * What developers will see in the console for new problems
- */
+/** What developers will see in the console for new problems */
 export const printNewProblems = async (
   knownProblemsSnapshot: CodeProblemsSnapshot,
   onlyNewProblemsSnapshot: CodeProblemsSnapshot,

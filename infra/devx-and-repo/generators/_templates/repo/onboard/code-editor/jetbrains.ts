@@ -11,11 +11,11 @@ import { HELP_ACTION_TEXT } from '#extra-template-vars';
 // if wondering about the `#...` import see: https://nodejs.org/api/packages.html#subpath-imports
 import { printCheck, printContactHelp, printError } from '#helpers';
 
-type ParsedComponentElement = {
+interface ParsedComponentElement {
   ['@_name']?: string;
   ['#text']?: string;
   option?: Array<{ ['@_name']?: string }>;
-};
+}
 
 interface WorkspaceXml {
   project: {
@@ -34,9 +34,7 @@ type ReconfigureFn = (options: {
 const getWorkspaceXmlPath = (repoRootDir: string) =>
   path.join(repoRootDir, '.idea/workspace.xml');
 
-/**
- * Make sure '<repo root>/.idea/workspace.xml' is created by the JetBrains IDE
- */
+/** Make sure '<repo root>/.idea/workspace.xml' is created by the JetBrains IDE */
 export const ensureJetBrainsWorkspaceXml = async (repoRootDir: string) => {
   printCheck(chalk.blue(`Checking for <repo root>/.idea/workspace.xml`));
   if (!fs.existsSync(getWorkspaceXmlPath(repoRootDir))) {
@@ -62,9 +60,7 @@ export const ensureJetBrainsWorkspaceXml = async (repoRootDir: string) => {
 // Wrapping text in CDATA is a way to escape text in XML
 const wrapInCDATA = (text: string) => `<![CDATA[${text}]]>`;
 
-/**
- * Apply all recommendations to '<repo root>/.idea/workspace.xml'
- */
+/** Apply all recommendations to '<repo root>/.idea/workspace.xml' */
 export const reconfigureWorkspaceXml = async (repoRootDir: string) => {
   const xmlParser = new XMLParser({
     ignoreAttributes: false,
@@ -105,7 +101,8 @@ export const reconfigureWorkspaceXml = async (repoRootDir: string) => {
 };
 
 /**
- * Updates <component name="VcsManagerConfiguration"> to fit recommended settings for this repo
+ * Updates <component name="VcsManagerConfiguration"> to fit recommended
+ * settings for this repo
  */
 const reconfigureWorkspaceVcsManagerComponent: ReconfigureFn = ({
   repoRootDir,
@@ -115,9 +112,9 @@ const reconfigureWorkspaceVcsManagerComponent: ReconfigureFn = ({
   xmlStringifier,
 }) => {
   const currentVcsManagerConfigElementParsed =
-    (workspaceXmlParsed.project.component.find(
+    workspaceXmlParsed.project.component.find(
       (componentEl) => componentEl['@_name'] === 'VcsManagerConfiguration',
-    ) as ParsedComponentElement) || {
+    )! || {
       option: [],
     };
 
@@ -165,7 +162,8 @@ const reconfigureWorkspaceVcsManagerComponent: ReconfigureFn = ({
 };
 
 /**
- * Updates <component name="PropertiesComponent"> to fit recommended settings for this repo
+ * Updates <component name="PropertiesComponent"> to fit recommended settings
+ * for this repo
  */
 const reconfigureWorkspacePropertiesComponent: ReconfigureFn = ({
   repoRootDir,
@@ -185,7 +183,7 @@ const reconfigureWorkspacePropertiesComponent: ReconfigureFn = ({
     workspaceXmlParsed.project.component.find(
       (componentEl) => componentEl['@_name'] === 'PropertiesComponent',
     )!['#text']!,
-  ) as { keyToString: { [key: string]: string } };
+  ) as { keyToString: Record<string, string> };
 
   const propertiesComponentRegex =
     /(<component\s+name="PropertiesComponent"\s*>)[\S\s]*?(<\/component>)/;
@@ -217,7 +215,8 @@ const overwriteFile = async (destinationPath: string, sourcePath: string) => {
 };
 
 /**
- * Overwrites eslint, prettier and general JS .idea files to fit recommended settings for this repo
+ * Overwrites eslint, prettier and general JS .idea files to fit recommended
+ * settings for this repo
  */
 export const overwriteJetBrainsFiles = (repoDir: string) => {
   return Promise.all([

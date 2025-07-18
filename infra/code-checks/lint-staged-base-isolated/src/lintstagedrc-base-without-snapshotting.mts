@@ -34,9 +34,9 @@ export const ESLINT_ARGS = `--config=${ESLINT_ACTIVE_CONFIG} --report-unused-dis
 export const ESLINT_CMD = `pnpm --filter="@repo/eslint-base-isolated" run eslint ${ESLINT_ARGS}`;
 
 /**
- * TypeScript checking must account for different `tsconfig` files.
- * We create multiple TS commands, each for different tsconfig file,
- * so that lint-staged can run them in parallel
+ * TypeScript checking must account for different `tsconfig` files. We create
+ * multiple TS commands, each for different tsconfig file, so that lint-staged
+ * can run them in parallel
  *
  * @see https://github.com/microsoft/TypeScript/issues/53979
  */
@@ -49,21 +49,22 @@ export const TSC_COMMANDS_PER_TSCONFIG: Record<string, keyof LintStagedConfig> =
   );
 
 /**
- * Creates a `LintStagedConfig` by mapping tsconfig files to their suitable lint-staged command.
+ * Creates a `LintStagedConfig` by mapping tsconfig files to their suitable
+ * lint-staged command.
  *
  * Uses `TSC_CONFIG_FILENAMES` (list of tsconfig filenames) and
- * `tscCommandsPerTsconfig` to determine which commands to run based on changed files
- * and their match with tsconfig `include`/`exclude` patterns.
- *
- * @param tscCommandsPerTsconfig - Mapping of tsconfig filenames to lint-staged commands.
- * @returns {LintStagedConfig}
- *   An object where keys are patterns, and values are functions deciding commands for matching files.
+ * `tscCommandsPerTsconfig` to determine which commands to run based on changed
+ * files and their match with tsconfig `include`/`exclude` patterns.
  *
  * @example
- * const tscCommands = {
- *   'tsconfig.app.json': 'tsc --noEmit',
- *   'tsconfig.lib.json': 'tsc --noEmit --project ./libs'
- * };
+ *   const tscCommands = {
+ *     // files included by tsconfig.app.json will be using `tsc` installed here in `lint-staged-isolated`
+ *     'tsconfig.app.json': 'tsc --project tsconfig.app.json--noEmit ',
+ *     // files included by tsconfig.lib.json will be using `tsc` installed in the packages being checked
+ *     'tsconfig.lib.json':
+ *       'pnpm exec tsc --project tsconfig.lib.json --noEmit',
+ *   };
+ *   getTypescriptLintStagedConfig(tscCommands);
  */
 export const getTypescriptLintStagedConfig = (
   tscCommandsPerTsconfig: Record<string, keyof LintStagedConfig>,
@@ -74,7 +75,7 @@ export const getTypescriptLintStagedConfig = (
   return Object.fromEntries(
     TSC_CONFIG_FILENAMES.map((tsConfigFileName) => [
       TSC_PATTERNS_PER_TSCONFIG[tsConfigFileName],
-      (changedFilePaths: string[]) => {
+      (changedFilePaths: Array<string>) => {
         const changedRelativeFilePaths = changedFilePaths.map(
           (absoluteFilePath) => path.relative(PACKAGE_DIR, absoluteFilePath),
         );
@@ -90,9 +91,7 @@ export const getTypescriptLintStagedConfig = (
   ) as LintStagedConfig;
 };
 
-/**
- * The final `lint-staged` base config
- */
+/** The final `lint-staged` base config */
 const config: LintStagedConfig = {
   [ESLINT_PATTERN]: `${ESLINT_CMD} ${LINT_SHOULD_FIX ? '--fix' : ''}`,
   [PRETTIER_PATTERN]: `pnpm exec prettier --ignore-unknown --no-error-on-unmatched-pattern ${LINT_SHOULD_FIX ? '--write' : '--check'}`,

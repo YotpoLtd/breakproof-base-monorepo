@@ -1,0 +1,44 @@
+name: Sends message to slack channel
+description: Sends message to slack channel
+
+#
+# Unlike reusable workflows, reusable actions like this one can't inherit secrets
+#
+# For that reason, the slack secrets are exposed as environment variables:
+#
+#  - `SECRET_SLACK_WEBHOOK`
+#
+
+inputs:
+  channel-name:
+    description: 'Slack channel name'
+    required: true
+  message:
+    description: Message content (supports markdown)
+    required: true
+  title:
+    description: Message title (supports markdown)
+    required: true
+  success:
+    description: Set to `false` if that's not a success message
+    default: 'true'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Slack Notification
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_CHANNEL: ${{ inputs.channel-name }}
+        SLACK_MSG_AUTHOR: SystemYotpo
+        SLACK_ICON_EMOJI: ':github:'
+        SLACK_MESSAGE: ${{ inputs.message }}
+        SLACK_TITLE: |-
+          ${{ inputs.success == 'true' && ':white_check_mark:' || ':alert:' }} ${{ inputs.title }}${{ inputs.success != 'true' && ' :alert:' || '' }}
+        SLACK_FOOTER: |-
+          <https://github.com/${{github.repository}}/actions/runs/${{github.run_id}}|Triggered on this workflow run>
+        SLACKIFY_MARKDOWN: true
+        MSG_MINIMAL: true
+        SLACK_USERNAME: ${{ github.repository }}
+        SLACK_COLOR: ${{ inputs.success == 'true' && 'success' || 'failure' }}
+        SLACK_WEBHOOK: ${{ env.SECRET_SLACK_WEBHOOK }}

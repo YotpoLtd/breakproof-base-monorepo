@@ -14,9 +14,7 @@ export interface FileProblemSummary extends Pick<CodeProblem, 'issueType'> {
   count: number;
 }
 
-export interface CodeProblemsSnapshot {
-  [filename: Filename]: Array<FileProblemSummary>;
-}
+export type CodeProblemsSnapshot = Record<Filename, Array<FileProblemSummary>>;
 
 export type CodeCheckerCliOutputParser = (
   codeCheckerCliOutput: string,

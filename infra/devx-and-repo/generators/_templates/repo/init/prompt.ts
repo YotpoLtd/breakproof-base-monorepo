@@ -15,9 +15,7 @@ import { createTemplateRenderer } from './template';
 
 const renderTemplate = createTemplateRenderer(__dirname);
 
-/**
- * @see For list of built-in types: https://github.com/enquirer/enquirer/tree/master/lib/prompts
- */
+/** @see For list of built-in types: https://github.com/enquirer/enquirer/tree/master/lib/prompts */
 export const params = async () => {
   const repoRoot = await getRepoRootDir();
   process.chdir(repoRoot);
@@ -104,7 +102,8 @@ export const params = async () => {
 
   /**
    * 1. Make sure no other file is staged
-   * 2. Make 2 commits, otherwise git will make the wrong assumption the files haven't moved but have changed
+   * 2. Make 2 commits, otherwise git will make the wrong assumption the files
+   *    haven't moved but have changed
    */
   await $`git reset`;
 

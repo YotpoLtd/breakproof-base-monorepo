@@ -1,0 +1,6 @@
+{
+  "src/filterPackagesExtended.ts": [
+    { "count": 1, "issueType": "@typescript-eslint/no-non-null-assertion" },
+    { "count": 1, "issueType": "@typescript-eslint/no-unsafe-assignment" }
+  ]
+}

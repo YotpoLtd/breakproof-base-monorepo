@@ -19,5 +19,6 @@
   "prettier.prettierPath": "./node_modules/prettier",
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "typescript.tsserver.nodePath": "<repo root>/infra/node",
-  "eslint.runtime": "<repo root>/infra/node"
+  "eslint.runtime": "<repo root>/infra/node",
+  "eslint.useFlatConfig": true,
 }

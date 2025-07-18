@@ -9,8 +9,6 @@ export declare const getFileOwnershipInfo: (
   filesWithPathsStartingFromRootDir: Array<string>,
   codeownersRules: Array<CodeownersRule>,
 ) => Promise<{
-  ownershipPerFile: {
-    [file: string]: string;
-  };
+  ownershipPerFile: Record<string, string>;
   filesWithoutOwner: Set<string>;
 }>;

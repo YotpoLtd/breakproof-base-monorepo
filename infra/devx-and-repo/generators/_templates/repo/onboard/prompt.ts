@@ -21,9 +21,7 @@ enum CodeEditor {
   OTHER = 'Other',
 }
 
-/**
- * @see For list of built-in types: https://github.com/enquirer/enquirer/tree/master/lib/prompts
- */
+/** @see For list of built-in types: https://github.com/enquirer/enquirer/tree/master/lib/prompts */
 export const params = async ({
   options,
 }: {
@@ -43,9 +41,7 @@ export const params = async ({
     printWelcome();
   }
 
-  /**
-   * pnpm --filter=devtools... install
-   */
+  /** Pnpm --filter=devtools... install */
   stepNum++;
   const hasInstalledDevtools = await prompts.quiz({
     ...COMMON_DEVELOPER_QUIZ_OPTIONS,
@@ -65,9 +61,7 @@ export const params = async ({
     done: hasInstalledDevtools.correct,
   });
 
-  /**
-   * CODE EDITOR INTEGRATION
-   */
+  /** CODE EDITOR INTEGRATION */
   stepNum++;
   printToTerminal(
     createQuizStepHeader(
@@ -83,24 +77,44 @@ export const params = async ({
   const repoRootDir = await getRepoRootDir();
 
   if (codeEditor === CodeEditor.JETBRAINS) {
+    await prompts.quiz({
+      ...COMMON_DEVELOPER_QUIZ_OPTIONS,
+      prefix: chalk.yellow(
+        `Open your IDE and go to top left menu item named "<IDE NAME>" and click "About <IDE NAME>" subitem`,
+      ),
+      message: `
+If the version shown there is not the latest available online, ${chalk.bold('please upgrade your IDE')}`,
+      choices: createDeveloperQuizOptions(),
+    });
     await applyJetBrainsRecommendations(repoRootDir);
     await prompts.quiz({
       ...COMMON_DEVELOPER_QUIZ_OPTIONS,
-      prefix: `${chalk.yellow(
+      prefix: chalk.yellow(
         `Now, open your IDE and it will ask you to install the required plugins ${terminalLink(
           '(see <repo root>/docs/JetBrains-required-plugins-example-popup.png)',
           `file://${repoRootDir}/docs/JetBrains-required-plugins-example-popup.png`,
         )}`,
-      )}`,
+      ),
       message: `
 Click "Install required plugins" and after this is complete, come back here`,
       choices: createDeveloperQuizOptions(),
     });
     await prompts.quiz({
       ...COMMON_DEVELOPER_QUIZ_OPTIONS,
-      prefix: `${chalk.yellow(`Open the ".prettierrc.mjs" of the project you are working on.`)}`,
+      prefix: chalk.yellow(
+        `Open the ".prettierrc.mjs" of the project you are working on.`,
+      ),
       message: `
 Having this file opened, first press "Shift" twice, then type "Apply Prettier Code Style Rules" and select it`,
+      choices: createDeveloperQuizOptions(),
+    });
+    await prompts.quiz({
+      ...COMMON_DEVELOPER_QUIZ_OPTIONS,
+      prefix: chalk.yellow(
+        `Open the "Settings (CMD+,)" and then go to Tools -> Terminal.`,
+      ),
+      message: `
+Make sure the selected terminal engine is the latest one, likely labeled "beta" or "Reworked 2025"`,
       choices: createDeveloperQuizOptions(),
     });
     actionListItems.push({
@@ -112,7 +126,9 @@ Having this file opened, first press "Shift" twice, then type "Apply Prettier Co
     await applyVsCodeRecommendations(repoRootDir);
     const willAcceptVSCodeSettings = await prompts.quiz({
       ...COMMON_DEVELOPER_QUIZ_OPTIONS,
-      prefix: `${chalk.yellow(`The first time you open a file in the repo VSCode ask you to accept the settings.`)}`,
+      prefix: chalk.yellow(
+        `The first time you open a file in the repo VSCode ask you to accept the settings.`,
+      ),
       message: `
 Make sure you accept the prompts that appear at the lower right`,
       choices: createDeveloperQuizOptions({
@@ -135,9 +151,7 @@ Make sure you accept the prompts that appear at the lower right`,
   }
 
   if (!options?.isSingleTeam) {
-    /**
-     * CODEOWNERS MAINTENANCE
-     */
+    /** CODEOWNERS MAINTENANCE */
     stepNum++;
     const willAddCodeowners = await prompts.quiz({
       ...COMMON_DEVELOPER_QUIZ_OPTIONS,

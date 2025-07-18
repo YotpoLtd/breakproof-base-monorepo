@@ -13,7 +13,7 @@ import {
   REPO_DIR_BY_PKG_TYPE,
 } from './extra-template-vars';
 
-// eslint-disable-next-line @typescript-eslint/naming-convention -- Mimicking a constant on purpose
+// eslint-disable-next-line @typescript-eslint/naming-convention -- Mimicking constant
 let REPO_ROOT_DIR: string;
 export const getRepoRootDir = async () => {
   if (!REPO_ROOT_DIR) {
@@ -34,7 +34,8 @@ export const getDestinationByType = ({
   const baseDir = REPO_DIR_BY_PKG_TYPE[type];
   return path.resolve(
     REPO_ROOT_DIR,
-    `${typeof baseDir === 'string' ? baseDir : baseDir[subtype as InfraToolSubtype]}/${name}`,
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- We know subtype is defined
+    `${typeof baseDir === 'string' ? baseDir : baseDir[subtype!]}/${name}`,
   );
 };
 
@@ -49,9 +50,7 @@ export const stringifyArguments = (parsedArgs: Record<string, unknown>) => {
 
 // eslint-disable-next-line no-console -- Aliasing console to another function for semantic usage
 export const printToTerminal = console.log.bind(console);
-/**
- * Helper to output progress info
- */
+/** Helper to output progress info */
 export const printCheck = (checkDescription: string) =>
   printToTerminal(
     chalk.blue(
@@ -61,9 +60,7 @@ export const printCheck = (checkDescription: string) =>
     ),
   );
 
-/**
- * Helper to output error info
- */
+/** Helper to output error info */
 export const printError = (err: string, prefix = 'PACKAGE PROBLEM') => {
   printToTerminal(`
 ${chalk.bgRed(chalk.whiteBright(` ${prefix}: `))} ${chalk.red(err)}`);

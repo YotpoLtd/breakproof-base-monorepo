@@ -1,6 +1,4 @@
-/**
- * This file is imported & transpiled by `release-it`
- */
+/** This file is imported & transpiled by `release-it` */
 import * as path from 'node:path';
 
 import findRoot from 'find-root';
@@ -10,7 +8,7 @@ import { ReleaseItConfig } from './release.types';
 
 export * from './release.types';
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires -- This is a shortcut for reading JSON using require()
+// eslint-disable-next-line @typescript-eslint/no-require-imports -- This is a shortcut for reading JSON using require()
 const PACKAGE_JSON = require(path.join(process.cwd(), `package.json`)) as {
   version: string;
   name: string;
@@ -80,9 +78,7 @@ const getReleaseItBaseConfig: (
       commit: finalVersionStrategy !== VersioningStrategy.SNAPSHOT,
       push: finalVersionStrategy !== VersioningStrategy.SNAPSHOT,
       tag: finalVersionStrategy !== VersioningStrategy.SNAPSHOT,
-      /**
-       * `requireCleanWorkingDir` is to be removed once we have a stable release
-       */
+      /** `requireCleanWorkingDir` is to be removed once we have a stable release */
       requireCleanWorkingDir: false,
       // '${version}' is intentionally not in backticks, it is replaced by `release-it`
       commitMessage: `chore: release ${PACKAGE_NAME}@` + '${version}',

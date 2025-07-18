@@ -147,7 +147,7 @@
    * This is achieved with a little bit of customization in .pnpmfile.cjs
    */
   codeEditorIntegrationDependencies: {
-    eslint: '^8.57.1',
+    eslint: '9.30.1',
     prettier: '3.4.2',
   },
 
@@ -264,6 +264,11 @@
       'zx': {
         peerDependencies: {
           '@types/fs-extra': '*',
+        },
+      },
+      '@eslint/eslintrc': {
+        peerDependencies: {
+          eslint: '*',
         },
       },
     },

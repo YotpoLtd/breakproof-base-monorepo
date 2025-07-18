@@ -14,12 +14,13 @@ export const SUPPORTED_WEB_BROWSERS = [
   'Edge >= 70',
   'Opera >= 42',
   /**
-   * iOS means Mobile Safari. And all browsers on iOS use the engine of Safari
+   * IOS means Mobile Safari. And all browsers on iOS use the engine of Safari
    * so Firefox & Chrome on iOS rely on this.
    */
   'iOS >= 8',
   /**
-   * The following is added to widen the coverage for other browsers with market share
+   * The following is added to widen the coverage for other browsers with market
+   * share
    */
   '>0.3%',
   'not dead',
@@ -45,5 +46,5 @@ export const SUPPORTED_AUTORESOLVE_FILE_EXTENSIONS = [
 
 export const NODE_VERSIONS = (NODE_VERSIONS_NO_TYPES as Array<string>)
   .sort()
-  .reverse();
-export const NPM_SCOPES = NPM_SCOPES_NO_TYPES as Array<string>;
+  .reverse() as [string, ...Array<string>];
+export const NPM_SCOPES = NPM_SCOPES_NO_TYPES as [string, ...Array<string>];

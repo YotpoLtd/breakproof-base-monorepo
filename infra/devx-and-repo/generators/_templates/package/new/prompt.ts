@@ -6,12 +6,10 @@ import { NODE_VERSIONS, NPM_SCOPES } from '@repo/environment';
 
 // if wondering about the `#...` import see: https://nodejs.org/api/packages.html#subpath-imports
 import {
-  HELP_ACTION_TEXT,
   InfraToolSubtype,
   NODE_VERSION_LATEST,
   PACKAGE_SUBTYPE_BY_TYPE,
   PackageType,
-  TechStack,
 } from '#extra-template-vars';
 import {
   getDestinationByType,
@@ -25,9 +23,7 @@ import * as sharedPrompts from '#shared-prompts';
 import { params as lintParams } from '../../add/lint/prompt';
 import { params as releaseParams } from '../../add/release/prompt';
 
-/**
- * Ensures developer adds owners in CODEOWNERS file
- */
+/** Ensures developer adds owners in CODEOWNERS file */
 const ensureCodeowners = async (
   repoRootDir: string,
   projectDirs: Array<string>,
@@ -52,8 +48,8 @@ const ensureCodeowners = async (
   }
   const hasAddedOwners = await prompts.quiz({
     ...sharedPrompts.COMMON_DEVELOPER_QUIZ_OPTIONS,
-    prefix: `${chalk.yellow(`Every project must have owners.
-`)}`,
+    prefix: chalk.yellow(`Every project must have owners.
+`),
     message: `Can you add:
 ${chalk.green(`
 ${projectDirs.map((projectDir) => `${projectDir.replace(repoRootDir, '')} <YOUR TEAM NAME IN GITHUB>`).join('\n')}
@@ -72,9 +68,7 @@ to ${terminalLink(
   }
 };
 
-/**
- * @see For list of built-in types: https://github.com/enquirer/enquirer/tree/master/lib/prompts
- */
+/** @see For list of built-in types: https://github.com/enquirer/enquirer/tree/master/lib/prompts */
 export const params = async ({
   args: cliArgs,
 }: {
@@ -83,30 +77,21 @@ export const params = async ({
   const type = await sharedPrompts.getType(cliArgs);
 
   const subtype =
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- False positive because of the type assertion
     (cliArgs.subtype as InfraToolSubtype) ||
     (PACKAGE_SUBTYPE_BY_TYPE[type] &&
       (await prompts.autocomplete({
         message: 'Subtype of the package?',
-        choices: Object.values(PACKAGE_SUBTYPE_BY_TYPE[type]!).map((value) => ({
+        choices: Object.values(PACKAGE_SUBTYPE_BY_TYPE[type]).map((value) => ({
           title: value,
           value,
         })),
       })));
 
-  const techStack =
-    cliArgs.techStack ||
-    (type === PackageType.INFRA_TOOL || type === PackageType.E2E_APP
-      ? TechStack.BASE
-      : await prompts.autocomplete({
-          message: 'Tech stack?',
-          choices: Object.values(TechStack).map((value) => ({
-            title: value,
-            value,
-          })),
-        }));
+  const techStack = await sharedPrompts.getTechStack(type, cliArgs);
 
   const nodeVersion =
-    cliArgs.nodeVersion ||
+    cliArgs.nodeVersion ??
     (type === PackageType.E2E_APP
       ? NODE_VERSION_LATEST
       : await prompts.autocomplete({
@@ -117,15 +102,9 @@ export const params = async ({
           })),
         }));
 
-  if (techStack === TechStack.ANGULAR13) {
-    throw new Error(
-      `Generator for packages based on Angular 13 is not implemented yet! Please ${HELP_ACTION_TEXT}.`,
-    );
-  }
-
-  const name =
-    cliArgs.name ||
-    (await prompts.input<string>({
+  const name: string =
+    cliArgs.name ??
+    (await prompts.input({
       message: 'Package name (without the `@` scope)?',
       validate: (name) => {
         if (!name) {
@@ -136,7 +115,7 @@ export const params = async ({
     }));
 
   const npmScope =
-    cliArgs.npmScope ||
+    cliArgs.npmScope ??
     (await prompts.autocomplete({
       message: 'Full package name (with `@` scope)?',
       choices: NPM_SCOPES.map((scope) => ({
@@ -145,7 +124,7 @@ export const params = async ({
       })),
     }));
 
-  const nameWithScope = `@${npmScope}/${name}`;
+  const nameWithScope = npmScope !== name ? `@${npmScope}/${name}` : name;
 
   if (!cliArgs.skipCodeownersCheck) {
     await ensureCodeowners(await getRepoRootDir(), [
@@ -201,6 +180,7 @@ export const params = async ({
       type,
       hasTypescript: true,
       hasTsConfigNode: true,
+      techStack,
       isSandbox,
       supportingForProject,
     },

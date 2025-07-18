@@ -106,7 +106,8 @@ const main = async () => {
 
   for (const globPattern of patterns) {
     /**
-     * Copy lint-staged mechanism: https://github.com/lint-staged/lint-staged/blob/163112f0214444021670009c845813416c60a852/lib/generateTasks.js#L34-L42
+     * Copy lint-staged mechanism:
+     * https://github.com/lint-staged/lint-staged/blob/163112f0214444021670009c845813416c60a852/lib/generateTasks.js#L34-L42
      */
     const matchingRelativeFilePaths = micromatch(allProjectFiles, globPattern, {
       dot: true,

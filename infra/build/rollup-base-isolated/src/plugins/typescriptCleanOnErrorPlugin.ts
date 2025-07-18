@@ -14,8 +14,8 @@ const isTSErrorLog = (log: RollupLog): boolean =>
   );
 
 /**
- * Remove output files if there was a TypeScript error
- * This way consumers of this library will fail their build as well.
+ * Remove output files if there was a TypeScript error This way consumers of
+ * this library will fail their build as well.
  */
 export function typescriptCleanOnError(): Plugin {
   let hasTsErrors = false;
@@ -34,14 +34,15 @@ export function typescriptCleanOnError(): Plugin {
     },
 
     /**
-     * Prevent output files if there was error, so consumers of this library will fail their build
-     * If there is any existing files -> remove them
+     * Prevent output files if there was error, so consumers of this library
+     * will fail their build If there is any existing files -> remove them
      */
     generateBundle: {
       order: 'pre',
       async handler(outputOptions, bundle) {
         if (hasTsErrors) {
           // prevent output
+          // eslint-disable-next-line @typescript-eslint/no-dynamic-delete -- This is how rollup bundle works
           Object.keys(bundle).forEach((fileName) => delete bundle[fileName]);
           // cleanup existing output
           const outputDir = path.resolve(

@@ -10,9 +10,8 @@ const helpers = require('./helpers');
 const { $runBash } = require('#zx');
 
 /**
- * @see defaults: https://github.com/jondot/hygen/blob/v6.2.11/src/bin.ts#L7-L17
- *
  * @type {import('hygen').RunnerConfig}
+ * @see defaults: https://github.com/jondot/hygen/blob/v6.2.11/src/bin.ts#L7-L17
  */
 module.exports = {
   cwd: $runBash({ sync: true })`pnpm --workspace-root exec pwd`.stdout.trim(),
@@ -20,15 +19,17 @@ module.exports = {
   helpers,
   logger: new DefaultHygenLogger((text) => {
     /**
-     * `_default` is internal to hygen, so we don't want to see it in the output.
+     * `_default` is internal to hygen, so we don't want to see it in the
+     * output.
      */
     // eslint-disable-next-line no-console -- Logging is intentional here
     console.log(text.replace('_default:', ''));
   }),
   /**
-   * fork of the default with 2 changes:
-   * 1. display what shell commands will be executed from a template
-   * 1. display output of those shell commands
+   * Fork of the default with 2 changes:
+   *
+   * 1. Display what shell commands will be executed from a template
+   * 2. Display output of those shell commands
    */
   exec: (action, body) => {
     const opts = body && body.length > 0 ? { input: body } : {};

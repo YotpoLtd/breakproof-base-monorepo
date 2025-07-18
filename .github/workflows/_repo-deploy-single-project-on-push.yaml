@@ -1,0 +1,91 @@
+name: Deployment of individual project
+on:
+  workflow_dispatch:
+    inputs:
+      package-name:
+        description:
+          Name of package to be deployed, as written in its `package.json`
+        type: string
+        required: true
+      git-ref:
+        description:
+          Git reference to checkout and deploy (branch, tag, or commit hash)
+        type: string
+        required: true
+  workflow_call:
+    inputs:
+      package-name:
+        description:
+          Name of package to be deployed, as written in its `package.json`
+        type: string
+        required: true
+      git-ref:
+        description:
+          Git reference to checkout and deploy (branch, tag, or commit hash)
+        type: string
+        required: true
+
+concurrency:
+  group: ${{ inputs.package-name }}-deployment
+  cancel-in-progress: false
+
+env:
+  SECRET_SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+jobs:
+  ensure-admin-user-or-workflow-call:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/ensure-admin-user-or-workflow-call
+
+  example:
+    if: ${{ inputs.package-name == '@example/example-project-name' }}
+    runs-on: ubuntu-latest
+    needs: [ensure-admin-user-or-workflow-call]
+    env:
+      SLACK_CHANNEL: name-of-slack-channel-that-will-get-deployment-notifications
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.git-ref }}
+
+      - uses: ./.github/actions/setup-pnpm
+        with:
+          store-and-tasks-cache-package-filter: '${{ inputs.package-name }}...'
+          task-cache-name: example-deploy
+
+      - uses: ./.github/actions/npm-login
+
+      - name: Install package and all its dependencies + any ci tools needed
+        run: |
+          pnpm --filter='@repo/citools...' --filter='${{ inputs.package-name }}...' install --frozen-lockfile --prefer-offline
+
+      - name: Deploy to production
+        if: ${{ github.ref_name == github.event.repository.default_branch }}
+        run: |
+          echo '...YOUR PRODUCTION DEPLOY COMMANDS HERE OR IN SEPARATE STEPS...'
+
+      - name: Deploy to staging
+        if: ${{ github.ref_name != github.event.repository.default_branch }}
+        run: |
+          echo '...YOUR STAGING DEPLOY COMMANDS HERE OR IN SEPARATE STEPS...'
+
+      - name: Slack on success
+        if: ${{ success() }}
+        uses: ./.github/actions/slack-message-on-deployment
+        with:
+          channel-name: ${{ env.SLACK_CHANNEL }}
+          success: true
+          package-name: ${{ inputs.package-name }}
+          git-ref: ${{ inputs.git-ref }}
+
+      - name: Slack on failure
+        if: ${{ failure() && env.SECRET_SLACK_WEBHOOK }}
+        uses: ./.github/actions/slack-message-on-deployment
+        with:
+          channel-name: ${{ env.SLACK_CHANNEL }}
+          success: false
+          package-name: ${{ inputs.package-name }}
+          git-ref: ${{ inputs.git-ref }}

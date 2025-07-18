@@ -263,6 +263,8 @@ individual tools without having to redo the entire system 🤔
    [import your existing](./infra/devx-and-repo/repo-shell-scripts/README.md#using-import-from-other-repo)
    projects.
 
+<a name="automatic-npm-publishing"></a>
+
 ### If you want to automatically release projects as `npm` packages
 
 <details>
@@ -328,6 +330,23 @@ You need to add some GitHub configuration for your repository:
 
 6. If you are publishing to a private registry set this at the top of the
    [`<repo root>/.npmrc`](./.npmrc).
+
+</details>
+
+### If you want to automatically deploy applications
+
+<details>
+<summary>Expand to see steps for setting up automatic application deployment</summary>
+
+1. Follow the first 3 steps from the instructions for
+   [automatic `npm` publishing](#automatic-npm-publishing)
+2. If you use Slack and you want to get message to a channel of your choice, set
+   up a GitHub repository secret named `SLACK_WEBHOOK_URL` with a webhook
+   generated from your slack admin
+3. Open
+   [`<repo root>/.github/workflows/_repo-deploy-single-project-on-push.yaml`](./workflows/_repo-deploy-single-project-on-push.yaml)
+   and copy the `example` job there, after which customize the steps to match
+   the specifics of your app deployment
 
 </details>
 

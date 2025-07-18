@@ -27,9 +27,7 @@ const readPackageJson = (packageJsonFilePath: string) =>
     scripts?: Record<string, string>;
   };
 
-/**
- * Check for issues inside package.json & keep asking to be fixed until they are
- */
+/** Check for issues inside package.json & keep asking to be fixed until they are */
 const checkPackageJsonIssues = async (packageJson: { name: string }) => {
   printCheck(
     chalk.blue(
@@ -38,7 +36,7 @@ const checkPackageJsonIssues = async (packageJson: { name: string }) => {
   );
   const eslintCommand = `pnpm --silent --filter='${packageJson.name}' exec pnpm --silent --workspace-root shared:lint:package.json`;
   try {
-    execSync(`${eslintCommand}`, {
+    execSync(eslintCommand, {
       shell: 'bash',
       stdio: 'inherit',
     });
@@ -65,12 +63,12 @@ const checkPackageJsonIssues = async (packageJson: { name: string }) => {
  */
 const getValidPackageInfo = async (
   repoRootDir: string,
-  initialValue?: string | undefined,
+  initialValue?: string,
 ) => {
   let packageJsonFilePath: string;
   let packageJson: { name: string; scripts?: Record<string, string> };
 
-  const packageDir = await prompts.input<string>({
+  const packageDir = await prompts.input({
     message: 'Package directory:',
     ...(initialValue && { initial: initialValue }),
     validate: (typedPackageDir) => {
@@ -154,9 +152,7 @@ ${chalk.bold(chalk.magenta('For examples of what those scripts could be, take a 
   }
 };
 
-/**
- * @see For list of built-in types: https://github.com/enquirer/enquirer/tree/master/lib/prompts
- */
+/** @see For list of built-in types: https://github.com/enquirer/enquirer/tree/master/lib/prompts */
 export const params = async ({
   args: cliArgs,
 }: {

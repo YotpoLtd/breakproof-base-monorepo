@@ -7,7 +7,10 @@ export default {
   ...baseLintStagedConfig,
   ...getTypescriptLintStagedConfig({
     ...TSC_COMMANDS_PER_TSCONFIG,
-    /** This is required to run typescript checks from the @repo/lint package instead of the current package. */
+    /**
+     * This is required to run typescript checks from the @repo/lint package
+     * instead of the current package.
+     */
     'tsconfig.json': 'tsc --project tsconfig.json --noEmit',
   }),
 };

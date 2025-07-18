@@ -1,7 +1,6 @@
 {
   "extends": ["./tsconfig.node22.base.json"],
   "compilerOptions": {
-    "incremental": true,
     "declaration": true
   }
 }

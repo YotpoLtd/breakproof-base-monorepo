@@ -17,7 +17,9 @@ const getPackageCommitsHashesSinceLastStableRelease = async () => {
   const gitDiff = `${latestStablePackageReleaseTag ? `${latestStablePackageReleaseTag}..` : ''}HEAD`;
   return new Set(
     /**
-     * This git command accounts for the `gitRawCommitsOpts` options passed to @release-it/conventional-changelog
+     * This git command accounts for the `gitRawCommitsOpts` options passed to
+     *
+     * @release-it/conventional-changelog
      */
     execSync(
       `git log --pretty=format:"%H" --full-history --no-merges ${gitDiff} -- ${projectPath}`,
@@ -51,14 +53,15 @@ export default async () => {
 
         return (
           /**
-           * Passthrough the originally calculated version change if the commit is in the package itself
+           * Passthrough the originally calculated version change if the commit
+           * is in the package itself
            */
           ORIGINAL_YOTPO_PRESET.recommendedBumpOpts.whatBump(
             packageOnlyCommits,
           ) ||
           /**
-           * Otherwise, if there is release-triggering commit in dependencies affecting the build
-           * Mark release as a patch "chore" release.
+           * Otherwise, if there is release-triggering commit in dependencies
+           * affecting the build Mark release as a patch "chore" release.
            */
           (ORIGINAL_YOTPO_PRESET.recommendedBumpOpts.whatBump(
             workspaceDependenciesCommits,
@@ -70,9 +73,7 @@ export default async () => {
       },
     },
 
-    /**
-     * Tweaks for how the CHANGELOG.md is created
-     */
+    /** Tweaks for how the CHANGELOG.md is created */
     writerOpts: {
       ...ORIGINAL_YOTPO_PRESET.writerOpts,
       transform: (commit, context) => {
@@ -80,15 +81,13 @@ export default async () => {
           ORIGINAL_YOTPO_PRESET.writerOpts.transform(commit, context);
 
         if (THIS_PACKAGE_COMMITS_SET.has(commit.hash)) {
-          /**
-           * Pass through commits that belong to this package
-           */
+          /** Pass through commits that belong to this package */
           return originalTransformation;
         } else if (originalTransformation && !hasIncludedFakeCommit) {
           hasIncludedFakeCommit = true;
           /**
-           * Return "fake" commit to include in the changelog.
-           * Make sure there is only one such "fake" commit.
+           * Return "fake" commit to include in the changelog. Make sure there
+           * is only one such "fake" commit.
            */
           return {
             type: 'Chores',
@@ -100,9 +99,7 @@ export default async () => {
             committerDate: Date.now(),
           };
         } else {
-          /**
-           * Don't write this commit in the changelog
-           */
+          /** Don't write this commit in the changelog */
           return null;
         }
       },

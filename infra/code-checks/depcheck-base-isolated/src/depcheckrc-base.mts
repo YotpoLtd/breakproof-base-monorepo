@@ -23,7 +23,7 @@ const NODE_MODULES_PEER_DEPS = [
         return packageJson.peerDependencies
           ? Object.keys(packageJson.peerDependencies)
           : [];
-      } catch (e) {
+      } catch (_e) {
         return [];
       }
     }),
@@ -41,7 +41,7 @@ export const defineIgnoredPackage = ({
 }) => {
   if (reason.length < 10) {
     throw new Error(
-      `When ignoring a package, please provide a descriptive reason longer than ${MINIMUM_REASON_LENGTH}.`,
+      `When ignoring a package, please provide a descriptive reason longer than ${String(MINIMUM_REASON_LENGTH)}.`,
     );
   }
   return packageName;

@@ -4,11 +4,8 @@ import { NODE_VERSIONS } from '@repo/environment';
 import { getAllPackages } from '@repo/pnpm-helpers';
 
 /**
- *
- *
- * Anything exported from this file is available to all generators template files (`*.ejs.t`)
- *
- *
+ * Anything exported from this file is available to all generators template
+ * files (`*.ejs.t`)
  */
 
 export enum PackageType {
@@ -109,4 +106,6 @@ export const getPackages = async () => {
   }
   return getPackagesCached();
 };
-export const NODE_VERSION_LATEST = [...NODE_VERSIONS].sort().reverse()[0]!;
+export const NODE_VERSION_LATEST = (
+  [...NODE_VERSIONS].sort().reverse() as [string, ...Array<string>]
+)[0];

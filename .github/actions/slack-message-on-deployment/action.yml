@@ -1,0 +1,45 @@
+name: Sends message to slack channel with deployment status
+description: Sends message to slack channel with deployment status
+
+#
+# Unlike reusable workflows, reusable actions like this one can't inherit secrets
+#
+# For that reason, the slack secrets must be exposed as environment variables:
+#
+#  - `SECRET_SLACK_WEBHOOK`
+#
+
+inputs:
+  package-name:
+    description: Name of deployed package, as written in its `package.json`
+    required: true
+  channel-name:
+    description: Slack channel name to post the message to
+    required: true
+  success:
+    description: Set to `false` if that's not a success message
+    required: true
+  git-ref:
+    description: Git reference used for deployment (branch, tag, or commit hash)
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - uses: ./.github/actions/slack-message
+      if: ${{ inputs.success == 'false' }}
+      with:
+        channel-name: ${{ inputs.channel-name }}
+        title: Deployment failed
+        message: |-
+          `${{ inputs.package-name }}` failed to deploy from `${{ inputs.git-ref }}`
+        success: false
+    - uses: ./.github/actions/slack-message
+      if:
+        ${{ github.ref_name == github.event.repository.default_branch &&
+        inputs.success == 'true' }}
+      with:
+        channel-name: ${{ inputs.channel-name }}
+        title: Deployment success!
+        message: |-
+          `${{ inputs.package-name }}` deployed to production from `${{inputs.git-ref }}`!
