@@ -22,7 +22,7 @@ to: "<%- type === PackageType.INFRA_TOOL || type === PackageType.E2E_APP ? null 
     ReactDOM.render(
       <React.StrictMode>
         <% if (isSandbox) { %>
-          The '<%- supportingForProject %>' component: <ExportedComponent />
+          The &apos;<%- supportingForProject %>&apos; component: <ExportedComponent />
         <% } else { %>
           Hello from <%- name %>!
         <% } %>
