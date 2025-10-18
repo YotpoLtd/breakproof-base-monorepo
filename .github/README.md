@@ -155,7 +155,7 @@ individual tools without having to redo the entire system 🤔
   the tools in a separate package instead of the same package as your project.
   In fact each different tool is installed in its own individual package. This
   allows us to
-  [leverage an ability of `pnpm` to specify a different `node.js` for each package](https://pnpm.io/9.x/package_json#pnpmexecutionenvnodeversion).
+  [leverage an ability of `pnpm` to specify a different `node.js` for each package](https://pnpm.io/package_json#devenginesruntime).
   Essentially you get an isolated pair of `<tool> + <node.js>`, e.g.
   `eslint + node22` and this lets you run `eslint`(_using `node22`_) from any
   place in the repo with a `pnpm` command similar to:

@@ -54,13 +54,15 @@ to: <%- h.getDestinationByType({ type, subtype, name }) %>/package.json
   <% } %>
 
 
-  "pnpm": {
-    "executionEnv": {
+  "devEngines": {
+    "runtime": {
+      "name": "node",
       <% if (type !== PackageType.E2E_APP) { %>
-        "nodeVersion": "<%- nodeVersion %>"
+        "version": "<%- nodeVersion %>",
       <% } else { %>
-        "nodeVersion": "<%- NODE_VERSION_LATEST %>"
+        "version": "<%- NODE_VERSION_LATEST %>",
       <% } %>
+      "onFail": "download"
     }
   },
 

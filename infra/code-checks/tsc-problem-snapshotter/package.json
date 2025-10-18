@@ -2,12 +2,13 @@
   "$schema": "https://json.schemastore.org/package.json",
   "name": "@repo/tsc-problem-snapshotter",
   "version": "0.3.1",
-  "pnpm": {
-    "executionEnv": {
-      "nodeVersion": "22.6.0"
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "22.6.0",
+      "onFail": "download"
     }
   },
-  "packageManager": "pnpm@9.15.9",
   "bin": {
     "yotpo-tsc-problem-snapshotter": "./dist/tsc-problem-snapshotter-cli.js"
   },

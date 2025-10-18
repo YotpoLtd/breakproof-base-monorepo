@@ -23,9 +23,11 @@ const PACKAGE_JSON = JSON.parse(
 };
 
 const NODEJS_VERSION_ERR_MSG = `You need to define ${JSON.stringify({
-  pnpm: {
-    executionEnv: {
-      nodeVersion: `<ONE OF ${SUPPORTED_NODEJS_VERSIONS.join(' or ')}>`,
+  devEngines: {
+    runtime: {
+      name: 'node',
+      version: `<ONE OF ${SUPPORTED_NODEJS_VERSIONS.join(' or ')}>`,
+      onFail: 'download',
     },
   },
 })}`;
@@ -51,20 +53,20 @@ export default {
         },
       },
     },
-    pnpm: {
+    devEngines: {
       type: 'object',
       properties: {
-        executionEnv: {
+        runtime: {
           type: 'object',
           properties: {
-            nodeVersion: {
+            version: {
               enum: SUPPORTED_NODEJS_VERSIONS,
             },
           },
-          required: ['nodeVersion'],
+          required: ['version'],
         },
       },
-      required: ['executionEnv'],
+      required: ['runtime'],
       errorMessage: {
         _: NODEJS_VERSION_ERR_MSG,
       },
@@ -72,14 +74,15 @@ export default {
     packageManager: {
       enum: [ALLOWED_PACKAGE_MANAGER],
     },
-    ...(PACKAGE_JSON.devDependencies && {
-      devtoolsDependencies: {
-        type: 'array',
-        items: {
-          enum: Object.keys(PACKAGE_JSON.devDependencies),
+    ...(PACKAGE_JSON.devDependencies &&
+      Object.keys(PACKAGE_JSON.devDependencies).length > 0 && {
+        devtoolsDependencies: {
+          type: 'array',
+          items: {
+            enum: Object.keys(PACKAGE_JSON.devDependencies),
+          },
         },
-      },
-    }),
+      }),
   },
   errorMessage: {
     properties: {
@@ -87,7 +90,7 @@ export default {
       devtoolsDependencies: `The \`devtoolsDependencies\` array can only contain the package names listed in 'devDependencies'`,
     },
     required: {
-      pnpm: NODEJS_VERSION_ERR_MSG,
+      devEngines: NODEJS_VERSION_ERR_MSG,
       scripts:
         'our conventions require you to define scripts section with specific items inside',
       packageManager:

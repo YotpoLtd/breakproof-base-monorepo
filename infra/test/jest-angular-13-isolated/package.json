@@ -2,12 +2,13 @@
   "$schema": "https://json.schemastore.org/package.json",
   "name": "@repo/jest-angular-13-isolated",
   "version": "0.0.1",
-  "pnpm": {
-    "executionEnv": {
-      "nodeVersion": "22.6.0"
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "22.6.0",
+      "onFail": "download"
     }
   },
-  "packageManager": "pnpm@9.15.9",
   "sideEffects": [
     "**/*.css"
   ],

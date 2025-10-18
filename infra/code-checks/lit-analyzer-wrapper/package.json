@@ -2,12 +2,13 @@
   "$schema": "https://json.schemastore.org/package.json",
   "name": "@repo/lit-analyzer-wrapper",
   "version": "1.1.8",
-  "pnpm": {
-    "executionEnv": {
-      "nodeVersion": "22.6.0"
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "22.6.0",
+      "onFail": "download"
     }
   },
-  "packageManager": "pnpm@9.15.9",
   "bin": {
     "yotpo-lit-analyzer-legacy": "./lit-analyzer-legacy.js",
     "yotpo-lit-analyzer-snapshotter": "./dist/lit-analyzer-snapshotte-cli.js"

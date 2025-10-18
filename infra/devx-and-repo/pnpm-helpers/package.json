@@ -3,12 +3,13 @@
   "name": "@repo/pnpm-helpers",
   "version": "0.0.1",
   "type": "module",
-  "pnpm": {
-    "executionEnv": {
-      "nodeVersion": "22.6.0"
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "22.6.0",
+      "onFail": "download"
     }
   },
-  "packageManager": "pnpm@9.15.9",
   "main": "./dist/index.js",
   "exports": {
     ".": "./src/index.ts",
