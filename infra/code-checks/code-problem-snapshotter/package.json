@@ -48,7 +48,6 @@
     "chalk": "^5.4.1",
     "json-stable-stringify": "^1.1.1",
     "prettier": "^3.4.2",
-    "tsx": "^4.19.1",
     "typescript": "^5.3.3"
   },
   "devtoolsDependencies": [

@@ -47,7 +47,6 @@
     "@repo/release-it-base-isolated": "workspace:^",
     "@repo/typescript-base-isolated": "workspace:^",
     "prettier": "^3.4.2",
-    "tsx": "^4.19.1",
     "typescript": "^5.3.3"
   },
   "devtoolsDependencies": [
