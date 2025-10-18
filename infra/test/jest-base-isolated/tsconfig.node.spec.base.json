@@ -7,10 +7,25 @@
        *
        * `@jest/globals` is module with special handling by jest
        * we can't simply re-export it from another file
-       * but we don't want it installed everywhere so we force the resolution to this tester
+       * but we don't want it installed everywhere so
+       * we force the resolution to this tester
        *
        */
-      "@jest/globals": ["./node_modules/@jest/globals"]
+      "@jest/globals": ["./node_modules/@jest/globals"],
+      /**
+       *
+       * `@jest/expect` is a dependency of `@jest/globals`
+       * We've noticed it is often overloaded by third-party
+       * libraries, to extend the jest types, so we also force
+       * its resolution to this package.
+       *
+       * As a safety measure, we also force the resolution
+       * to the rest of "@jest/globals" dependencies: `@jest/environment` and `@jest/types`.
+       *
+       */
+      "@jest/expect": ["./node_modules/@jest/expect"],
+      "@jest/environment": ["./node_modules/@jest/environment"],
+      "@jest/types": ["./node_modules/@jest/types"]
     }
   }
 }

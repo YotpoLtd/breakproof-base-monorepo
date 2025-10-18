@@ -21,7 +21,6 @@ export enum InfraToolSubtype {
   DEVX_AND_REPO = 'Repo-management, Developer experience or dev analysis tool',
   RELEASE = 'Release/Deployment tool',
   TEST = 'Testing tool',
-  TO_EXTRACT = 'Tools that will be extracted in another pnpm-repo',
 }
 
 export const PACKAGE_SUBTYPE_BY_TYPE: Partial<
@@ -46,7 +45,6 @@ export const REPO_DIR_BY_PKG_TYPE = {
     [InfraToolSubtype.DEVX_AND_REPO]: 'infra/devx-and-repo',
     [InfraToolSubtype.RELEASE]: 'infra/release',
     [InfraToolSubtype.TEST]: 'infra/test',
-    [InfraToolSubtype.TO_EXTRACT]: 'infra/to-extract-in-infra-repo',
   },
 } as const;
 

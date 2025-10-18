@@ -2,7 +2,7 @@ import * as path from 'node:path';
 
 import { RollupBabelInputPluginOptions } from '@rollup/plugin-babel';
 import { RollupTypescriptOptions } from '@rollup/plugin-typescript';
-import { RollupOptions } from 'rollup';
+import { OutputOptions, RollupOptions } from 'rollup';
 
 import {
   BabelConfigGeneratorOptions,
@@ -23,8 +23,8 @@ export const externalizeNonSource: Required<RollupOptions>['external'] = (
 };
 
 /** Sane output defaults that plays nicely for building libraries in the repo */
-export const getDefaultOutputOptions =
-  (): Required<RollupOptions>['output'] => ({
+export const getDefaultOutputOptions = () =>
+  ({
     dir: 'dist',
     format: 'cjs',
     /**
@@ -34,7 +34,7 @@ export const getDefaultOutputOptions =
      */
     preserveModules: true, // Keep directory structure and files
     sourcemap: true,
-  });
+  }) as const satisfies OutputOptions;
 
 /** Base config for the `babel` plugin that plays nicely with repo concepts */
 export const getBabelPluginConfig = (

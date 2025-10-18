@@ -42,7 +42,7 @@
     "@repo/eslint-base-isolated": "workspace:^",
     "@repo/lint-staged-base-isolated": "workspace:^",
     "@repo/typescript-base-isolated": "workspace:^",
-    "prettier": "3.2.4",
+    "prettier": "3.4.2",
     "sucrase": "^3.35.0"
   },
   "devtoolsDependencies": [

@@ -15,5 +15,20 @@ export default {
       reason:
         'this is installed but only used here, only re-exported via tsconfig.node.spec.base.json',
     }),
+    defineIgnoredPackage({
+      package: '@jest/expect',
+      reason:
+        'this is installed but only used here, only re-exported via tsconfig.node.spec.base.json',
+    }),
+    defineIgnoredPackage({
+      package: '@jest/environment',
+      reason:
+        'this is installed but only used here, only re-exported via tsconfig.node.spec.base.json',
+    }),
+    defineIgnoredPackage({
+      package: '@jest/types',
+      reason:
+        'this is installed but only used here, only re-exported via tsconfig.node.spec.base.json',
+    }),
   ],
 };
