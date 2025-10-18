@@ -159,7 +159,10 @@
      * Override the older versions of those nested dependencies so we get some bug fixes
      */
     overrides: {
-      cosmiconfig: '^9',
+      'cosmiconfig': '^9',
+      '@jest/globals@29>@jest/environment': '-',
+      '@jest/globals@29>@jest/expect': '-',
+      '@jest/globals@29>@jest/types': '-',
     },
     packageExtensions: {
       /**
@@ -239,6 +242,31 @@
       'jest-config': {
         dependencies: {
           'ts-node': '*',
+        },
+      },
+      '@testing-library/jest-dom': {
+        dependencies: {
+          '@types/aria-query': '*',
+        },
+        peerDependencies: {
+          '@types/react': '*',
+        },
+      },
+      '@testing-library/react': {
+        peerDependencies: {
+          '@types/react-dom': '*',
+        },
+      },
+      '@jest/globals@29': {
+        peerDependencies: {
+          '@jest/environment': '^29.7.0',
+          '@jest/expect': '^29.7.0',
+          '@jest/types': '^29.6.3',
+        },
+      },
+      'react-i18next': {
+        peerDependencies: {
+          '@types/react': '*',
         },
       },
       'tslib': {

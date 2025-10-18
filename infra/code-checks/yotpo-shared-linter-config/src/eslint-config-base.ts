@@ -292,6 +292,16 @@ const config: EslintConfig = [
       '@typescript-eslint/array-type': ['error', { default: 'generic' }],
       '@typescript-eslint/no-confusing-void-expression': 'off',
       '@typescript-eslint/no-unused-vars': sharedConfig['no-unused-vars'],
+      '@typescript-eslint/restrict-template-expressions': [
+        'error',
+        {
+          allowNumber: true,
+          allowBoolean: false,
+          allowAny: false,
+          allowNullish: false,
+          allowRegExp: false,
+        },
+      ],
       ...getNamingConventionRules(),
     },
   }) as EslintConfig),
