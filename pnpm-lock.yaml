@@ -328,9 +328,6 @@ importers:
       prettier:
         specifier: ^3.4.2
         version: 3.4.2
-      tsx:
-        specifier: ^4.19.1
-        version: 4.19.1
       typescript:
         specifier: ^5.3.3
         version: 5.6.2
@@ -455,9 +452,6 @@ importers:
       prettier:
         specifier: ^3.4.2
         version: 3.4.2
-      tsx:
-        specifier: ^4.19.1
-        version: 4.19.1
       typescript:
         specifier: ^5.3.3
         version: 5.6.2
@@ -544,9 +538,6 @@ importers:
       prettier:
         specifier: ^3.4.2
         version: 3.4.2
-      tsx:
-        specifier: ^4.19.1
-        version: 4.19.1
 
   infra/code-checks/syncpack-base-isolated:
     dependencies:
@@ -603,9 +594,6 @@ importers:
       prettier:
         specifier: ^3.4.2
         version: 3.4.2
-      tsx:
-        specifier: ^4.19.1
-        version: 4.19.1
       typescript:
         specifier: ^5.3.3
         version: 5.6.2
