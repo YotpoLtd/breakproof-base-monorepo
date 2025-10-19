@@ -42,10 +42,11 @@
     'lint:everything:fix-autofixable': 'pnpm run --sequential shared:fix:lint:common',
     'lint:precommit': 'pnpm run shared:staged:lint:common',
     'lint:precommit:fix-autofixable': 'pnpm run --sequential shared:staged:fix:common',
+
     // PREVENT ACCIDENTAL USAGE OF `NPM`
-    preinstall: "[ -n \"$(pwd | grep '/node_modules/')\" ] || echo $npm_config_user_agent | grep -q 'pnpm/' || (echo 'PLEASE USE PNPM, not NPM' && exit 1)",
+    'preinstall': "[ -n \"$(pwd | grep '/node_modules/')\" ] || echo $npm_config_user_agent | grep -q 'pnpm/' || (echo 'PLEASE USE PNPM, not NPM' && exit 1)",
     // Run fixes for better integration with code editors
-    postinstall: '([ -z "$CODE_EDITOR_INSTALL" ] && [ -z "$GITHUB_ENV" ] && pnpm --workspace-root run code-editor:install-tools-at-top-level && pnpm --workspace-root run code-editor:jetbrains:fix-eslint-at-top-level && pnpm --workspace-root run code-editor:symlink-default-node) || true',
+    'postinstall': '([ -z "$CODE_EDITOR_INSTALL" ] && [ -z "$GITHUB_ENV" ] && pnpm --workspace-root run code-editor:install-tools-at-top-level && pnpm --workspace-root run code-editor:jetbrains:fix-eslint-at-top-level && pnpm --workspace-root run code-editor:symlink-default-node) || true',
     // it outputs which dependencies are outdated and what's the available latest version. It doesn't automatically update them, only reports options for updating
     'shared:analyze:dependencies-versions': 'PACKAGE_DIR=$INIT_CWD pnpm --filter=devtools run analyze:dependencies-versions',
     // outputs its entire `tsconfig.json` file including settings from all extended tsconfigs
@@ -55,12 +56,15 @@
     // creates `stats.json` with metadata about the build. Only works if `webpack` is executed as bundler under the `build` script of your package.
     'shared:analyze:webpack:stats': 'PACKAGE_DIR=$INIT_CWD pnpm --filter=devtools run webpack:stats',
     'shared:analyze:webpack:stats:delete-external': 'PACKAGE_DIR=$INIT_CWD pnpm --filter=devtools run webpack:stats:delete-external',
+
     /**
      * SHORTCUTS FOR FINDING CODE PROBLEMS
      */
-    'shared:ts:check': 'PACKAGE_DIR=$INIT_CWD pnpm --filter=@repo/lint run ts:check', /**
+    'shared:ts:check': 'PACKAGE_DIR=$INIT_CWD pnpm --filter=@repo/lint run ts:check',
+
+    /**
      * SHORTCUTS FOR ANALYZING CODE
-     */ /* [comment possibly relocated by pnpm] */
+     */
     'shared:lint:common': 'PACKAGE_DIR=$INIT_CWD pnpm --filter=@repo/lint-staged-base-isolated run lint-staged-but-for-all-package-files',
     // checks if there are missing or unused dependencies. It can't fix the errors, only reports them
     'shared:lint:dependencies:circular': 'PACKAGE_DIR=$INIT_CWD pnpm --filter=@repo/dpdm-base-isolated run dpdm',
@@ -73,6 +77,7 @@
     // two shortcuts for specific cases: precommit hook & github CI
     'shared:staged:lint:common': "PACKAGE_DIR=$INIT_CWD pnpm --filter=@repo/lint-staged-base-isolated run staged:lint --diff='--cached'",
     'shared:github-pr:lint:common': 'PACKAGE_DIR=$INIT_CWD pnpm --filter=@repo/lint-staged-base-isolated run staged:lint --diff="${GIT_DIFF_BASE:-$(git merge-base origin/$GITHUB_BASE_REF HEAD)}"',
+
     /**
      * SHORTCUTS FOR COMMANDS THAT WILL TRY TO FIX FOUND PROBLEMS AUTOMATICALLY (IF POSSIBLE)
      * & COMMANDS to REMEMBER CODE PROBLEMS
@@ -84,6 +89,7 @@
     'shared:repo:fix:lint:package.json:dependencies': 'pnpm --filter=@repo/syncpack-base-isolated run fix:syncpack',
     // different naming from the other fixing commands so that it's not executed when you do pnpm --workspace-root run '/^shared:fix:.+/'
     'shared:staged:fix:common': "PACKAGE_DIR=$INIT_CWD pnpm --filter=@repo/lint-staged-base-isolated run staged:fix:lint --diff='--cached'",
+
     /**
      * SHORTCUTS FOR COMMANDS THAT DON'T APPLY TO SPECIFIC PACKAGE BUT TO ALL OF THEM
      */
@@ -103,21 +109,35 @@
     // it outputs multiple --filter='<smth that selects A SINGLE package>', one for each original match
     'repo:pnpm:expand-filters': 'pnpm --filter="@repo/pnpm-helpers" run expand-filters',
     // perform the default release logic using `release-it`
+
+    /**
+     * SHORTCUTS RELATED TO RELEASING A NEW VERSION OF A PACKAGE
+     */
     'shared:release': 'PACKAGE_DIR=$INIT_CWD pnpm --filter=@repo/release-it-base-isolated run release:perform',
     'shared:release:if-needed': '(pnpm --silent --filter=$PNPM_PACKAGE_NAME exec pnpm --silent --workspace-root run shared:release:conventional-commit:get-new-version && pnpm --filter=$PNPM_PACKAGE_NAME run release) || echo "<NO NEW VERSION>"',
     'shared:release:conventional-commit:get-new-version': 'PACKAGE_DIR=$INIT_CWD pnpm --filter=@repo/release-it-base-isolated run release:conventional-commit:get-new-version',
     'shared:release:get-new-tag': 'cd $INIT_CWD && PNPM_PACKAGE_NAME=$(node -p "require(\'./package.json\').name") && NEW_VERSION=$(pnpm --workspace-root run shared:release:conventional-commit:get-new-version) && echo "$PNPM_PACKAGE_NAME@$NEW_VERSION"',
+
     /**
      * SHORTCUTS FOR GENERATING CODE
      */
-    generate: 'pnpm --filter=@repo/generators exec hygen',
+    'generate': 'pnpm --filter=@repo/generators exec hygen',
+
+    /**
+     * MISC USEFUL SHORTCUTS
+     */
     // will run the `build` script for all of nested dependencies and once those are built, it will do the same for the package itself
     'shared:build:recursive': "cd $INIT_CWD && pnpm --filter='{.}...' run build",
+
+    /**
+     * SHORTCUTS FOR CODE-EDITOR INTEGRATIONS
+     */
     // Install dependencies defined in codeEditorIntegrationDependencies of this file WITHOUT saving them to the lock file
     'code-editor:install-tools-at-top-level': 'CODE_EDITOR_INSTALL=1 npm_config_save=false npm_config_lockfile=false pnpm --workspace-root install --prefer-offline',
     'code-editor:jetbrains:fix-eslint-at-top-level': 'ln -sf ./this-file-should-not-exist-please-delete-me ./package.json',
     'code-editor:symlink-default-node': 'ln -sf "$(readlink -f $(pnpm which node))" ./infra/node',
   },
+
   /**
    * !! DO NOT ADD NEW DEPENDENCIES TO THE REPOSITORY ROOT !!
    *
@@ -127,12 +147,13 @@
   devDependencies: {
     concurrently: '9.1.0',
   },
+
   /**
    * Only installed locally, not on CI.
    * This is achieved with a little bit of customization in .pnpmfile.cjs
    */
   codeEditorIntegrationDependencies: {
-    eslint: '9.30.1', 
+    eslint: '9.30.1',
     prettier: '3.4.2',
   },
 }
