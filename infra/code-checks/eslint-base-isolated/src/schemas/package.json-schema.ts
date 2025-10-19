@@ -32,9 +32,6 @@ const NODEJS_VERSION_ERR_MSG = `You need to define ${JSON.stringify({
   },
 })}`;
 
-/** Managed by FE infra team */
-const ALLOWED_PACKAGE_MANAGER = 'pnpm@9.15.9';
-
 export default {
   type: 'object',
   properties: {
@@ -71,9 +68,6 @@ export default {
         _: NODEJS_VERSION_ERR_MSG,
       },
     },
-    packageManager: {
-      enum: [ALLOWED_PACKAGE_MANAGER],
-    },
     ...(PACKAGE_JSON.devDependencies &&
       Object.keys(PACKAGE_JSON.devDependencies).length > 0 && {
         devtoolsDependencies: {
@@ -86,15 +80,12 @@ export default {
   },
   errorMessage: {
     properties: {
-      packageManager: `The \`packageManager\` must exactly be "${ALLOWED_PACKAGE_MANAGER}"`,
       devtoolsDependencies: `The \`devtoolsDependencies\` array can only contain the package names listed in 'devDependencies'`,
     },
     required: {
       devEngines: NODEJS_VERSION_ERR_MSG,
       scripts:
         'our conventions require you to define scripts section with specific items inside',
-      packageManager:
-        'Every package needs to define `packageManager` property so we can get pnpm upgrades automatically',
     },
   },
 };
