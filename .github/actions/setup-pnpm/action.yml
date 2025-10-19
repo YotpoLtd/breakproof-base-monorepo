@@ -58,7 +58,7 @@ runs:
 
         echo "PNPM_HOME=$PNPM_HOME" >> "$GITHUB_ENV"
         echo "npm_config_store_dir=$PNPM_STORE_DIR" >> "$GITHUB_ENV"
-        echo "npm_config_store_dir=$PNPM_STORE_DIR" >> $GITHUB_OUTPUT
+        echo "pnpm_config_store_dir=$PNPM_STORE_DIR" >> "$GITHUB_ENV"
         echo "TASKS_CACHE_DIR=$TASKS_CACHE_DIR" >> "$GITHUB_ENV"
         echo "NX_CACHE_DIRECTORY=$NX_CACHE_DIRECTORY" >> "$GITHUB_ENV"
         echo "$PNPM_HOME" >> $GITHUB_PATH
@@ -71,6 +71,7 @@ runs:
 
         echo "PNPM_HOME=${{ env.PNPM_HOME }}"
         echo "npm_config_store_dir=${{ env.npm_config_store_dir }}"
+        echo "pnpm_config_store_dir=${{ env.pnpm_config_store_dir }}"
 
         echo "TASKS_CACHE_DIR=${{ env.TASKS_CACHE_DIR }}"
         echo "NX_CACHE_DIRECTORY=${{ env.NX_CACHE_DIRECTORY }}"
@@ -87,6 +88,11 @@ runs:
       shell: bash
       run: |
         which curl || (apt-get update && apt-get install -y curl)
+
+    - name: Don't check if node_modules are outdated on CI
+      shell: bash
+      run: |
+        echo 'pnpm_config_verify_deps_before_run=false' >> $GITHUB_ENV
 
     - name: Install pnpm & node
       if: steps.restore-pnpm-cache.outputs.cache-hit != 'true'
