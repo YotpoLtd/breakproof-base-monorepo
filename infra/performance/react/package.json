@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json.schemastore.org/package.json",
+  "name": "@repo/react",
+  "version": "0.0.1",
+  "type": "module",
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "22.6.0",
+      "onFail": "download"
+    }
+  },
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "lint:everything": "pnpm --workspace-root run '/^shared:lint:.*/'",
+    "lint:everything:fix-autofixable": "pnpm --workspace-root run --sequential '/^shared:fix:/'",
+    "lint:precommit": "pnpm --workspace-root run '/^shared:(staged:lint:.*|lint:dependencies:.*)/'",
+    "lint:precommit:fix-autofixable": "pnpm --workspace-root run --sequential '/^shared:staged:fix:/'",
+    "lint:github-pr": "pnpm --workspace-root run '/^shared:(github-pr:lint|lint:dependencies:.*)/'",
+    "preinstall": "[ -n \"$(pwd | grep '/node_modules/')\" ] || echo $npm_config_user_agent | grep -q 'pnpm/' || (echo 'PLEASE USE PNPM, not NPM' && exit 1)",
+    "__SEE_SHARED__": "echo \"You can run any script starting with 'shared:' defined in <repo-root>/package.json by executing `pnpm -w <name of script>` from your package directory\""
+  },
+  "devDependencies": {
+    "@repo/depcheck-base-isolated": "workspace:^",
+    "@repo/eslint-base-isolated": "workspace:^",
+    "@repo/eslint-problem-snapshotter": "workspace:^",
+    "@repo/lint-staged-base-isolated": "workspace:^",
+    "@repo/typescript-base-isolated": "workspace:^",
+    "@tanstack/query-core": "5.90.2",
+    "@tanstack/react-query": "5.90.2",
+    "@types/react": "19.2.2",
+    "prettier": "3.4.2",
+    "react": "19.2.0",
+    "typescript": "^5.3.3"
+  },
+  "devtoolsDependencies": [
+    "@repo/typescript-base-isolated",
+    "@repo/eslint-base-isolated",
+    "@repo/eslint-problem-snapshotter",
+    "@repo/depcheck-base-isolated",
+    "@repo/lint-staged-base-isolated"
+  ],
+  "peerDependencies": {
+    "@tanstack/query-core": "5.90.2",
+    "@tanstack/react-query": "5.90.2",
+    "@types/react": "19.2.2",
+    "react": "19.2.0"
+  }
+}

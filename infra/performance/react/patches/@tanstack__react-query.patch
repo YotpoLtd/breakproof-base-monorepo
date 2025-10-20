@@ -1,0 +1,44 @@
+diff --git a/build/modern/useBaseQuery.js b/build/modern/useBaseQuery.js
+index 187d0257c39034a244c82da9dc4450dc40b90965..933d8c34c957e3f231fe35d17b1d7f1c188b7328 100644
+--- a/build/modern/useBaseQuery.js
++++ b/build/modern/useBaseQuery.js
+@@ -29,6 +29,39 @@ function useBaseQuery(options, Observer, queryClient) {
+   const errorResetBoundary = useQueryErrorResetBoundary();
+   const client = useQueryClient(queryClient);
+   const defaultedOptions = client.defaultQueryOptions(options);
++
++  /**
++   * By default useQuery will not prefetch the query on the server 
++   * even if experimental_prefetchInRender is enabled.
++   * 
++   * We want that to happen because otherwise useQuery().promise is never resolved
++   * on the server.
++   * 
++   * This code is mostly a copy of the code you can find a bit below, which runs 
++   * in the browser.
++   * 
++   * We only patch this file as we rely on vite to be the bundler
++   * vite will always prefer this ES module version of the file
++   */
++  const shouldDoServerPrefetch =  
++    defaultedOptions.experimental_prefetchInRender &&
++    isServer &&
++    (!('enabled' in defaultedOptions) || defaultedOptions.enabled) && 
++    (!('suspense' in defaultedOptions) || !defaultedOptions.suspense);
++
++  if (shouldDoServerPrefetch) {
++    const cacheEntry = client.getQueryCache().get(defaultedOptions.queryHash);
++    const promise = !cacheEntry ? (
++      // Fetch immediately on render in order to ensure `.promise` is resolved even if the component is unmounted
++      client.prefetchQuery(defaultedOptions)
++    ) : (
++      // subscribe to the "cache promise" so that we can finalize the currentThenable once data comes in
++      client.getQueryCache().get(defaultedOptions.queryHash)?.promise
++    );
++    promise?.catch(noop).finally(() => {
++      observer.updateResult();
++    });
++  }
+   client.getDefaultOptions().queries?._experimental_beforeQuery?.(
+     defaultedOptions
+   );
