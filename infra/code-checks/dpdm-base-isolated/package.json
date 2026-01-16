@@ -3,12 +3,13 @@
   "name": "@repo/dpdm-base-isolated",
   "private": true,
   "version": "0.0.1",
-  "pnpm": {
-    "executionEnv": {
-      "nodeVersion": "22.6.0"
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "22.6.0",
+      "onFail": "download"
     }
   },
-  "packageManager": "pnpm@9.15.9",
   "scripts": {
     "preinstall": "[ -n \"$(pwd | grep '/node_modules/')\" ] || echo $npm_config_user_agent | grep -q 'pnpm/' || (echo 'PLEASE USE PNPM, not NPM' && exit 1)",
     "lint:everything": "pnpm --workspace-root run '/^shared:lint:.*/'",
