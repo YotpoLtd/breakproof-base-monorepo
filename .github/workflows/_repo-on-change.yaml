@@ -89,7 +89,7 @@ jobs:
       is-code-import: ${{ steps.get-basics.outputs.is-code-import }}
     steps:
       - name: Check out code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -107,7 +107,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: ${{ needs.basics.outputs.git-diff-base-depth }}
           fetch-tags: false
@@ -142,7 +142,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: ${{ needs.basics.outputs.git-diff-base-depth }}
           fetch-tags: false
@@ -270,7 +270,7 @@ jobs:
     steps:
       - name: Check out code
         if: ${{ needs.basics.outputs.is-autorelease-enabled }}
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
           ref: ${{ github.head_ref }}
@@ -329,7 +329,7 @@ jobs:
       list: ${{ steps.list.outputs.packages-with-potentially-affected-build }}
     steps:
       - name: Check out code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: ${{ needs.basics.outputs.git-diff-base-depth }}
           fetch-tags: false
@@ -390,7 +390,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: ${{ needs.basics.outputs.git-diff-base-depth }}
           fetch-tags: false
@@ -443,7 +443,7 @@ jobs:
         ${{ steps.list-for-matrix.outputs.packages-with-affected-e2e-tests }}
     steps:
       - name: Check out code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: ${{ needs.basics.outputs.git-diff-base-depth }}
           fetch-tags: false
@@ -492,12 +492,12 @@ jobs:
         container: [1, 2, 3, 4]
     steps:
       - name: Check out code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: ${{ needs.basics.outputs.git-diff-base-depth }}
           fetch-tags: false
 
-      # This should be addressed by passing `set-safe-directory: true` to actions/checkout@v4 but that doesn't work
+      # This should be addressed by passing `set-safe-directory: true` to actions/checkout@v6 but that doesn't work
       - name: Fix git permissions in this Docker container
         run: |
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
@@ -561,7 +561,7 @@ jobs:
       NO_DEPLOY_TAG: '${{ matrix.package }}@NO_AUTO_DEPLOY'
     steps:
       - name: Check out code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-tags: true
 
@@ -607,7 +607,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: ${{ needs.basics.outputs.git-diff-base-depth }}
           fetch-tags: false
@@ -654,7 +654,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
           token: ${{ secrets.AUTORELEASE_BOT_TOKEN }}

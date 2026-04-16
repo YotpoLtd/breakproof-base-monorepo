@@ -39,7 +39,7 @@ jobs:
   ensure-admin-user-or-workflow-call:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/ensure-admin-user-or-workflow-call
 
   control-deployment:
@@ -51,7 +51,7 @@ jobs:
       is-paused: ${{ steps.check-status.outputs.is-paused }}
     steps:
       - name: Check out code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-tags: true
           token: ${{ secrets.AUTORELEASE_GITHUB_TOKEN }}
